@@ -1,0 +1,1015 @@
+databaseChangeLog:
+  - changeSet:
+      id: t-001-users
+      author: gymplatform
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: password_hash
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: first_name
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_name
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: tenant_id
+                  type: varchar(100)
+              - column:
+                  name: enabled
+                  type: boolean
+                  defaultValueBoolean: true
+              - column:
+                  name: email_verified
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: last_login_at
+                  type: timestamp with time zone
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+        - createTable:
+            tableName: refresh_tokens
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: token
+                  type: varchar(255)
+                  constraints:
+                    unique: true
+              - column:
+                  name: user_id
+                  type: uuid
+              - column:
+                  name: expires_at
+                  type: timestamp with time zone
+              - column:
+                  name: revoked
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+        - createTable:
+            tableName: audit_logs
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: entity_type
+                  type: varchar(100)
+              - column:
+                  name: entity_id
+                  type: uuid
+              - column:
+                  name: action
+                  type: varchar(50)
+              - column:
+                  name: user_id
+                  type: uuid
+              - column:
+                  name: old_value
+                  type: text
+              - column:
+                  name: new_value
+                  type: text
+              - column:
+                  name: tenant_id
+                  type: varchar(100)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+
+  - changeSet:
+      id: t-002-members
+      author: gymplatform
+      changes:
+        - createTable:
+            tableName: members
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: uuid
+              - column:
+                  name: member_number
+                  type: varchar(50)
+                  constraints:
+                    unique: true
+              - column:
+                  name: first_name
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_name
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: phone
+                  type: varchar(50)
+              - column:
+                  name: date_of_birth
+                  type: date
+              - column:
+                  name: gender
+                  type: varchar(20)
+              - column:
+                  name: street
+                  type: varchar(255)
+              - column:
+                  name: city
+                  type: varchar(100)
+              - column:
+                  name: state
+                  type: varchar(100)
+              - column:
+                  name: postal_code
+                  type: varchar(20)
+              - column:
+                  name: country
+                  type: varchar(100)
+              - column:
+                  name: emergency_contact_name
+                  type: varchar(200)
+              - column:
+                  name: emergency_contact_phone
+                  type: varchar(50)
+              - column:
+                  name: profile_photo_url
+                  type: varchar(500)
+              - column:
+                  name: health_notes
+                  type: text
+              - column:
+                  name: status
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: join_date
+                  type: date
+              - column:
+                  name: tenant_id
+                  type: varchar(100)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+        - createTable:
+            tableName: member_notes
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: member_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: author_id
+                  type: uuid
+              - column:
+                  name: content
+                  type: text
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+        - createTable:
+            tableName: member_tags
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: color
+                  type: varchar(20)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+        - createTable:
+            tableName: member_tag_assignments
+            columns:
+              - column:
+                  name: member_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: tag_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: member_notes
+            baseColumnNames: member_id
+            referencedTableName: members
+            referencedColumnNames: id
+            constraintName: fk_member_notes_member
+        - createIndex:
+            tableName: members
+            indexName: idx_members_email
+            columns:
+              - column:
+                  name: email
+        - createIndex:
+            tableName: members
+            indexName: idx_members_status
+            columns:
+              - column:
+                  name: status
+
+  - changeSet:
+      id: t-003-contracts
+      author: gymplatform
+      changes:
+        - createTable:
+            tableName: membership_tiers
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: text
+              - column:
+                  name: monthly_price
+                  type: decimal(10,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: billing_cycle
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: minimum_term_months
+                  type: int
+                  defaultValueNumeric: 0
+              - column:
+                  name: notice_period_days
+                  type: int
+                  defaultValueNumeric: 30
+              - column:
+                  name: class_allowance
+                  type: int
+              - column:
+                  name: access_rules
+                  type: text
+              - column:
+                  name: active
+                  type: boolean
+                  defaultValueBoolean: true
+              - column:
+                  name: tenant_id
+                  type: varchar(100)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+        - createTable:
+            tableName: contracts
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: member_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: membership_tier_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: start_date
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: end_date
+                  type: date
+              - column:
+                  name: billing_start_date
+                  type: date
+              - column:
+                  name: next_billing_date
+                  type: date
+              - column:
+                  name: monthly_amount
+                  type: decimal(10,2)
+              - column:
+                  name: discount_code
+                  type: varchar(50)
+              - column:
+                  name: cancellation_date
+                  type: date
+              - column:
+                  name: cancellation_effective_date
+                  type: date
+              - column:
+                  name: cancellation_reason
+                  type: text
+              - column:
+                  name: auto_renew
+                  type: boolean
+                  defaultValueBoolean: true
+              - column:
+                  name: tenant_id
+                  type: varchar(100)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+        - createTable:
+            tableName: idle_periods
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: contract_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: start_date
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: end_date
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: reason
+                  type: text
+              - column:
+                  name: billing_reduced
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: reduced_amount
+                  type: decimal(10,2)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+        - addForeignKeyConstraint:
+            baseTableName: contracts
+            baseColumnNames: member_id
+            referencedTableName: members
+            referencedColumnNames: id
+            constraintName: fk_contracts_member
+        - addForeignKeyConstraint:
+            baseTableName: contracts
+            baseColumnNames: membership_tier_id
+            referencedTableName: membership_tiers
+            referencedColumnNames: id
+            constraintName: fk_contracts_tier
+        - addForeignKeyConstraint:
+            baseTableName: idle_periods
+            baseColumnNames: contract_id
+            referencedTableName: contracts
+            referencedColumnNames: id
+            constraintName: fk_idle_periods_contract
+
+  - changeSet:
+      id: t-004-finance
+      author: gymplatform
+      changes:
+        - createTable:
+            tableName: payment_methods
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: member_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: type
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: stripe_payment_method_id
+                  type: varchar(255)
+              - column:
+                  name: gocardless_mandate_id
+                  type: varchar(255)
+              - column:
+                  name: last4
+                  type: varchar(4)
+              - column:
+                  name: is_default
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: active
+                  type: boolean
+                  defaultValueBoolean: true
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+        - createTable:
+            tableName: invoices
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: member_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: contract_id
+                  type: uuid
+              - column:
+                  name: invoice_number
+                  type: varchar(50)
+                  constraints:
+                    unique: true
+              - column:
+                  name: amount
+                  type: decimal(10,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: vat_amount
+                  type: decimal(10,2)
+                  defaultValueNumeric: 0
+              - column:
+                  name: total_amount
+                  type: decimal(10,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: currency
+                  type: varchar(3)
+                  defaultValue: EUR
+              - column:
+                  name: status
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: issued_at
+                  type: timestamp with time zone
+              - column:
+                  name: due_date
+                  type: date
+              - column:
+                  name: paid_at
+                  type: timestamp with time zone
+              - column:
+                  name: pdf_url
+                  type: varchar(500)
+              - column:
+                  name: tenant_id
+                  type: varchar(100)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+        - createTable:
+            tableName: payments
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: invoice_id
+                  type: uuid
+              - column:
+                  name: payment_method_id
+                  type: uuid
+              - column:
+                  name: amount
+                  type: decimal(10,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: currency
+                  type: varchar(3)
+                  defaultValue: EUR
+              - column:
+                  name: status
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: stripe_payment_intent_id
+                  type: varchar(255)
+              - column:
+                  name: gocardless_payment_id
+                  type: varchar(255)
+              - column:
+                  name: failure_reason
+                  type: text
+              - column:
+                  name: processed_at
+                  type: timestamp with time zone
+              - column:
+                  name: tenant_id
+                  type: varchar(100)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+        - createTable:
+            tableName: dunning_levels
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: level
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(100)
+              - column:
+                  name: days_after_due
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: action
+                  type: varchar(50)
+              - column:
+                  name: template_id
+                  type: uuid
+              - column:
+                  name: tenant_id
+                  type: varchar(100)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+        - createTable:
+            tableName: dunning_runs
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: invoice_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: member_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: current_level
+                  type: int
+                  defaultValueNumeric: 1
+              - column:
+                  name: last_escalated_at
+                  type: timestamp with time zone
+              - column:
+                  name: resolved
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: tenant_id
+                  type: varchar(100)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+        - addForeignKeyConstraint:
+            baseTableName: payment_methods
+            baseColumnNames: member_id
+            referencedTableName: members
+            referencedColumnNames: id
+            constraintName: fk_payment_methods_member
+        - addForeignKeyConstraint:
+            baseTableName: invoices
+            baseColumnNames: member_id
+            referencedTableName: members
+            referencedColumnNames: id
+            constraintName: fk_invoices_member
+        - addForeignKeyConstraint:
+            baseTableName: payments
+            baseColumnNames: invoice_id
+            referencedTableName: invoices
+            referencedColumnNames: id
+            constraintName: fk_payments_invoice
+
+  - changeSet:
+      id: t-005-checkin
+      author: gymplatform
+      changes:
+        - createTable:
+            tableName: access_devices
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: device_type
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: mode
+                  type: varchar(20)
+                  defaultValue: QR
+              - column:
+                  name: location_description
+                  type: varchar(255)
+              - column:
+                  name: ip_address
+                  type: varchar(45)
+              - column:
+                  name: api_endpoint
+                  type: varchar(500)
+              - column:
+                  name: api_key
+                  type: varchar(255)
+              - column:
+                  name: max_occupancy
+                  type: int
+              - column:
+                  name: active
+                  type: boolean
+                  defaultValueBoolean: true
+              - column:
+                  name: last_heartbeat_at
+                  type: timestamp with time zone
+              - column:
+                  name: tenant_id
+                  type: varchar(100)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+        - createTable:
+            tableName: check_ins
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: member_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: device_id
+                  type: uuid
+              - column:
+                  name: method
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: denial_reason
+                  type: varchar(100)
+              - column:
+                  name: staff_id
+                  type: uuid
+              - column:
+                  name: check_in_time
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: check_out_time
+                  type: timestamp with time zone
+              - column:
+                  name: tenant_id
+                  type: varchar(100)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+        - createTable:
+            tableName: access_restrictions
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: member_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: reason
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: text
+              - column:
+                  name: active
+                  type: boolean
+                  defaultValueBoolean: true
+              - column:
+                  name: restricted_by
+                  type: uuid
+              - column:
+                  name: restricted_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+              - column:
+                  name: released_at
+                  type: timestamp with time zone
+              - column:
+                  name: released_by
+                  type: uuid
+              - column:
+                  name: auto_release
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: tenant_id
+                  type: varchar(100)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+        - createTable:
+            tableName: access_events
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: device_id
+                  type: uuid
+              - column:
+                  name: member_id
+                  type: uuid
+              - column:
+                  name: event_type
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: reason_code
+                  type: varchar(100)
+              - column:
+                  name: details
+                  type: text
+              - column:
+                  name: tenant_id
+                  type: varchar(100)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+        - addForeignKeyConstraint:
+            baseTableName: check_ins
+            baseColumnNames: member_id
+            referencedTableName: members
+            referencedColumnNames: id
+            constraintName: fk_check_ins_member
+        - addForeignKeyConstraint:
+            baseTableName: check_ins
+            baseColumnNames: device_id
+            referencedTableName: access_devices
+            referencedColumnNames: id
+            constraintName: fk_check_ins_device
+        - addForeignKeyConstraint:
+            baseTableName: access_restrictions
+            baseColumnNames: member_id
+            referencedTableName: members
+            referencedColumnNames: id
+            constraintName: fk_access_restrictions_member
+        - addForeignKeyConstraint:
+            baseTableName: access_events
+            baseColumnNames: device_id
+            referencedTableName: access_devices
+            referencedColumnNames: id
+            constraintName: fk_access_events_device
+        - createIndex:
+            tableName: check_ins
+            indexName: idx_check_ins_member_id
+            columns:
+              - column:
+                  name: member_id
+        - createIndex:
+            tableName: check_ins
+            indexName: idx_check_ins_time
+            columns:
+              - column:
+                  name: check_in_time
+        - createIndex:
+            tableName: access_restrictions
+            indexName: idx_access_restrictions_member_active
+            columns:
+              - column:
+                  name: member_id
+              - column:
+                  name: active
+        - createIndex:
+            tableName: access_events
+            indexName: idx_access_events_created
+            columns:
+              - column:
+                  name: created_at

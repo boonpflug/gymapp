@@ -106,6 +106,17 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Queue campaignMessageQueue() {
+        return QueueBuilder.durable("campaign.message.queue").build();
+    }
+
+    @Bean
+    public Binding campaignMessageBinding() {
+        return BindingBuilder.bind(campaignMessageQueue())
+                .to(notificationExchange()).with("campaign.#");
+    }
+
+    @Bean
     public MessageConverter jsonMessageConverter() {
         return new Jackson2JsonMessageConverter();
     }

@@ -690,3 +690,105 @@ export interface TrainingGoalDto {
   createdAt: string
   updatedAt: string
 }
+
+// ── Marketing ──────────────────────────────────────────
+
+export type CampaignStatus = 'DRAFT' | 'SCHEDULED' | 'SENDING' | 'SENT' | 'CANCELLED'
+export type CampaignType = 'EMAIL' | 'SMS' | 'PUSH'
+export type CampaignEventType = 'SENT' | 'DELIVERED' | 'OPENED' | 'CLICKED' | 'CONVERTED' | 'FAILED' | 'BOUNCED'
+export type RiskLevel = 'HIGH' | 'MEDIUM' | 'LOW'
+
+export interface CampaignDto {
+  id: string
+  name: string
+  description?: string
+  campaignType: CampaignType
+  status: CampaignStatus
+  templateId?: string
+  templateName?: string
+  subject?: string
+  bodyHtml?: string
+  bodyText?: string
+  audienceCriteria?: string
+  scheduledAt?: string
+  sentAt?: string
+  totalRecipients?: number
+  sentCount?: number
+  deliveredCount?: number
+  openedCount?: number
+  clickedCount?: number
+  failedCount?: number
+  convertedCount?: number
+  deliveryRate?: number
+  openRate?: number
+  clickRate?: number
+  createdBy?: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface CampaignRecipientDto {
+  id: string
+  campaignId: string
+  memberId: string
+  memberName?: string
+  memberEmail?: string
+  recipientAddress?: string
+  status?: CampaignEventType
+  sentAt?: string
+  deliveredAt?: string
+  openedAt?: string
+  clickedAt?: string
+  errorMessage?: string
+  createdAt: string
+}
+
+export interface CampaignStatsDto {
+  totalCampaigns: number
+  activeCampaigns: number
+  totalSent: number
+  totalDelivered: number
+  totalOpened: number
+  totalClicked: number
+  totalFailed: number
+  avgDeliveryRate: number
+  avgOpenRate: number
+  avgClickRate: number
+}
+
+export interface AudienceCriteria {
+  memberStatuses?: string[]
+  minCheckInFrequencyDays?: number
+  maxCheckInFrequencyDays?: number
+  noCheckInDays?: number
+  tags?: string[]
+  facilityIds?: string[]
+  contractStatus?: string
+  contractExpiresWithinDays?: number
+  joinedAfter?: string
+  joinedBefore?: string
+  gender?: string
+  minAge?: number
+  maxAge?: number
+}
+
+export interface AudiencePreviewDto {
+  totalCount: number
+  sample: { memberId: string; firstName: string; lastName: string; email: string; status: string }[]
+}
+
+export interface AtRiskMemberDto {
+  memberId: string
+  firstName: string
+  lastName: string
+  email?: string
+  phone?: string
+  memberStatus: string
+  contractStatus: string
+  lastCheckIn?: string
+  daysSinceLastCheckIn: number
+  avgWeeklyVisits: number
+  visitTrend: number
+  riskLevel: RiskLevel
+  riskReason: string
+}

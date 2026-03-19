@@ -48,10 +48,12 @@
 - DataSeeder (step 26 partial) — ApplicationRunner that seeds demo data on first startup when demo-gym tenant doesn't exist: creates tenant in public schema, provisions tenant_demo_gym schema via Liquibase, seeds 55 users (owner/manager/2 trainers/receptionist/50 members), 3 facilities (Berlin Downtown/West + Munich franchise), 4 membership tiers, 50 members with mixed statuses, 50 contracts, 3 access devices, 415 check-ins over 30 days, 5 class categories + 10 classes + 32 schedules, 40 exercises + 13 training plans, 6 lead stages + 20 leads, 6 communication templates + 3 notification rules, 5 employees, 90 invoices
 - Bug fixes: removed hibernate.default_schema=public from application.yml (was causing Hibernate to qualify all tables with public. prefix, breaking multi-tenant schema routing via SET search_path), removed /api/auth/** from TenantInterceptor exclusions (auth endpoints need tenant context for login to find users in tenant schema), fixed TenantProvisioningService subdomain hyphen handling in DataSeeder
 
+- Marketing module — Campaign entity (name, description, type EMAIL/SMS/PUSH, status DRAFT/SCHEDULED/SENDING/SENT/CANCELLED, template link, subject, body HTML/text, audience criteria JSON, scheduled/sent timestamps, recipient/sent/delivered/opened/clicked/failed/converted counts, created by), CampaignRecipient entity (campaign link, member link, recipient address, status per-recipient SENT/DELIVERED/OPENED/CLICKED/FAILED, sent/delivered/opened/clicked timestamps, error message), CampaignEvent entity (campaign link, recipient link, member link, event type, metadata), CampaignStatus/CampaignType/CampaignEventType enums, CampaignRepository (JpaSpecificationExecutor, find by status, find scheduled due), CampaignRecipientRepository (by campaign, count by status grouped), CampaignEventRepository (by campaign + type), AudienceBuilderService (build audience from AudienceCriteria: member status filter, gender, join date range, age range via JPA Specification + check-in inactivity filter + check-in frequency filter + contract status filter + contract expiry filter, preview with sample members), AtRiskDetectionService (detect at-risk active members: no check-in analysis, visit frequency trend 30-day vs 60-day comparison, risk level HIGH/MEDIUM/LOW classification, summary by risk level), CampaignService (create/update draft campaigns with audience criteria JSON serialization, schedule with audience resolution + recipient creation, send now with template interpolation + RabbitMQ notification.events dispatch per recipient + campaign event logging, cancel, get recipients paginated, overall stats aggregation, @Scheduled processScheduledCampaigns every 60s for auto-send), CampaignController (@PreAuthorize STUDIO_OWNER/MANAGER, CRUD + schedule/send/cancel + recipients + stats + audience preview endpoints), AtRiskController (at-risk members list with configurable inactive days threshold + summary by risk level), all DTOs (CampaignDto with computed delivery/open/click rates, CampaignRecipientDto with member name/email denormalized, CampaignStatsDto, AtRiskMemberDto with visit trend/risk analysis, AudienceCriteria, AudiencePreviewDto with sample members), Liquibase migration t-012-marketing with 3 tables (campaigns, campaign_recipients, campaign_events) + 7 indexes, RabbitMQ campaign.message.queue bound to notification.events exchange, audit logging on all mutations
+- Frontend marketing page — tabbed UI (Campaigns / Audience Builder / At-Risk Members), campaigns tab with stats cards (total campaigns, sent, delivered, opened, avg open rate) + status filter dropdown + campaigns table (name, type badge, status badge, recipients, sent count, open rate, send/schedule/cancel actions) + pagination + create campaign modal (name, type, description, subject, body HTML with variable placeholder hint, schedule datetime, audience criteria: member status multi-select, no-check-in days, contract status, contract expiry days, gender + inline audience preview with matching count + sample members) + campaign detail modal (performance stats grid + delivery/open/click rate progress bars + recipients table with status badges + pagination), audience builder tab (split panel: criteria form with member status, inactivity days, check-in frequency range, contract status, contract expiry days, join date range, gender, age range + preview button; results panel with total count highlight + sample members table), at-risk members tab (risk summary cards HIGH/MEDIUM/LOW with color coding + configurable inactive threshold input + members table with name/email, risk level badge, last visit date, days inactive, avg weekly visits, visit trend % with color, risk reason), CampaignDto/CampaignRecipientDto/CampaignStatsDto/AudienceCriteria/AudiencePreviewDto/AtRiskMemberDto TypeScript types + CampaignStatus/CampaignType/CampaignEventType/RiskLevel enums
+
 ## NOT STARTED ⏳
 - Staff & trainer floor app — React Native role-aware view (step 19)
   NOTE: Steps 19 and 25 (mobile apps) require React Native + Expo setup — skip if focusing on web-only modules first
-- Marketing tools — campaigns, audience builder, at-risk detection (step 21)
 - Loyalty & rewards — points, redemption, tiers, badges, streaks (step 22)
 - Open API + webhook system (step 23)
 - Analytics and reporting dashboards (step 24)
@@ -85,10 +87,10 @@
 - BaseEntity UUID strategy (GenerationType.UUID)
 
 ## FILE COUNTS
-- Backend Java files: 308
-- Frontend TypeScript/TSX files: 27
+- Backend Java files: 321
+- Frontend TypeScript/TSX files: 28
 - Config/migration YAML files: 5
-- Total source files: ~340
+- Total source files: ~354
 
 ---
 
@@ -103,5 +105,5 @@ Do not re-build anything marked ✅ in PROGRESS.md.
 Do not change any decisions listed under KEY DECISIONS MADE.
 Do not alter the database schema for completed modules.
 
-Resume from: Next: implement Marketing tools (step 21) — campaigns, audience builder, at-risk detectionboard
+Resume from: Next: implement Loyalty & rewards (step 22) — points, redemption, tiers, badges, streaks
 ```

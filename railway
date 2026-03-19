@@ -37,3 +37,12 @@ All clean. Here's what was added for Railway deployment:
   #    VITE_API_URL=https://<your-backend>.up.railway.app
 
   For RabbitMQ, use CloudAMQP's free tier since Railway doesn't have a native plugin.
+
+  ⏺ Your services are already accessible:
+
+    - Frontend: https://frontend-production-37fc.up.railway.app
+    - Backend: https://backend-production-63ee.up.railway.app
+
+    Make sure the frontend's VITE_API_URL env var is set to https://backend-production-63ee.up.railway.app in Railway, otherwise API calls from the frontend won't reach the backend. If you change that var, you'll need to redeploy the frontend
+    since Vite bakes it in at build time.
+

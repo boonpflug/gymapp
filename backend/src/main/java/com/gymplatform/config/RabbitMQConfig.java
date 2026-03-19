@@ -73,6 +73,39 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Queue notificationEventsQueue() {
+        return QueueBuilder.durable("notification.events.queue").build();
+    }
+
+    @Bean
+    public Binding notificationEventsBinding() {
+        return BindingBuilder.bind(notificationEventsQueue())
+                .to(notificationExchange()).with("#");
+    }
+
+    @Bean
+    public Queue memberEventsNotificationQueue() {
+        return QueueBuilder.durable("member.events.notification.queue").build();
+    }
+
+    @Bean
+    public Binding memberEventsNotificationBinding() {
+        return BindingBuilder.bind(memberEventsNotificationQueue())
+                .to(memberExchange()).with("#");
+    }
+
+    @Bean
+    public Queue paymentEventsNotificationQueue() {
+        return QueueBuilder.durable("payment.events.notification.queue").build();
+    }
+
+    @Bean
+    public Binding paymentEventsNotificationBinding() {
+        return BindingBuilder.bind(paymentEventsNotificationQueue())
+                .to(paymentExchange()).with("#");
+    }
+
+    @Bean
     public MessageConverter jsonMessageConverter() {
         return new Jackson2JsonMessageConverter();
     }

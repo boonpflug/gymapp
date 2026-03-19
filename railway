@@ -1,0 +1,39 @@
+All clean. Here's what was added for Railway deployment:
+
+  Backend:
+  - application-prod.yml — production config that reads Railway env vars (DATABASE_URL, REDIS_URL, PORT, etc.)
+  - railway.toml — tells Railway to use Dockerfile with health check on /actuator/health
+  - Updated Dockerfile with -Xmx512m memory limit
+
+  Frontend:
+  - Dockerfile.prod — multi-stage build (Node build → serve for static files)
+  - railway.toml — uses Dockerfile.prod
+  - src/api/client.ts — reads VITE_API_URL env var for API base URL (falls back to /api for local dev)
+  - src/vite-env.d.ts — TypeScript types for Vite env vars
+
+  To deploy:
+
+  # 1. Install Railway CLI
+  npm i -g @railway/cli
+  railway login
+
+  # 2. Create project
+  railway init
+
+  # 3. Add PostgreSQL + Redis plugins in Railway dashboard
+
+  # 4. Deploy backend (from /backend dir)
+  cd backend && railway up
+
+  # 5. Set backend env vars in Railway dashboard:
+  #    SPRING_PROFILES_ACTIVE=prod
+  #    JWT_SECRET=<openssl rand -base64 32>
+  #    (DATABASE_URL and REDIS_URL auto-linked from plugins)
+
+  # 6. Deploy frontend (from /frontend dir)
+  cd ../frontend && railway up
+
+  # 7. Set frontend build arg in Railway:
+  #    VITE_API_URL=https://<your-backend>.up.railway.app
+
+  For RabbitMQ, use CloudAMQP's free tier since Railway doesn't have a native plugin.

@@ -1,0 +1,60 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:${DATABASE_URL:jdbc:postgresql://localhost:5432/gymplatform}}
+    username: ${SPRING_DATASOURCE_USERNAME:${PGUSER:gymplatform}}
+    password: ${SPRING_DATASOURCE_PASSWORD:${PGPASSWORD:gymplatform123}}
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: false
+    open-in-view: false
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    default-schema: public
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_DEFAULT_USER:gymplatform}
+    password: ${RABBITMQ_DEFAULT_PASS:gymplatform123}
+  data:
+    redis:
+      url: ${REDIS_URL:redis://localhost:6379}
+  batch:
+    jdbc:
+      initialize-schema: always
+    job:
+      enabled: false
+
+jwt:
+  secret: ${JWT_SECRET:c2VjdXJlLWp3dC1zZWNyZXQta2V5LWZvci1neW0tcGxhdGZvcm0tMjAyNA==}
+  access-token-expiry: 900000
+  refresh-token-expiry: 604800000
+
+stripe:
+  api-key: ${STRIPE_API_KEY:sk_test_placeholder}
+  webhook-secret: ${STRIPE_WEBHOOK_SECRET:whsec_placeholder}
+
+gocardless:
+  access-token: ${GOCARDLESS_ACCESS_TOKEN:sandbox_placeholder}
+  environment: sandbox
+  webhook-secret: ${GOCARDLESS_WEBHOOK_SECRET:placeholder}
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  level:
+    com.gymplatform: INFO
+    org.hibernate.SQL: WARN

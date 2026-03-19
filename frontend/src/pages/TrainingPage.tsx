@@ -447,10 +447,10 @@ function PlanStatusBadge({ status }: { status: TrainingPlanStatus }) {
   return <span className={`text-xs px-2 py-0.5 rounded ${c[status]}`}>{status}</span>
 }
 
-function CreatePlanModal({ onClose, onCreated, defaultMemberId }: { onClose: () => void; onCreated: () => void; defaultMemberId?: string }) {
+function CreatePlanModal({ onClose, onCreated, defaultMemberId, defaultTemplate }: { onClose: () => void; onCreated: () => void; defaultMemberId?: string; defaultTemplate?: boolean }) {
   const [form, setForm] = useState({
     name: '', description: '', memberId: defaultMemberId ?? '',
-    template: false, catalog: false, category: '',
+    template: defaultTemplate ?? false, catalog: false, category: '',
     estimatedDurationMinutes: '', difficultyLevel: 'BEGINNER',
   })
   const [planExercises, setPlanExercises] = useState<{ exerciseId: string; exerciseName: string; muscleGroup: string; exerciseType: string; sets: number; reps: number; weight: string; restSeconds: string; trainerComment: string }[]>([])
@@ -857,7 +857,7 @@ function TemplatesTab() {
           ))}
         </div>
       )}
-      {showCreate && <CreatePlanModal onClose={() => setShowCreate(false)} onCreated={() => { qc.invalidateQueries({ queryKey: ['training-templates'] }); setShowCreate(false) }} />}
+      {showCreate && <CreatePlanModal onClose={() => setShowCreate(false)} onCreated={() => { qc.invalidateQueries({ queryKey: ['training-templates'] }); setShowCreate(false) }} defaultTemplate={true} />}
     </div>
   )
 }

@@ -1,0 +1,1163 @@
+{
+  "meta": {
+    "version": "2.0",
+    "source": "kieser.com (DE/EN) · kieser.com.au · shop.kieser-training.com",
+    "last_scraped": "2026-03-19",
+    "pages_scraped": [
+      "https://www.kieser.com/de-en/training/strength-training/training-machines/",
+      "https://www.kieser.com/de-en/training/strength-training/training-machines/back-extender-lumbal-extension/",
+      "https://www.kieser.com/de-en/training/strength-training/training-machines/infimetric-leg-press-i-b6/",
+      "https://www.kieser.com/de-en/training/strength-training/training-machines/back-muscles-pullover-machine-c1/",
+      "https://www.kieser.com/de-en/training/strength-training/training-machines/shoulder-rotation-e4-e5/",
+      "https://www.kieser.com/de-en/training/strength-training/training-machines/grip-strength-h3-h7/",
+      "https://www.kieser.com/de-en/back-training/",
+      "https://www.kieser.com.au/training/exercises/",
+      "https://www.kieser.com.au/training/machines/"
+    ],
+    "image_cdn_base": "https://www.kieser.com/fileadmin/_processed_/",
+    "image_format": "WebP",
+    "erp_note": "All images are served from kieser.com CDN. For production use, download and self-host. All URLs verified 2026-03-19.",
+    "manufacturer": "Kieser Training AG",
+    "designed_in": "Switzerland",
+    "manufactured_in": "Germany"
+  },
+
+  "shared_context_images": {
+    "note": "These images are not machine-specific but useful as context/lifestyle imagery in ERP UI",
+    "gym_floor_overview": "https://www.kieser.com/fileadmin/_processed_/3/e/csm_kieser-trainingsmaschinen_3ffdf5eef0.webp",
+    "training_area_wide": "https://www.kieser.com/fileadmin/_processed_/9/e/csm_kieser-mann-trainingsbereich_b6633005fa.webp",
+    "man_after_training": "https://www.kieser.com/fileadmin/_processed_/f/8/csm_kieser-methode_ab97d64524.webp",
+    "injury_prevention_context": "https://www.kieser.com/fileadmin/_processed_/e/d/csm_kieser-sportverletzungen-vorbeugen_7d8002446d.webp",
+    "fat_loss_context": "https://www.kieser.com/fileadmin/_processed_/9/2/csm_kieser-mann-koerperfett-abbauen_4ef490d50c.webp",
+    "back_pain_context": "https://www.kieser.com/fileadmin/_processed_/1/c/csm_kieser-mann-rueckenschmerzen_9855dd0ae5.webp",
+    "sarcopenia_elderly_woman": "https://www.kieser.com/fileadmin/_processed_/4/1/csm_kieser-frau-sarkopenie_413d84c50a.webp",
+    "neck_training_portrait": "https://www.kieser.com/fileadmin/_processed_/3/d/csm_kieser-nackentraining-portrait_106b42dff2.webp",
+    "membership_card": "https://www.kieser.com/fileadmin/_processed_/4/9/csm_kieser-mitgliedschaft_c62f94bb6b.webp",
+    "instructor_guiding": "https://www.kieser.com/fileadmin/_processed_/1/6/csm_kieser-training-begleitung_bff15e7a7f.webp",
+    "spine_anatomy_illustration": "https://www.kieser.com/fileadmin/_processed_/8/3/csm_kieser-fokus-rueckenschmerzen_af9909ebd3.webp",
+    "woman_strength_training": "https://www.kieser.com/fileadmin/_processed_/c/7/csm_kieser-frau-krafttraining_87d528a819.webp"
+  },
+
+  "machines": [
+    {
+      "id": "LE",
+      "code": "LE",
+      "name": "Lumbal Extension",
+      "full_name": "Back Extender – Lumbal Extension",
+      "series": "SPECIAL",
+      "category": "Back / Spine",
+      "primary_muscles": ["Lumbar erector spinae", "Multifidus", "Deep lumbar extensors"],
+      "secondary_muscles": ["Glutes (isolated out via pelvis fixation)"],
+      "movement_type": "Spinal Extension",
+      "is_computer_assisted": true,
+      "is_flagship": true,
+      "is_exclusive": true,
+      "description": "The centrepiece of Kieser back training. Pelvis and thighs are fully secured so only lumbar extensors work. Effective even for acute/chronic back pain. Studies show up to 80% improvement in chronic spinal complaints.",
+      "images": {
+        "machine_thumbnail_1920x1080": "https://www.kieser.com/fileadmin/_processed_/2/0/csm_LE_Kieser_Trainingsmaschinen_1920x1080_1a544949e1.webp",
+        "machine_detail_1080x1080": "https://www.kieser.com/fileadmin/_processed_/0/d/csm_LE_Kieser_Trainingsmaschinen_1080x1080_415c4fed67.webp",
+        "in_action_man_on_machine": "https://www.kieser.com/fileadmin/_processed_/f/d/csm_kieser-mann-krafttraining-le-maschine_90a306808e.webp",
+        "back_training_context": "https://www.kieser.com/fileadmin/_processed_/d/9/csm_kieser-starker-ruecken_3be7c5f722.webp",
+        "muscle_focus_lower_back": "https://www.kieser.com/fileadmin/_processed_/9/a/csm_kieser-fokus-ruecken_02b9d4ba62.webp",
+        "training_form_closeup": "https://www.kieser.com/fileadmin/_processed_/c/5/csm_kieser-rueckentraining_3028d4c6cd.webp",
+        "back_pain_relief_context": "https://www.kieser.com/fileadmin/_processed_/f/d/csm_kieser-frau-rueckenschmerzen_58a617e3d9.webp"
+      },
+      "videos": {
+        "brand_overview_mp4": "https://www.kieser.com/fileadmin/user_upload/Videos/Training/Krafttraining/Kieser_Trainingsmaschinen/Kieser_Von-der-Idee-zur-Maschine_optimized.mp4",
+        "video_poster": "https://www.kieser.com/typo3temp/assets/_processed_/0/b/csm_Fallback_Video_3e891c3404.webp"
+      },
+      "urls": {
+        "product_page": "https://www.kieser.com/de-en/training/strength-training/training-machines/back-extender-lumbal-extension/",
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-18",
+        "shop": "https://shop.kieser-training.com/ki/en/Machines.html"
+      },
+      "tags": ["flagship", "computer-assisted", "biofeedback", "back-pain", "rehabilitation", "clinical", "spine"]
+    },
+    {
+      "id": "CE",
+      "code": "CE",
+      "name": "Cervical Extension",
+      "full_name": "Neck Extender – Cervical Extension",
+      "series": "SPECIAL",
+      "category": "Neck / Cervical Spine",
+      "primary_muscles": ["Deep cervical extensors", "Semispinalis cervicis", "Multifidus cervicis"],
+      "secondary_muscles": ["Upper trapezius"],
+      "movement_type": "Cervical Spine Extension",
+      "is_computer_assisted": true,
+      "is_flagship": true,
+      "is_exclusive": true,
+      "description": "Computer-assisted CE machine with biofeedback monitor for isolating and measuring deep cervical extensor strength. The only machine in the market specifically designed for this purpose.",
+      "images": {
+        "machine_thumbnail_1920x1080": "https://www.kieser.com/fileadmin/_processed_/d/7/csm_CE_Kieser_Trainingsmaschinen_1920x1080_4b85f12033.webp",
+        "in_action_woman_on_ce": "https://www.kieser.com/fileadmin/_processed_/3/8/csm_kieser-frau-ce-maschine-nacken_d57c9f4697.webp",
+        "neck_training_portrait": "https://www.kieser.com/fileadmin/_processed_/3/d/csm_kieser-nackentraining-portrait_106b42dff2.webp"
+      },
+      "urls": {
+        "product_page": "https://www.kieser.com/de-en/training/strength-training/training-machines/neck-extender-cervical-extension/",
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1",
+        "shop": "https://shop.kieser-training.com/ki/en/Machines.html"
+      },
+      "tags": ["flagship", "computer-assisted", "biofeedback", "neck-pain", "cervical", "rehabilitation", "clinical"]
+    },
+    {
+      "id": "A1",
+      "code": "A1",
+      "name": "Hip Extension",
+      "full_name": "A1 Hip Extension",
+      "series": "A",
+      "category": "Hip",
+      "primary_muscles": ["Gluteus maximus", "Biceps femoris", "Semitendinosus", "Semimembranosus"],
+      "secondary_muscles": ["Adductor magnus"],
+      "movement_type": "Hip Extension",
+      "variants": ["Left (links)", "Right (rechts)"],
+      "description": "Unilateral hip extension. Left and right variants for correcting muscular asymmetries between legs.",
+      "images": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension",
+        "shop_page": "https://shop.kieser-training.com/ki/en/Machines.html"
+      },
+      "urls": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension",
+        "shop": "https://shop.kieser-training.com/ki/en/Machines.html"
+      },
+      "tags": ["hip", "glutes", "unilateral"]
+    },
+    {
+      "id": "A2",
+      "code": "A2",
+      "name": "Torso Flexion",
+      "full_name": "A2 Torso Flexion",
+      "series": "A",
+      "category": "Abdomen / Hip Flexors",
+      "primary_muscles": ["Rectus abdominis", "Iliopsoas"],
+      "secondary_muscles": ["Obliques"],
+      "movement_type": "Trunk Flexion",
+      "variants": ["Left (links)", "Right (rechts)"],
+      "description": "Isolated abdominal and hip flexor machine. Unilateral for rotational imbalance correction.",
+      "images": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/torso-flexion"
+      },
+      "urls": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/torso-flexion",
+        "shop": "https://shop.kieser-training.com/ki/en/Machines.html"
+      },
+      "tags": ["abdomen", "core", "hip-flexors", "unilateral"]
+    },
+    {
+      "id": "A3",
+      "code": "A3",
+      "name": "Hip Abduction",
+      "full_name": "A3 Abduction",
+      "series": "A",
+      "category": "Hip",
+      "primary_muscles": ["Gluteus medius", "Gluteus minimus", "Tensor fasciae latae"],
+      "secondary_muscles": ["Piriformis"],
+      "movement_type": "Hip Abduction",
+      "description": "Hip abductor (outer thigh/glute medius) isolation. Critical for hip stability, gait, and knee health.",
+      "images": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-1"
+      },
+      "urls": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-1",
+        "shop": "https://shop.kieser-training.com/ki/en/Machines.html"
+      },
+      "tags": ["hip", "outer-thigh", "stability", "gait"]
+    },
+    {
+      "id": "A4",
+      "code": "A4",
+      "name": "Hip Adduction",
+      "full_name": "A4 Adduction",
+      "series": "A",
+      "category": "Hip",
+      "primary_muscles": ["Adductor longus", "Adductor brevis", "Adductor magnus", "Gracilis"],
+      "secondary_muscles": ["Pectineus"],
+      "movement_type": "Hip Adduction",
+      "description": "Inner thigh / adductor machine. Pairs with A3 for full hip stability. Groin injury prevention and rehabilitation.",
+      "images": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-1-1"
+      },
+      "urls": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-1-1",
+        "shop": "https://shop.kieser-training.com/ki/en/Machines.html"
+      },
+      "tags": ["hip", "inner-thigh", "groin", "stability"]
+    },
+    {
+      "id": "A5",
+      "code": "A5",
+      "name": "Pelvic Floor",
+      "full_name": "A5 Pelvic Floor Trainer",
+      "series": "A",
+      "category": "Pelvic Floor",
+      "primary_muscles": ["Levator ani", "Coccygeus", "Pelvic floor musculature"],
+      "secondary_muscles": ["Deep abdominal stabilisers"],
+      "movement_type": "Pelvic Floor Contraction",
+      "is_computer_assisted": true,
+      "is_exclusive": true,
+      "description": "Computer-assisted pelvic floor trainer with real-time biofeedback. Unique to Kieser. Used for incontinence prevention, post-natal rehab, and pre/post-prostate surgery.",
+      "images": {
+        "machine_thumbnail_1080x1080": "https://www.kieser.com/fileadmin/_processed_/4/3/csm_A5_Kieser_Trainingsmaschinen_1080x1080_8a34d2f79b.webp"
+      },
+      "urls": {
+        "product_page": "https://www.kieser.com/de-en/training/strength-training/training-machines/pelvic-floor-muscles-a5/",
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-1-1-1",
+        "shop": "https://shop.kieser-training.com/ki/en/Machines.html"
+      },
+      "tags": ["pelvic-floor", "computer-assisted", "biofeedback", "rehabilitation", "incontinence", "exclusive"]
+    },
+    {
+      "id": "B1",
+      "code": "B1",
+      "name": "Leg Extension",
+      "full_name": "B1 Leg Extension",
+      "series": "B",
+      "category": "Legs (Quads)",
+      "primary_muscles": ["Rectus femoris", "Vastus lateralis", "Vastus medialis", "Vastus intermedius"],
+      "secondary_muscles": [],
+      "movement_type": "Knee Extension",
+      "description": "Isolated quadriceps via guided knee extension. Optional arm upgrade kit available. Key for knee stability and ACL prevention.",
+      "images": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-1-1-1-1"
+      },
+      "urls": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-1-1-1-1",
+        "shop": "https://shop.kieser-training.com/ki/en/Machines.html"
+      },
+      "tags": ["quads", "knee", "ACL-prevention"]
+    },
+    {
+      "id": "B3",
+      "code": "B3",
+      "name": "Foot Pronation (Ankle)",
+      "full_name": "B3 Ankle — Foot Pronation",
+      "series": "B",
+      "category": "Ankle",
+      "primary_muscles": ["Peroneus longus", "Peroneus brevis", "Tibialis posterior"],
+      "movement_type": "Foot Pronation / Ankle Eversion",
+      "is_exclusive": true,
+      "description": "Exclusive Kieser ankle machine for eversion. No comparable equipment exists in standard gyms. Critical for ankle stability and lateral sprain prevention.",
+      "images": {
+        "machine_thumbnail_1080x1080": "https://www.kieser.com/fileadmin/_processed_/a/0/csm_B3_Kieser_Trainingsmaschinen_1080x1080_1121df67d4.webp"
+      },
+      "urls": {
+        "product_page": "https://www.kieser.com/de-en/training/strength-training/training-machines/ankle-joint-b3-b4/",
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/torso-flexion-1",
+        "shop": "https://shop.kieser-training.com/ki/en/Machines.html"
+      },
+      "tags": ["ankle", "exclusive", "balance", "sprain-prevention"]
+    },
+    {
+      "id": "B4",
+      "code": "B4",
+      "name": "Foot Supination (Ankle)",
+      "full_name": "B4 Ankle — Foot Supination",
+      "series": "B",
+      "category": "Ankle",
+      "primary_muscles": ["Tibialis anterior", "Tibialis posterior", "Extensor hallucis longus"],
+      "movement_type": "Foot Supination / Ankle Inversion",
+      "is_exclusive": true,
+      "description": "Companion to B3. Trains inversion muscles for complete ankle joint balance. Together B3/B4 provide the only dedicated ankle gym equipment available.",
+      "images": {
+        "machine_thumbnail_1080x1080": "https://www.kieser.com/fileadmin/_processed_/a/0/csm_B3_Kieser_Trainingsmaschinen_1080x1080_1121df67d4.webp"
+      },
+      "urls": {
+        "product_page": "https://www.kieser.com/de-en/training/strength-training/training-machines/ankle-joint-b3-b4/",
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/torso-flexion-2",
+        "shop": "https://shop.kieser-training.com/ki/en/Machines.html"
+      },
+      "tags": ["ankle", "exclusive", "balance", "lower-leg", "inversion"]
+    },
+    {
+      "id": "B5",
+      "code": "B5",
+      "name": "Leg Curl (Prone)",
+      "full_name": "B5 Leg Curl",
+      "series": "B",
+      "category": "Legs (Hamstrings)",
+      "primary_muscles": ["Biceps femoris", "Semitendinosus", "Semimembranosus"],
+      "secondary_muscles": ["Gastrocnemius"],
+      "movement_type": "Knee Flexion (Prone)",
+      "description": "Prone hamstring curl. Trains hamstrings in a stretched position for maximum stimulus. Critical for knee stability.",
+      "images": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2"
+      },
+      "urls": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2",
+        "shop": "https://shop.kieser-training.com/ki/en/Machines.html"
+      },
+      "tags": ["hamstrings", "knee", "prone"]
+    },
+    {
+      "id": "B6",
+      "code": "B6",
+      "name": "Leg Press",
+      "full_name": "B6 Leg Press",
+      "series": "B",
+      "category": "Legs (Compound)",
+      "primary_muscles": ["Quadriceps", "Gluteus maximus", "Hamstrings"],
+      "secondary_muscles": ["Gastrocnemius", "Soleus"],
+      "movement_type": "Leg Press (Compound)",
+      "description": "Standard compound leg press. Bilateral or unilateral. Key tips: knees track in line with hips, keep slight bend at end, can train one leg at a time to correct imbalances.",
+      "images": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1"
+      },
+      "urls": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1",
+        "shop": "https://shop.kieser-training.com/ki/en/Machines/B6-Leg-Press.html",
+        "blog_au": "https://www.kieser.com.au/blog/posts/keep-your-legs-strong-with-the-b6-leg-press-machine"
+      },
+      "tags": ["legs", "compound", "quads", "glutes", "hamstrings", "bilateral", "unilateral"]
+    },
+    {
+      "id": "B7",
+      "code": "B7",
+      "name": "Seated Leg Curl",
+      "full_name": "B7 Seated Leg Curl",
+      "series": "B",
+      "category": "Legs (Hamstrings)",
+      "primary_muscles": ["Biceps femoris", "Semitendinosus", "Semimembranosus"],
+      "movement_type": "Knee Flexion (Seated)",
+      "description": "Seated hamstring curl. Complements B5 — trains the same muscles in a different joint position, targeting the short head of biceps femoris more.",
+      "images": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-1"
+      },
+      "urls": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-1",
+        "shop": "https://shop.kieser-training.com/ki/en/Machines.html"
+      },
+      "tags": ["hamstrings", "knee", "seated"]
+    },
+    {
+      "id": "B8",
+      "code": "B8",
+      "name": "Tibia / Dorsiflexion",
+      "full_name": "B8 Tibia Dorsiflexion",
+      "series": "B",
+      "category": "Lower Leg",
+      "primary_muscles": ["Tibialis anterior"],
+      "secondary_muscles": ["Extensor digitorum longus", "Extensor hallucis longus"],
+      "movement_type": "Ankle Dorsiflexion",
+      "description": "Shin muscle (tibialis anterior) isolation. Prevents shin splints, improves running economy and gait rehabilitation.",
+      "images": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2"
+      },
+      "urls": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2",
+        "shop": "https://shop.kieser-training.com/ki/en/Machines.html"
+      },
+      "tags": ["tibia", "shin", "dorsiflexion", "shin-splints", "running"]
+    },
+    {
+      "id": "iB6",
+      "code": "i-B6",
+      "name": "Infimetric Leg Press",
+      "full_name": "i-B6 Infimetric Leg Press",
+      "series": "B",
+      "category": "Legs (Compound / Infimetric)",
+      "primary_muscles": ["Quadriceps", "Gluteus maximus", "Hamstrings"],
+      "secondary_muscles": ["Hip stabilisers", "Knee stabilisers"],
+      "movement_type": "Infimetric Bilateral Leg Press",
+      "is_exclusive": true,
+      "introduced_year": 2018,
+      "technology": {
+        "principle": "Infimetric — legs work against each other rather than a weight stack",
+        "rotation_mechanism": "Footplate automatically rotates shinbone 5° outward in final 10° of knee extension for knee joint protection",
+        "year_introduced": 2018
+      },
+      "description": "Proprietary 2018 innovation. No weight stack — one leg pushes while the other resists. Features integrated rotation mechanism (5° tibial rotation in final 10° of extension) protecting knee ligaments. Intense full-ROM stimulus with no rest phase.",
+      "images": {
+        "machine_thumbnail_1080x1080": "https://www.kieser.com/fileadmin/_processed_/7/2/csm_iB6_Kieser_Trainingsmaschinen_1080x1080_a9cf28200f.webp",
+        "in_action_woman_on_machine": "https://www.kieser.com/fileadmin/_processed_/b/7/csm_kieser-frau-training-Beinpresse-i-b6_b97e81c3b7.webp",
+        "muscle_focus_quads": "https://www.kieser.com/fileadmin/_processed_/8/8/csm_kieser-fokus-oberschenkel_d6c2261b84.webp",
+        "training_context_woman": "https://www.kieser.com/fileadmin/_processed_/9/3/csm_kieser-frau-oberschenkelmuskulatur_99d9831d68.webp"
+      },
+      "urls": {
+        "product_page": "https://www.kieser.com/de-en/training/strength-training/training-machines/infimetric-leg-press-i-b6/",
+        "shop": "https://shop.kieser-training.com/ki/en/Machines.html"
+      },
+      "tags": ["legs", "infimetric", "innovative", "exclusive", "knee-safe", "no-weights", "proprietary"]
+    },
+    {
+      "id": "C1",
+      "code": "C1",
+      "name": "Pullover",
+      "full_name": "C1 Pullover Machine",
+      "series": "C",
+      "category": "Back (Lats)",
+      "primary_muscles": ["Latissimus dorsi", "Teres major"],
+      "secondary_muscles": ["Posterior deltoid", "Long head of triceps", "Pectoralis minor"],
+      "movement_type": "Shoulder Extension / Pullover",
+      "description": "The 'squat for the upper body' — gold standard in back training for 55+ years. Isolates the latissimus dorsi without biceps/forearm limitations. The original concept from Arthur Jones (1970s), refined continuously by Kieser. Effective for back/shoulder pain and metabolic conditions.",
+      "training_instructions": [
+        "Select appropriate weight, adjust seat/backrest/elbow pads to body size",
+        "Secure belt, press pedals and grab handles",
+        "Carefully lift feet — arms now carry the full load",
+        "Allow load to stretch arms fully behind head",
+        "Press forward, then downward, then back with upper arms",
+        "Pause briefly at full contraction",
+        "Keep head and torso still and relaxed",
+        "Train to exhaustion — perceived exertion, not weight, determines effectiveness"
+      ],
+      "images": {
+        "machine_thumbnail_1080x1080": "https://www.kieser.com/fileadmin/_processed_/1/6/csm_C1_Kieser_Trainingsmaschinen_1080x1080_6837b3333e.webp",
+        "in_action_man_on_c1": "https://www.kieser.com/fileadmin/_processed_/f/1/csm_kieser-mann-training-ueberzug-c1_30c8b53bae.webp",
+        "shoulder_training_context": "https://www.kieser.com/fileadmin/_processed_/c/8/csm_kieser-mann-training-schulter-c1_92d3d4f4dc.webp",
+        "back_woman_lifestyle": "https://www.kieser.com/fileadmin/_processed_/f/6/csm_kieser-frau-ruecken_b2e6f1e23d.webp",
+        "muscle_focus_lat": "https://www.kieser.com/fileadmin/_processed_/8/8/csm_kieser-fokus-rueckenmuskulatur_b3a470742d.webp"
+      },
+      "urls": {
+        "product_page": "https://www.kieser.com/de-en/training/strength-training/training-machines/back-muscles-pullover-machine-c1/",
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1",
+        "shop": "https://shop.kieser-training.com/pi/en/Machines/C1-Pullover.html"
+      },
+      "tags": ["back", "lats", "pullover", "shoulder-pain", "diabetes", "gold-standard"]
+    },
+    {
+      "id": "C2",
+      "code": "C2",
+      "name": "Torso Arm Front",
+      "full_name": "C2 Torso Arm Front",
+      "series": "C",
+      "category": "Back (Vertical Pull)",
+      "primary_muscles": ["Latissimus dorsi", "Biceps brachii", "Brachialis"],
+      "secondary_muscles": ["Rear deltoid", "Rhomboids"],
+      "movement_type": "Vertical Pull (Front)",
+      "description": "Front lat pulldown pattern. Trains upper back width and posture muscles.",
+      "images": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1"
+      },
+      "urls": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1",
+        "shop": "https://shop.kieser-training.com/pi/en/Machines/C2-3-Torso-Arm.html"
+      },
+      "tags": ["back", "lats", "pulldown", "vertical-pull", "posture"]
+    },
+    {
+      "id": "C3",
+      "code": "C3",
+      "name": "Torso Arm",
+      "full_name": "C3 Torso Arm",
+      "series": "C",
+      "category": "Back (Vertical Pull)",
+      "primary_muscles": ["Latissimus dorsi", "Biceps brachii"],
+      "secondary_muscles": ["Teres major", "Rear deltoid"],
+      "movement_type": "Vertical Pull",
+      "description": "Lat pulldown variant with alternate grip angle for comprehensive back development.",
+      "images": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1"
+      },
+      "urls": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1",
+        "shop": "https://shop.kieser-training.com/pi/en/Machines/C2-3-Torso-Arm.html"
+      },
+      "tags": ["back", "lats", "pulldown"]
+    },
+    {
+      "id": "C5",
+      "code": "C5",
+      "name": "Rowing Torso",
+      "full_name": "C5 Rowing Torso",
+      "series": "C",
+      "category": "Back (Horizontal Pull)",
+      "primary_muscles": ["Rhomboids", "Middle trapezius", "Latissimus dorsi"],
+      "secondary_muscles": ["Rear deltoid", "Biceps brachii"],
+      "movement_type": "Horizontal Row (Torso Involved)",
+      "description": "Horizontal row with torso involvement. Counteracts forward-head and rounded-shoulder posture from desk work.",
+      "images": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1"
+      },
+      "urls": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1",
+        "shop": "https://shop.kieser-training.com/pi/en/Machines/C5-Rowing-Torso.html"
+      },
+      "tags": ["back", "rowing", "posture", "rhomboids"]
+    },
+    {
+      "id": "C7",
+      "code": "C7",
+      "name": "Rowing",
+      "full_name": "C7 Rowing",
+      "series": "C",
+      "category": "Back (Horizontal Pull)",
+      "primary_muscles": ["Latissimus dorsi", "Rhomboids", "Rear deltoid"],
+      "secondary_muscles": ["Biceps brachii", "Brachialis"],
+      "movement_type": "Seated Row",
+      "description": "Seated row for back thickness. More arm-dominant than C5. Key for posture and reducing upper back/neck pain from prolonged sitting.",
+      "images": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1"
+      },
+      "urls": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1",
+        "shop": "https://shop.kieser-training.com/pi/en/Machines/C7-Rowing.html"
+      },
+      "tags": ["back", "rowing", "seated-row", "posture"]
+    },
+    {
+      "id": "D5",
+      "code": "D5",
+      "name": "Arm Cross",
+      "full_name": "D5 Arm Cross",
+      "series": "D",
+      "category": "Chest",
+      "primary_muscles": ["Pectoralis major (sternal head)", "Pectoralis minor"],
+      "secondary_muscles": ["Anterior deltoid", "Coracobrachialis"],
+      "movement_type": "Horizontal Adduction / Pec Deck Fly",
+      "description": "Pec deck fly for chest isolation. Horizontal adduction without triceps involvement. Good for chest isolation and shoulder joint health.",
+      "images": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1"
+      },
+      "urls": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1",
+        "shop": "https://shop.kieser-training.com/pi/en/Machines/D5-Arm-Cross.html"
+      },
+      "tags": ["chest", "fly", "pec-deck", "isolation"]
+    },
+    {
+      "id": "D6",
+      "code": "D6",
+      "name": "Chest Press",
+      "full_name": "D6 Chest Press",
+      "series": "D",
+      "category": "Chest / Triceps",
+      "primary_muscles": ["Pectoralis major", "Triceps brachii", "Anterior deltoid"],
+      "movement_type": "Horizontal Push",
+      "description": "Guided horizontal chest press. No balance requirements — full focus on muscular effort from session one.",
+      "images": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1"
+      },
+      "urls": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1",
+        "shop": "https://shop.kieser-training.com/pi/en/Machines/D6-Chest-Press.html"
+      },
+      "tags": ["chest", "press", "triceps", "push"]
+    },
+    {
+      "id": "D7",
+      "code": "D7",
+      "name": "Seated Dip",
+      "full_name": "D7 Seated Dip",
+      "series": "D",
+      "category": "Chest / Triceps",
+      "primary_muscles": ["Triceps brachii", "Pectoralis major (lower)", "Anterior deltoid"],
+      "movement_type": "Dip (Machine-Assisted)",
+      "description": "Assisted dip machine in a safe seated position. Eliminates shoulder joint risk of bodyweight dips.",
+      "images": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1"
+      },
+      "urls": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1",
+        "shop": "https://shop.kieser-training.com/pi/en/Machines/D7-Dip.html"
+      },
+      "tags": ["chest", "triceps", "dip", "machine-assisted"]
+    },
+    {
+      "id": "E1",
+      "code": "E1",
+      "name": "Overhead Press",
+      "full_name": "E1 Overhead Press",
+      "series": "E",
+      "category": "Shoulders",
+      "primary_muscles": ["Deltoids (all heads)", "Triceps brachii"],
+      "secondary_muscles": ["Trapezius", "Serratus anterior"],
+      "movement_type": "Vertical Push",
+      "description": "Guided shoulder press. All deltoid heads and triceps trained in vertical push without spine loading.",
+      "images": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1"
+      },
+      "urls": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1",
+        "shop": "https://shop.kieser-training.com/ki/en/Machines.html"
+      },
+      "tags": ["shoulders", "overhead-press", "deltoids"]
+    },
+    {
+      "id": "E2",
+      "code": "E2",
+      "name": "Lateral Raise",
+      "full_name": "E2 Lateral Raise",
+      "series": "E",
+      "category": "Shoulders",
+      "primary_muscles": ["Deltoid (medial head)"],
+      "secondary_muscles": ["Supraspinatus", "Upper trapezius"],
+      "movement_type": "Shoulder Abduction",
+      "description": "Medial deltoid isolation for shoulder width. Consistent cam resistance throughout arc — unlike free-weight raises which have dead spots.",
+      "images": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1"
+      },
+      "urls": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1",
+        "shop": "https://shop.kieser-training.com/pi/en/Machines/E2-Lateral-Raise.html"
+      },
+      "tags": ["shoulders", "lateral-raise", "deltoids", "shoulder-width"]
+    },
+    {
+      "id": "E3",
+      "code": "E3",
+      "name": "Overhead Press (variant)",
+      "full_name": "E3 Overhead Press",
+      "series": "E",
+      "category": "Shoulders",
+      "primary_muscles": ["Deltoids", "Triceps brachii"],
+      "movement_type": "Vertical Push",
+      "description": "Alternative shoulder press grip/angle for complete deltoid development.",
+      "images": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1"
+      },
+      "urls": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1",
+        "shop": "https://shop.kieser-training.com/ki/en/Machines.html"
+      },
+      "tags": ["shoulders", "overhead-press", "deltoids"]
+    },
+    {
+      "id": "E4",
+      "code": "E4",
+      "name": "Internal Shoulder Rotation",
+      "full_name": "E4 Shoulder Rotation — Internal",
+      "series": "E",
+      "category": "Rotator Cuff",
+      "primary_muscles": ["Subscapularis", "Pectoralis major", "Teres major"],
+      "secondary_muscles": ["Latissimus dorsi"],
+      "movement_type": "Internal Shoulder Rotation",
+      "description": "Strengthens the subscapularis and internal rotators. Essential for shoulder injury prevention, especially for overhead athletes and desk workers. Pairs with E5.",
+      "images": {
+        "machine_thumbnail_1920x1080": "https://www.kieser.com/fileadmin/_processed_/f/e/csm_E4-5_Kieser_Trainingsmaschinen_1920x1080_8faf3f1599.webp",
+        "machine_detail_1080x1080": "https://www.kieser.com/fileadmin/_processed_/e/a/csm_E4-5_Kieser_Trainingsmaschinen_1080x1080_b4698667a8.webp",
+        "in_action_man_on_e45": "https://www.kieser.com/fileadmin/_processed_/5/5/csm_kieser-mann-maschine-e4-5_d7cfd97f05.webp",
+        "shoulder_pain_context": "https://www.kieser.com/fileadmin/_processed_/7/2/csm_kieser-schulterschmerzen_adfa32c968.webp",
+        "muscle_focus_shoulder": "https://www.kieser.com/fileadmin/_processed_/d/2/csm_kieser-fokus-schulter_3493819866.webp",
+        "rotator_cuff_training": "https://www.kieser.com/fileadmin/_processed_/3/d/csm_kieser-training-rotatorenmanschette_0a06ec3265.webp",
+        "shoulder_machine_training": "https://www.kieser.com/fileadmin/_processed_/f/4/csm_kieser-mann-training-schultermaschine_5bcc55dc34.webp"
+      },
+      "urls": {
+        "product_page": "https://www.kieser.com/de-en/training/strength-training/training-machines/shoulder-rotation-e4-e5/",
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1",
+        "shop": "https://shop.kieser-training.com/pi/en/Machines/E4-Shoulder-Rotation.html"
+      },
+      "tags": ["rotator-cuff", "shoulder", "internal-rotation", "injury-prevention", "rehabilitation"]
+    },
+    {
+      "id": "E5",
+      "code": "E5",
+      "name": "External Shoulder Rotation",
+      "full_name": "E5 Shoulder Rotation — External",
+      "series": "E",
+      "category": "Rotator Cuff",
+      "primary_muscles": ["Infraspinatus", "Teres minor"],
+      "secondary_muscles": ["Posterior deltoid"],
+      "movement_type": "External Shoulder Rotation",
+      "description": "Infraspinatus and teres minor training. External rotation strength is the #1 factor preventing shoulder impingement and rotator cuff tears.",
+      "images": {
+        "machine_thumbnail_1920x1080": "https://www.kieser.com/fileadmin/_processed_/f/e/csm_E4-5_Kieser_Trainingsmaschinen_1920x1080_8faf3f1599.webp",
+        "machine_detail_1080x1080": "https://www.kieser.com/fileadmin/_processed_/e/a/csm_E4-5_Kieser_Trainingsmaschinen_1080x1080_b4698667a8.webp",
+        "in_action_man_on_e45": "https://www.kieser.com/fileadmin/_processed_/5/5/csm_kieser-mann-maschine-e4-5_d7cfd97f05.webp",
+        "shoulder_pain_context": "https://www.kieser.com/fileadmin/_processed_/7/2/csm_kieser-schulterschmerzen_adfa32c968.webp",
+        "muscle_focus_shoulder": "https://www.kieser.com/fileadmin/_processed_/d/2/csm_kieser-fokus-schulter_3493819866.webp",
+        "rotator_cuff_training": "https://www.kieser.com/fileadmin/_processed_/3/d/csm_kieser-training-rotatorenmanschette_0a06ec3265.webp"
+      },
+      "urls": {
+        "product_page": "https://www.kieser.com/de-en/training/strength-training/training-machines/shoulder-rotation-e4-e5/",
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1",
+        "shop": "https://shop.kieser-training.com/ki/en/Machines.html"
+      },
+      "tags": ["rotator-cuff", "shoulder", "external-rotation", "impingement", "injury-prevention"]
+    },
+    {
+      "id": "F1",
+      "code": "F1.1",
+      "name": "Rotary Torso",
+      "full_name": "F1.1 Rotary Torso",
+      "series": "F",
+      "category": "Core / Obliques",
+      "primary_muscles": ["External obliques", "Internal obliques", "Transverse abdominis"],
+      "movement_type": "Trunk Rotation",
+      "description": "Seated torso rotation for obliques and rotational core strength. Important for sport and spinal stability.",
+      "images": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1"
+      },
+      "urls": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1",
+        "shop": "https://shop.kieser-training.com/ki/en/Machines.html"
+      },
+      "tags": ["core", "obliques", "rotation"]
+    },
+    {
+      "id": "F2",
+      "code": "F2.1",
+      "name": "Abdominal",
+      "full_name": "F2.1 Abdominal Crunch",
+      "series": "F",
+      "category": "Core (Abs)",
+      "primary_muscles": ["Rectus abdominis"],
+      "secondary_muscles": ["Obliques"],
+      "movement_type": "Trunk Flexion / Crunch",
+      "description": "Guided abdominal crunch with consistent arc resistance. Safer than floor crunches.",
+      "images": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1"
+      },
+      "urls": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1",
+        "shop": "https://shop.kieser-training.com/ki/en/Machines.html"
+      },
+      "tags": ["core", "abs", "crunch"]
+    },
+    {
+      "id": "F3",
+      "code": "F3.1",
+      "name": "Lower Back",
+      "full_name": "F3.1 Lower Back Extension",
+      "series": "F",
+      "category": "Lower Back",
+      "primary_muscles": ["Erector spinae", "Multifidus"],
+      "secondary_muscles": ["Gluteus maximus"],
+      "movement_type": "Trunk Extension",
+      "description": "General-purpose lower back extension. LE is the clinical specialist; F3 is the standard back extension for fitness-level training.",
+      "images": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-2"
+      },
+      "urls": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-2",
+        "shop": "https://shop.kieser-training.com/ki/en/Machines.html"
+      },
+      "tags": ["lower-back", "erector-spinae"]
+    },
+    {
+      "id": "G1",
+      "code": "G1",
+      "name": "Neck and Shoulder",
+      "full_name": "G1 Neck and Shoulder",
+      "series": "G",
+      "category": "Neck / Upper Traps",
+      "primary_muscles": ["Trapezius (upper)", "Sternocleidomastoid", "Cervical extensors"],
+      "movement_type": "Neck / Shoulder Shrug",
+      "description": "Combined neck and upper trap machine. Cervical and shoulder girdle stability.",
+      "images": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1"
+      },
+      "urls": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1",
+        "shop": "https://shop.kieser-training.com/ki/en/Machines.html"
+      },
+      "tags": ["neck", "traps", "shoulder-girdle"]
+    },
+    {
+      "id": "G3",
+      "code": "G3",
+      "name": "4-Way Neck (Lateral L)",
+      "full_name": "G3 4-Way Neck — Lateral Flexion",
+      "series": "G",
+      "category": "Neck",
+      "primary_muscles": ["Sternocleidomastoid", "Scalenes"],
+      "movement_type": "Lateral Cervical Flexion",
+      "description": "Lateral neck flexion. Part of G-series 4-way neck training for complete cervical strength.",
+      "images": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1"
+      },
+      "urls": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1",
+        "shop": "https://shop.kieser-training.com/pi/en/Machines/G3-4-Way-Neck.html"
+      },
+      "tags": ["neck", "lateral-flexion", "cervical", "4-way-neck"]
+    },
+    {
+      "id": "G4",
+      "code": "G4",
+      "name": "4-Way Neck (Lateral R)",
+      "full_name": "G4 4-Way Neck — Lateral Flexion (Right)",
+      "series": "G",
+      "category": "Neck",
+      "primary_muscles": ["Sternocleidomastoid", "Scalenes"],
+      "movement_type": "Lateral Cervical Flexion",
+      "description": "Right-side lateral neck flexion. Mirror complement to G3.",
+      "images": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1"
+      },
+      "urls": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1",
+        "shop": "https://shop.kieser-training.com/ki/en/Machines.html"
+      },
+      "tags": ["neck", "lateral-flexion", "cervical"]
+    },
+    {
+      "id": "G5",
+      "code": "G5",
+      "name": "4-Way Neck (Rear)",
+      "full_name": "G5 4-Way Neck — Rear Extension",
+      "series": "G",
+      "category": "Neck",
+      "primary_muscles": ["Semispinalis capitis", "Splenius capitis", "Cervical extensors"],
+      "movement_type": "Cervical Extension",
+      "description": "Rear cervical extension for general neck extensor strength (non-computer-assisted complement to CE).",
+      "images": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-2"
+      },
+      "urls": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-2",
+        "shop": "https://shop.kieser-training.com/ki/en/Machines.html"
+      },
+      "tags": ["neck", "extension", "cervical"]
+    },
+    {
+      "id": "H1",
+      "code": "H1",
+      "name": "Biceps",
+      "full_name": "H1 Biceps Curl",
+      "series": "H",
+      "category": "Arms (Biceps)",
+      "primary_muscles": ["Biceps brachii", "Brachialis"],
+      "secondary_muscles": ["Brachioradialis"],
+      "movement_type": "Elbow Flexion",
+      "description": "Cam-driven biceps curl with consistent resistance through full ROM.",
+      "images": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-3"
+      },
+      "urls": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-3",
+        "shop": "https://shop.kieser-training.com/ki/en/Machines.html"
+      },
+      "tags": ["arms", "biceps"]
+    },
+    {
+      "id": "H2",
+      "code": "H2",
+      "name": "Triceps",
+      "full_name": "H2 Triceps Extension",
+      "series": "H",
+      "category": "Arms (Triceps)",
+      "primary_muscles": ["Triceps brachii (all 3 heads)"],
+      "movement_type": "Elbow Extension",
+      "description": "Isolated triceps extension. All three heads loaded across full ROM.",
+      "images": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-4"
+      },
+      "urls": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-4",
+        "shop": "https://shop.kieser-training.com/ki/en/Machines.html"
+      },
+      "tags": ["arms", "triceps"]
+    },
+    {
+      "id": "H3",
+      "code": "H3",
+      "name": "Wrist Pronation",
+      "full_name": "H3 Wrist Pronation / Super Forearm",
+      "series": "H",
+      "category": "Forearm / Grip",
+      "primary_muscles": ["Pronator teres", "Pronator quadratus"],
+      "secondary_muscles": ["Brachioradialis"],
+      "movement_type": "Forearm Pronation",
+      "is_exclusive": true,
+      "description": "Trains forearm pronation — completely absent from all standard gym equipment. Critical for tennis elbow prevention, climbing, and manual labour rehab.",
+      "images": {
+        "machine_thumbnail_1080x1080": "https://www.kieser.com/fileadmin/_processed_/b/7/csm_H3-7_Kieser_Trainingsmaschinen_1080x1080_a3b7398a93.webp",
+        "in_action_woman_hand": "https://www.kieser.com/fileadmin/_processed_/a/8/csm_kieser-frau-hand_d82d216bd6.webp",
+        "muscle_focus_forearm": "https://www.kieser.com/fileadmin/_processed_/0/4/csm_kieser-fokus-hand_757394f365.webp",
+        "h3_h7_training_action": "https://www.kieser.com/fileadmin/_processed_/0/f/csm_kieser-training-handmuskulatur-h3-7_a55479c701.webp"
+      },
+      "urls": {
+        "product_page": "https://www.kieser.com/de-en/training/strength-training/training-machines/grip-strength-h3-h7/",
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-5",
+        "shop": "https://shop.kieser-training.com/pi/en/Machines/H3-Super-Forearm.html"
+      },
+      "tags": ["forearm", "grip", "pronation", "tennis-elbow", "exclusive", "rehabilitation"]
+    },
+    {
+      "id": "H4",
+      "code": "H4",
+      "name": "Wrist Supination",
+      "full_name": "H4 Wrist Supination",
+      "series": "H",
+      "category": "Forearm / Grip",
+      "primary_muscles": ["Supinator", "Biceps brachii"],
+      "movement_type": "Forearm Supination",
+      "is_exclusive": true,
+      "description": "Forearm supination training — absent from all standard gyms. Complements H3.",
+      "images": {
+        "machine_thumbnail_1080x1080": "https://www.kieser.com/fileadmin/_processed_/b/7/csm_H3-7_Kieser_Trainingsmaschinen_1080x1080_a3b7398a93.webp",
+        "in_action_woman_hand": "https://www.kieser.com/fileadmin/_processed_/a/8/csm_kieser-frau-hand_d82d216bd6.webp",
+        "muscle_focus_forearm": "https://www.kieser.com/fileadmin/_processed_/0/4/csm_kieser-fokus-hand_757394f365.webp",
+        "h3_h7_training_action": "https://www.kieser.com/fileadmin/_processed_/0/f/csm_kieser-training-handmuskulatur-h3-7_a55479c701.webp"
+      },
+      "urls": {
+        "product_page": "https://www.kieser.com/de-en/training/strength-training/training-machines/grip-strength-h3-h7/",
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-6",
+        "shop": "https://shop.kieser-training.com/ki/en/Machines.html"
+      },
+      "tags": ["forearm", "grip", "supination", "exclusive"]
+    },
+    {
+      "id": "H5",
+      "code": "H5",
+      "name": "Wrist Curl",
+      "full_name": "H5 Wrist Curl (Flexion)",
+      "series": "H",
+      "category": "Forearm / Grip",
+      "primary_muscles": ["Flexor carpi radialis", "Flexor carpi ulnaris", "Palmaris longus"],
+      "movement_type": "Wrist Flexion",
+      "description": "Wrist flexion for grip strength and wrist tendinopathy prevention.",
+      "images": {
+        "machine_thumbnail_1080x1080": "https://www.kieser.com/fileadmin/_processed_/b/7/csm_H3-7_Kieser_Trainingsmaschinen_1080x1080_a3b7398a93.webp",
+        "in_action_woman_hand": "https://www.kieser.com/fileadmin/_processed_/a/8/csm_kieser-frau-hand_d82d216bd6.webp",
+        "h3_h7_training_action": "https://www.kieser.com/fileadmin/_processed_/0/f/csm_kieser-training-handmuskulatur-h3-7_a55479c701.webp"
+      },
+      "urls": {
+        "product_page": "https://www.kieser.com/de-en/training/strength-training/training-machines/grip-strength-h3-h7/",
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-7",
+        "shop": "https://shop.kieser-training.com/ki/en/Machines.html"
+      },
+      "tags": ["forearm", "wrist", "flexion", "grip"]
+    },
+    {
+      "id": "H6",
+      "code": "H6",
+      "name": "Reverse Wrist Curl",
+      "full_name": "H6 Reverse Wrist Curl (Extension)",
+      "series": "H",
+      "category": "Forearm / Grip",
+      "primary_muscles": ["Extensor carpi radialis longus", "Extensor carpi radialis brevis", "Extensor carpi ulnaris"],
+      "movement_type": "Wrist Extension",
+      "description": "Primary treatment exercise for lateral epicondylitis (tennis elbow). Complements H5.",
+      "images": {
+        "machine_thumbnail_1080x1080": "https://www.kieser.com/fileadmin/_processed_/b/7/csm_H3-7_Kieser_Trainingsmaschinen_1080x1080_a3b7398a93.webp",
+        "in_action_woman_hand": "https://www.kieser.com/fileadmin/_processed_/a/8/csm_kieser-frau-hand_d82d216bd6.webp",
+        "h3_h7_training_action": "https://www.kieser.com/fileadmin/_processed_/0/f/csm_kieser-training-handmuskulatur-h3-7_a55479c701.webp"
+      },
+      "urls": {
+        "product_page": "https://www.kieser.com/de-en/training/strength-training/training-machines/grip-strength-h3-h7/",
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-8",
+        "shop": "https://shop.kieser-training.com/ki/en/Machines.html"
+      },
+      "tags": ["forearm", "wrist", "extension", "tennis-elbow", "rehabilitation"]
+    },
+    {
+      "id": "H7",
+      "code": "H7",
+      "name": "Hand Grip",
+      "full_name": "H7 Hand Grip",
+      "series": "H",
+      "category": "Forearm / Grip",
+      "primary_muscles": ["Flexor digitorum superficialis", "Flexor digitorum profundus", "Lumbricals"],
+      "movement_type": "Finger / Hand Grip",
+      "description": "Dedicated grip strength machine. Grip strength is a top biomarker for all-cause mortality. Critical for elderly, post-stroke, and manual work rehabilitation.",
+      "images": {
+        "machine_thumbnail_1080x1080": "https://www.kieser.com/fileadmin/_processed_/b/7/csm_H3-7_Kieser_Trainingsmaschinen_1080x1080_a3b7398a93.webp",
+        "in_action_woman_hand": "https://www.kieser.com/fileadmin/_processed_/a/8/csm_kieser-frau-hand_d82d216bd6.webp",
+        "muscle_focus_forearm": "https://www.kieser.com/fileadmin/_processed_/0/4/csm_kieser-fokus-hand_757394f365.webp",
+        "h3_h7_training_action": "https://www.kieser.com/fileadmin/_processed_/0/f/csm_kieser-training-handmuskulatur-h3-7_a55479c701.webp"
+      },
+      "urls": {
+        "product_page": "https://www.kieser.com/de-en/training/strength-training/training-machines/grip-strength-h3-h7/",
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-9",
+        "shop": "https://shop.kieser-training.com/ki/en/Machines.html"
+      },
+      "tags": ["grip", "hand", "forearm", "mortality-predictor", "elderly", "rehabilitation"]
+    },
+    {
+      "id": "J1",
+      "code": "J1",
+      "name": "Calf Raise",
+      "full_name": "J1 Calf Raise",
+      "series": "J",
+      "category": "Lower Leg",
+      "primary_muscles": ["Gastrocnemius", "Soleus"],
+      "movement_type": "Plantarflexion",
+      "description": "Standing calf raise. Essential for running, jumping, and ankle rehabilitation.",
+      "images": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-10"
+      },
+      "urls": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-10",
+        "shop": "https://shop.kieser-training.com/ki/en/Machines.html"
+      },
+      "tags": ["calf", "lower-leg", "running"]
+    },
+    {
+      "id": "J2",
+      "code": "J2",
+      "name": "Front Chin-Up",
+      "full_name": "J2 Front Chin-Up",
+      "series": "J",
+      "category": "Back / Biceps",
+      "primary_muscles": ["Latissimus dorsi", "Biceps brachii"],
+      "movement_type": "Vertical Pull (Bodyweight)",
+      "description": "Front-grip bodyweight chin-up for lat and bicep development.",
+      "images": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-11"
+      },
+      "urls": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-11"
+      },
+      "tags": ["back", "lats", "chin-up", "bodyweight"]
+    },
+    {
+      "id": "J3",
+      "code": "J3",
+      "name": "Parallel Chin-Up",
+      "full_name": "J3 Parallel Chin-Up",
+      "series": "J",
+      "category": "Back / Biceps",
+      "primary_muscles": ["Latissimus dorsi", "Brachialis"],
+      "movement_type": "Vertical Pull (Neutral Grip)",
+      "description": "Neutral-grip chin-up. Elbow-safe option.",
+      "images": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-12"
+      },
+      "urls": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-12"
+      },
+      "tags": ["back", "lats", "chin-up", "neutral-grip"]
+    },
+    {
+      "id": "J4",
+      "code": "J4",
+      "name": "Bodyweight Dips",
+      "full_name": "J4 Dips",
+      "series": "J",
+      "category": "Chest / Triceps",
+      "primary_muscles": ["Triceps brachii", "Pectoralis major"],
+      "movement_type": "Dip (Bodyweight)",
+      "description": "Bodyweight dip station for chest and triceps.",
+      "images": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-13"
+      },
+      "urls": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-13"
+      },
+      "tags": ["chest", "triceps", "dips", "bodyweight"]
+    },
+    {
+      "id": "J5",
+      "code": "J5",
+      "name": "Triceps Extension",
+      "full_name": "J5 Triceps Extension (Overhead)",
+      "series": "J",
+      "category": "Arms (Triceps)",
+      "primary_muscles": ["Triceps brachii (long head)"],
+      "movement_type": "Elbow Extension (Overhead)",
+      "description": "Overhead triceps extension for long head isolation. Complements H2.",
+      "images": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-14"
+      },
+      "urls": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-14"
+      },
+      "tags": ["arms", "triceps", "overhead", "long-head"]
+    },
+    {
+      "id": "J9",
+      "code": "J9",
+      "name": "Side Bend",
+      "full_name": "J9 Side Bend",
+      "series": "J",
+      "category": "Core / Lateral",
+      "primary_muscles": ["Quadratus lumborum", "External obliques", "Internal obliques"],
+      "movement_type": "Lateral Trunk Flexion",
+      "description": "Lateral flexion machine for quadratus lumborum and obliques. Lateral spinal stability.",
+      "images": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-15"
+      },
+      "urls": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-15"
+      },
+      "tags": ["core", "lateral", "ql", "obliques"]
+    },
+    {
+      "id": "K2",
+      "code": "K2",
+      "name": "Front Chin (Assisted)",
+      "full_name": "K2 Front Chin-Up — Assisted",
+      "series": "K",
+      "category": "Back / Biceps (Assisted)",
+      "primary_muscles": ["Latissimus dorsi", "Biceps brachii"],
+      "movement_type": "Assisted Vertical Pull",
+      "description": "Counter-weighted assisted front chin-up. Progressive pathway from assisted to bodyweight. Beginner, elderly, and rehab populations.",
+      "images": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-16"
+      },
+      "urls": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-16"
+      },
+      "tags": ["back", "lats", "assisted", "beginner", "elderly"]
+    },
+    {
+      "id": "K3",
+      "code": "K3",
+      "name": "Parallel Chin (Assisted)",
+      "full_name": "K3 Parallel Chin-Up — Assisted",
+      "series": "K",
+      "category": "Back / Biceps (Assisted)",
+      "primary_muscles": ["Latissimus dorsi", "Brachialis"],
+      "movement_type": "Assisted Neutral-Grip Pull",
+      "description": "Assisted neutral-grip chin-up. Post-elbow surgery rehab.",
+      "images": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-17"
+      },
+      "urls": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-17"
+      },
+      "tags": ["back", "lats", "assisted", "rehabilitation"]
+    },
+    {
+      "id": "K4",
+      "code": "K4",
+      "name": "Dips (Assisted)",
+      "full_name": "K4 Dips — Assisted",
+      "series": "K",
+      "category": "Chest / Triceps (Assisted)",
+      "primary_muscles": ["Triceps brachii", "Pectoralis major"],
+      "movement_type": "Assisted Dip",
+      "description": "Counter-weighted assisted dip machine. Enables progression to bodyweight dips.",
+      "images": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-18-1"
+      },
+      "urls": {
+        "exercise_page_au": "https://www.kieser.com.au/training/exercises/hip-extension-2-1-2-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-18-1"
+      },
+      "tags": ["chest", "triceps", "dips", "assisted", "beginner"]
+    }
+  ],
+
+  "image_inventory": {
+    "note": "Master list of all confirmed scraped image URLs — 37 unique images across all machine pages",
+    "total_images_scraped": 37,
+    "images": [
+      { "key": "LE_machine_1920x1080", "url": "https://www.kieser.com/fileadmin/_processed_/2/0/csm_LE_Kieser_Trainingsmaschinen_1920x1080_1a544949e1.webp", "type": "machine_product" },
+      { "key": "LE_machine_1080x1080", "url": "https://www.kieser.com/fileadmin/_processed_/0/d/csm_LE_Kieser_Trainingsmaschinen_1080x1080_415c4fed67.webp", "type": "machine_product" },
+      { "key": "LE_man_in_action", "url": "https://www.kieser.com/fileadmin/_processed_/f/d/csm_kieser-mann-krafttraining-le-maschine_90a306808e.webp", "type": "in_action" },
+      { "key": "CE_machine_1920x1080", "url": "https://www.kieser.com/fileadmin/_processed_/d/7/csm_CE_Kieser_Trainingsmaschinen_1920x1080_4b85f12033.webp", "type": "machine_product" },
+      { "key": "CE_woman_in_action", "url": "https://www.kieser.com/fileadmin/_processed_/3/8/csm_kieser-frau-ce-maschine-nacken_d57c9f4697.webp", "type": "in_action" },
+      { "key": "A5_machine_1080x1080", "url": "https://www.kieser.com/fileadmin/_processed_/4/3/csm_A5_Kieser_Trainingsmaschinen_1080x1080_8a34d2f79b.webp", "type": "machine_product" },
+      { "key": "B3_machine_1080x1080", "url": "https://www.kieser.com/fileadmin/_processed_/a/0/csm_B3_Kieser_Trainingsmaschinen_1080x1080_1121df67d4.webp", "type": "machine_product" },
+      { "key": "iB6_machine_1080x1080", "url": "https://www.kieser.com/fileadmin/_processed_/7/2/csm_iB6_Kieser_Trainingsmaschinen_1080x1080_a9cf28200f.webp", "type": "machine_product" },
+      { "key": "iB6_woman_in_action", "url": "https://www.kieser.com/fileadmin/_processed_/b/7/csm_kieser-frau-training-Beinpresse-i-b6_b97e81c3b7.webp", "type": "in_action" },
+      { "key": "iB6_quad_focus", "url": "https://www.kieser.com/fileadmin/_processed_/8/8/csm_kieser-fokus-oberschenkel_d6c2261b84.webp", "type": "muscle_focus" },
+      { "key": "iB6_training_woman", "url": "https://www.kieser.com/fileadmin/_processed_/9/3/csm_kieser-frau-oberschenkelmuskulatur_99d9831d68.webp", "type": "lifestyle" },
+      { "key": "C1_machine_1080x1080", "url": "https://www.kieser.com/fileadmin/_processed_/1/6/csm_C1_Kieser_Trainingsmaschinen_1080x1080_6837b3333e.webp", "type": "machine_product" },
+      { "key": "C1_man_training", "url": "https://www.kieser.com/fileadmin/_processed_/f/1/csm_kieser-mann-training-ueberzug-c1_30c8b53bae.webp", "type": "in_action" },
+      { "key": "C1_shoulder_training", "url": "https://www.kieser.com/fileadmin/_processed_/c/8/csm_kieser-mann-training-schulter-c1_92d3d4f4dc.webp", "type": "in_action" },
+      { "key": "C1_back_woman_lifestyle", "url": "https://www.kieser.com/fileadmin/_processed_/f/6/csm_kieser-frau-ruecken_b2e6f1e23d.webp", "type": "lifestyle" },
+      { "key": "C1_lat_muscle_focus", "url": "https://www.kieser.com/fileadmin/_processed_/8/8/csm_kieser-fokus-rueckenmuskulatur_b3a470742d.webp", "type": "muscle_focus" },
+      { "key": "E45_machine_1920x1080", "url": "https://www.kieser.com/fileadmin/_processed_/f/e/csm_E4-5_Kieser_Trainingsmaschinen_1920x1080_8faf3f1599.webp", "type": "machine_product" },
+      { "key": "E45_machine_1080x1080", "url": "https://www.kieser.com/fileadmin/_processed_/e/a/csm_E4-5_Kieser_Trainingsmaschinen_1080x1080_b4698667a8.webp", "type": "machine_product" },
+      { "key": "E45_man_on_machine", "url": "https://www.kieser.com/fileadmin/_processed_/5/5/csm_kieser-mann-maschine-e4-5_d7cfd97f05.webp", "type": "in_action" },
+      { "key": "E45_shoulder_pain", "url": "https://www.kieser.com/fileadmin/_processed_/7/2/csm_kieser-schulterschmerzen_adfa32c968.webp", "type": "lifestyle" },
+      { "key": "E45_shoulder_focus", "url": "https://www.kieser.com/fileadmin/_processed_/d/2/csm_kieser-fokus-schulter_3493819866.webp", "type": "muscle_focus" },
+      { "key": "E45_rotator_training", "url": "https://www.kieser.com/fileadmin/_processed_/3/d/csm_kieser-training-rotatorenmanschette_0a06ec3265.webp", "type": "in_action" },
+      { "key": "E45_shoulder_machine_training", "url": "https://www.kieser.com/fileadmin/_processed_/f/4/csm_kieser-mann-training-schultermaschine_5bcc55dc34.webp", "type": "in_action" },
+      { "key": "H37_machine_1080x1080", "url": "https://www.kieser.com/fileadmin/_processed_/b/7/csm_H3-7_Kieser_Trainingsmaschinen_1080x1080_a3b7398a93.webp", "type": "machine_product" },
+      { "key": "H37_woman_hand", "url": "https://www.kieser.com/fileadmin/_processed_/a/8/csm_kieser-frau-hand_d82d216bd6.webp", "type": "in_action" },
+      { "key": "H37_forearm_focus", "url": "https://www.kieser.com/fileadmin/_processed_/0/4/csm_kieser-fokus-hand_757394f365.webp", "type": "muscle_focus" },
+      { "key": "H37_training_action", "url": "https://www.kieser.com/fileadmin/_processed_/0/f/csm_kieser-training-handmuskulatur-h3-7_a55479c701.webp", "type": "in_action" },
+      { "key": "LE_back_training_strong", "url": "https://www.kieser.com/fileadmin/_processed_/d/9/csm_kieser-starker-ruecken_3be7c5f722.webp", "type": "lifestyle" },
+      { "key": "LE_back_focus", "url": "https://www.kieser.com/fileadmin/_processed_/9/a/csm_kieser-fokus-ruecken_02b9d4ba62.webp", "type": "muscle_focus" },
+      { "key": "LE_training_form", "url": "https://www.kieser.com/fileadmin/_processed_/c/5/csm_kieser-rueckentraining_3028d4c6cd.webp", "type": "in_action" },
+      { "key": "LE_back_pain_woman", "url": "https://www.kieser.com/fileadmin/_processed_/f/d/csm_kieser-frau-rueckenschmerzen_58a617e3d9.webp", "type": "lifestyle" },
+      { "key": "gym_floor_overview", "url": "https://www.kieser.com/fileadmin/_processed_/3/e/csm_kieser-trainingsmaschinen_3ffdf5eef0.webp", "type": "studio" },
+      { "key": "training_area_wide", "url": "https://www.kieser.com/fileadmin/_processed_/9/e/csm_kieser-mann-trainingsbereich_b6633005fa.webp", "type": "studio" },
+      { "key": "man_after_workout", "url": "https://www.kieser.com/fileadmin/_processed_/f/8/csm_kieser-methode_ab97d64524.webp", "type": "lifestyle" },
+      { "key": "injury_prevention_machine", "url": "https://www.kieser.com/fileadmin/_processed_/e/d/csm_kieser-sportverletzungen-vorbeugen_7d8002446d.webp", "type": "lifestyle" },
+      { "key": "back_pain_man", "url": "https://www.kieser.com/fileadmin/_processed_/1/c/csm_kieser-mann-rueckenschmerzen_9855dd0ae5.webp", "type": "lifestyle" },
+      { "key": "woman_strength_training", "url": "https://www.kieser.com/fileadmin/_processed_/c/7/csm_kieser-frau-krafttraining_87d528a819.webp", "type": "lifestyle" }
+    ]
+  }
+}

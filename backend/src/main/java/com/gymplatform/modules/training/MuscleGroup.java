@@ -19,6 +19,10 @@ public enum MuscleGroup {
     ABDUCTORS,
     TRAPS,
     LATS,
+    NECK,
+    PELVIC_FLOOR,
+    ROTATOR_CUFF,
+    SHINS,
     FULL_BODY,
     CARDIO
 }

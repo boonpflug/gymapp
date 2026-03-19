@@ -24,7 +24,12 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.core.io.ClassPathResource;
+
 import javax.sql.DataSource;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.time.*;
 import java.time.temporal.ChronoUnit;
@@ -71,7 +76,27 @@ public class DataSeeder implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
         if (tenantRepository.existsBySubdomain(TENANT_SUBDOMAIN)) {
-            log.info("Demo tenant already exists, skipping seed");
+            log.info("Demo tenant already exists, checking exercises");
+            TenantContext.setTenantId(TENANT_ID);
+            try {
+                setSearchPath(TENANT_SCHEMA);
+                // Check if Kieser exercises exist (they have "Kieser" in equipment)
+                boolean hasKieserExercises = exerciseRepository.findAll().stream()
+                        .anyMatch(e -> e.getEquipment() != null && e.getEquipment().contains("Kieser"));
+                if (!hasKieserExercises) {
+                    log.info("No Kieser exercises found, clearing old exercises and seeding...");
+                    planExerciseRepository.deleteAll();
+                    planRepository.deleteAll();
+                    exerciseRepository.deleteAll();
+                    List<Member> members = memberRepository.findAll();
+                    seedExercisesAndPlans(members);
+                    log.info("Kieser exercises seeded successfully");
+                } else {
+                    log.info("Kieser exercises already exist, skipping");
+                }
+            } finally {
+                TenantContext.clear();
+            }
             return;
         }
 
@@ -478,149 +503,171 @@ public class DataSeeder implements ApplicationRunner {
 
     // ---- EXERCISES & TRAINING PLANS ----
 
-    private void seedExercisesAndPlans(List<Member> members) {
-        Object[][] exercises = {
-                {"Barbell Bench Press", ExerciseType.FREE_WEIGHT, MuscleGroup.CHEST},
-                {"Dumbbell Fly", ExerciseType.FREE_WEIGHT, MuscleGroup.CHEST},
-                {"Push-Up", ExerciseType.BODYWEIGHT, MuscleGroup.CHEST},
-                {"Incline Dumbbell Press", ExerciseType.FREE_WEIGHT, MuscleGroup.CHEST},
-                {"Cable Crossover", ExerciseType.CABLE, MuscleGroup.CHEST},
-                {"Barbell Back Squat", ExerciseType.FREE_WEIGHT, MuscleGroup.QUADRICEPS},
-                {"Leg Press", ExerciseType.MACHINE, MuscleGroup.QUADRICEPS},
-                {"Romanian Deadlift", ExerciseType.FREE_WEIGHT, MuscleGroup.HAMSTRINGS},
-                {"Leg Extension", ExerciseType.MACHINE, MuscleGroup.QUADRICEPS},
-                {"Leg Curl", ExerciseType.MACHINE, MuscleGroup.HAMSTRINGS},
-                {"Walking Lunge", ExerciseType.FREE_WEIGHT, MuscleGroup.GLUTES},
-                {"Calf Raise", ExerciseType.MACHINE, MuscleGroup.CALVES},
-                {"Pull-Up", ExerciseType.BODYWEIGHT, MuscleGroup.BACK},
-                {"Lat Pulldown", ExerciseType.CABLE, MuscleGroup.LATS},
-                {"Barbell Row", ExerciseType.FREE_WEIGHT, MuscleGroup.BACK},
-                {"Seated Cable Row", ExerciseType.CABLE, MuscleGroup.BACK},
-                {"Dumbbell Row", ExerciseType.FREE_WEIGHT, MuscleGroup.BACK},
-                {"Face Pull", ExerciseType.CABLE, MuscleGroup.SHOULDERS},
-                {"Overhead Press", ExerciseType.FREE_WEIGHT, MuscleGroup.SHOULDERS},
-                {"Lateral Raise", ExerciseType.FREE_WEIGHT, MuscleGroup.SHOULDERS},
-                {"Front Raise", ExerciseType.FREE_WEIGHT, MuscleGroup.SHOULDERS},
-                {"Rear Delt Fly", ExerciseType.FREE_WEIGHT, MuscleGroup.SHOULDERS},
-                {"Barbell Curl", ExerciseType.FREE_WEIGHT, MuscleGroup.BICEPS},
-                {"Hammer Curl", ExerciseType.FREE_WEIGHT, MuscleGroup.BICEPS},
-                {"Tricep Pushdown", ExerciseType.CABLE, MuscleGroup.TRICEPS},
-                {"Skull Crusher", ExerciseType.FREE_WEIGHT, MuscleGroup.TRICEPS},
-                {"Dip", ExerciseType.BODYWEIGHT, MuscleGroup.TRICEPS},
-                {"Plank", ExerciseType.BODYWEIGHT, MuscleGroup.ABS},
-                {"Crunch", ExerciseType.BODYWEIGHT, MuscleGroup.ABS},
-                {"Russian Twist", ExerciseType.BODYWEIGHT, MuscleGroup.OBLIQUES},
-                {"Deadlift", ExerciseType.FREE_WEIGHT, MuscleGroup.BACK},
-                {"Hip Thrust", ExerciseType.FREE_WEIGHT, MuscleGroup.GLUTES},
-                {"Treadmill Run", ExerciseType.CARDIO, MuscleGroup.CARDIO},
-                {"Rowing Machine", ExerciseType.CARDIO, MuscleGroup.FULL_BODY},
-                {"Battle Ropes", ExerciseType.FUNCTIONAL, MuscleGroup.FULL_BODY},
-                {"Kettlebell Swing", ExerciseType.FUNCTIONAL, MuscleGroup.FULL_BODY},
-                {"Box Jump", ExerciseType.PLYOMETRIC, MuscleGroup.QUADRICEPS},
-                {"Burpee", ExerciseType.BODYWEIGHT, MuscleGroup.FULL_BODY},
-                {"Mountain Climber", ExerciseType.BODYWEIGHT, MuscleGroup.ABS},
-                {"Resistance Band Pull Apart", ExerciseType.RESISTANCE_BAND, MuscleGroup.SHOULDERS},
-        };
+    private static final Map<String, MuscleGroup> CATEGORY_TO_MUSCLE = Map.ofEntries(
+            Map.entry("Back / Spine", MuscleGroup.LOWER_BACK),
+            Map.entry("Neck / Cervical Spine", MuscleGroup.NECK),
+            Map.entry("Neck", MuscleGroup.NECK),
+            Map.entry("Neck / Upper Traps", MuscleGroup.TRAPS),
+            Map.entry("Hip", MuscleGroup.GLUTES),
+            Map.entry("Abdomen / Hip Flexors", MuscleGroup.ABS),
+            Map.entry("Pelvic Floor", MuscleGroup.PELVIC_FLOOR),
+            Map.entry("Legs (Quads)", MuscleGroup.QUADRICEPS),
+            Map.entry("Legs (Hamstrings)", MuscleGroup.HAMSTRINGS),
+            Map.entry("Legs (Compound)", MuscleGroup.QUADRICEPS),
+            Map.entry("Legs (Compound / Infimetric)", MuscleGroup.QUADRICEPS),
+            Map.entry("Ankle", MuscleGroup.CALVES),
+            Map.entry("Lower Leg", MuscleGroup.SHINS),
+            Map.entry("Lower Back", MuscleGroup.LOWER_BACK),
+            Map.entry("Back (Lats)", MuscleGroup.LATS),
+            Map.entry("Back (Vertical Pull)", MuscleGroup.LATS),
+            Map.entry("Back (Horizontal Pull)", MuscleGroup.BACK),
+            Map.entry("Back / Biceps", MuscleGroup.BACK),
+            Map.entry("Back / Biceps (Assisted)", MuscleGroup.BACK),
+            Map.entry("Chest", MuscleGroup.CHEST),
+            Map.entry("Chest / Triceps", MuscleGroup.CHEST),
+            Map.entry("Chest / Triceps (Assisted)", MuscleGroup.CHEST),
+            Map.entry("Shoulders", MuscleGroup.SHOULDERS),
+            Map.entry("Rotator Cuff", MuscleGroup.ROTATOR_CUFF),
+            Map.entry("Core (Abs)", MuscleGroup.ABS),
+            Map.entry("Core / Obliques", MuscleGroup.OBLIQUES),
+            Map.entry("Core / Lateral", MuscleGroup.OBLIQUES),
+            Map.entry("Arms (Biceps)", MuscleGroup.BICEPS),
+            Map.entry("Arms (Triceps)", MuscleGroup.TRICEPS),
+            Map.entry("Forearm / Grip", MuscleGroup.FOREARMS)
+    );
 
-        String[][] exerciseDetails = {
-                {"Lie flat on a bench, grip barbell slightly wider than shoulders, lower to chest and press up.", "Keep feet flat, arch slightly, retract shoulder blades.", "Barbell, Flat Bench"},
-                {"Lie on bench with dumbbells, arms extended. Lower in wide arc until chest stretch, return.", "Slight bend in elbows, control the descent.", "Dumbbells, Flat Bench"},
-                {"Hands shoulder-width, lower chest to floor, push back up. Scale on knees if needed.", "Keep core tight, body in straight line, full range of motion.", "None (Bodyweight)"},
-                {"Bench at 30-45 degrees, press dumbbells from chest to lockout overhead.", "Don't flare elbows past 45 degrees, control the negative.", "Dumbbells, Incline Bench"},
-                {"Stand between cable stations, bring handles together in hugging motion.", "Slight forward lean, squeeze chest at the bottom.", "Cable Machine"},
-                {"Bar on upper back, squat until thighs parallel, drive through heels to stand.", "Knees track over toes, chest up, brace core throughout.", "Barbell, Squat Rack"},
-                {"Sit in machine, feet shoulder-width on platform, press away and return with control.", "Don't lock knees at top, keep lower back against pad.", "Leg Press Machine"},
-                {"Hinge at hips with slight knee bend, lower bar along legs, feel hamstring stretch.", "Keep bar close to body, back flat, squeeze glutes at top.", "Barbell or Dumbbells"},
-                {"Sit in machine, extend legs to straight, squeeze at top, lower with control.", "Adjust pad to sit above ankles, don't use momentum.", "Leg Extension Machine"},
-                {"Lie face down in machine, curl heels toward glutes, squeeze at top.", "Control the negative, don't let weight slam down.", "Leg Curl Machine"},
-                {"Step forward into lunge, both knees at 90 degrees, push back to start.", "Keep torso upright, front knee behind toes.", "Dumbbells"},
-                {"Stand on platform, raise heels as high as possible, lower with full stretch.", "Pause at top and bottom, use full range of motion.", "Calf Raise Machine"},
-                {"Hang from bar, pull chin above bar, lower with control.", "Engage lats first, avoid swinging, full extension at bottom.", "Pull-Up Bar"},
-                {"Sit at machine, pull bar to upper chest, squeeze shoulder blades.", "Lean back slightly, pull elbows down and back.", "Cable Lat Pulldown Machine"},
-                {"Bend over 45 degrees, pull barbell to lower chest, squeeze back.", "Keep back flat, brace core, pull elbows past torso.", "Barbell"},
-                {"Sit upright, pull handle to lower chest, squeeze shoulder blades together.", "Keep chest up, don't round the back on the return.", "Cable Row Machine"},
-                {"One hand and knee on bench, row dumbbell to hip with other arm.", "Keep back flat, pull elbow past torso, squeeze lat.", "Dumbbell, Flat Bench"},
-                {"Cable at face height, pull rope to face with elbows high and wide.", "Squeeze rear delts at the end, keep elbows above wrists.", "Cable Machine, Rope Attachment"},
-                {"Press barbell from shoulders to overhead lockout.", "Brace core, don't lean back excessively, full lockout.", "Barbell"},
-                {"Stand with dumbbells at sides, raise to shoulder height with slight bend.", "Control the weight, don't swing, pause at the top.", "Dumbbells"},
-                {"Raise dumbbells in front to shoulder height, alternating or both.", "Keep slight bend in elbows, don't use momentum.", "Dumbbells"},
-                {"Bend forward, raise dumbbells out to sides targeting rear delts.", "Lead with elbows, squeeze shoulder blades at top.", "Dumbbells"},
-                {"Stand with barbell, curl to shoulders keeping elbows stationary.", "Don't swing body, squeeze at top, control descent.", "Barbell or EZ-Bar"},
-                {"Curl dumbbells with neutral grip (palms facing), targeting brachialis.", "Keep elbows at sides, don't swing, full range of motion.", "Dumbbells"},
-                {"Push cable attachment down until arms straight, squeeze triceps.", "Keep elbows pinned to sides, only forearms move.", "Cable Machine"},
-                {"Lie on bench, lower EZ-bar to forehead, extend back up using triceps.", "Keep upper arms vertical, don't flare elbows.", "EZ-Bar, Flat Bench"},
-                {"Grip parallel bars, lower until shoulders below elbows, press back up.", "Lean forward slightly for chest emphasis, upright for triceps.", "Dip Station"},
-                {"Hold push-up position on forearms, maintain straight line from head to heels.", "Brace core, don't let hips sag or pike up.", "None (Bodyweight)"},
-                {"Lie on back, curl shoulders toward pelvis, squeezing abs at top.", "Don't pull on neck, focus on ab contraction.", "None (Bodyweight)"},
-                {"Sit with feet elevated, rotate torso side to side holding weight.", "Keep chest up, control the rotation, breathe steadily.", "Weight Plate or Dumbbell"},
-                {"Lift barbell from floor to lockout with flat back, full hip extension.", "Keep bar close, engage lats, push floor away with legs.", "Barbell"},
-                {"Sit with upper back on bench, drive hips up squeezing glutes at top.", "Chin tucked, pause at top, full range of motion.", "Barbell, Bench"},
-                {"Run at moderate to high intensity on treadmill for cardio conditioning.", "Start with warm-up, maintain good posture, cool down.", "Treadmill"},
-                {"Pull handle on rowing machine with legs-back-arms sequence, return in reverse.", "Drive with legs first, keep core braced, smooth strokes.", "Rowing Machine"},
-                {"Whip heavy ropes in alternating or simultaneous waves.", "Keep core tight, use full arm motion, stay in athletic stance.", "Battle Ropes"},
-                {"Hinge at hips, swing kettlebell between legs and up to chest height.", "Power comes from hips not arms, squeeze glutes at top.", "Kettlebell"},
-                {"Jump onto box, land softly with both feet, step back down.", "Land with soft knees, use arm swing, start with lower box.", "Plyo Box"},
-                {"Squat down, kick feet back to plank, push-up, jump feet forward, jump up.", "Maintain form even when tired, scale by removing push-up.", "None (Bodyweight)"},
-                {"In plank position, drive knees alternately toward chest rapidly.", "Keep hips level, core tight, move as fast as form allows.", "None (Bodyweight)"},
-                {"Hold band at chest, pull apart squeezing shoulder blades.", "Keep arms straight, control the return, focus on rear delts.", "Resistance Band"},
-        };
-
+    private List<Exercise> seedKieserExercises() {
         List<Exercise> savedExercises = new ArrayList<>();
-        for (int ei = 0; ei < exercises.length; ei++) {
-            Object[] ex = exercises[ei];
-            String[] detail = exerciseDetails[ei];
-            savedExercises.add(exerciseRepository.save(Exercise.builder()
-                    .name((String) ex[0]).exerciseType((ExerciseType) ex[1])
-                    .primaryMuscleGroup((MuscleGroup) ex[2])
-                    .description(detail[0])
-                    .executionTips(detail[0])
-                    .postureNotes(detail[1])
-                    .equipment(detail[2])
-                    .difficultyLevel("INTERMEDIATE").active(true)
-                    .global(true).tenantId(TENANT_ID).build()));
+        try {
+            InputStream is = new ClassPathResource("kieser.json").getInputStream();
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode root = mapper.readTree(is);
+            JsonNode machines = root.get("machines");
+
+            for (JsonNode machine : machines) {
+                String name = machine.get("full_name").asText();
+                String category = machine.get("category").asText();
+                String description = machine.has("description") ? machine.get("description").asText() : "";
+
+                MuscleGroup primaryMuscle = CATEGORY_TO_MUSCLE.getOrDefault(category, MuscleGroup.FULL_BODY);
+
+                // Get thumbnail URL
+                String thumbnailUrl = null;
+                if (machine.has("images")) {
+                    JsonNode images = machine.get("images");
+                    if (images.has("machine_thumbnail_1920x1080")) {
+                        thumbnailUrl = images.get("machine_thumbnail_1920x1080").asText();
+                    } else if (images.has("machine_thumbnail_1080x1080")) {
+                        thumbnailUrl = images.get("machine_thumbnail_1080x1080").asText();
+                    } else if (images.has("machine_detail_1080x1080")) {
+                        thumbnailUrl = images.get("machine_detail_1080x1080").asText();
+                    } else if (images.has("in_action_man_on_machine")) {
+                        thumbnailUrl = images.get("in_action_man_on_machine").asText();
+                    } else if (images.has("in_action_woman_on_ce")) {
+                        thumbnailUrl = images.get("in_action_woman_on_ce").asText();
+                    }
+                }
+
+                // Get video URL
+                String videoUrl = null;
+                if (machine.has("videos")) {
+                    JsonNode videos = machine.get("videos");
+                    if (videos.has("brand_overview_mp4")) {
+                        videoUrl = videos.get("brand_overview_mp4").asText();
+                    }
+                }
+
+                // Build equipment string from machine code and name
+                String code = machine.get("code").asText();
+                String equipment = "Kieser " + code + " Machine";
+
+                // Build posture notes from primary muscles
+                StringBuilder muscles = new StringBuilder("Primary muscles: ");
+                JsonNode primaryMuscles = machine.get("primary_muscles");
+                if (primaryMuscles != null) {
+                    List<String> muscleNames = new ArrayList<>();
+                    for (JsonNode m : primaryMuscles) muscleNames.add(m.asText());
+                    muscles.append(String.join(", ", muscleNames));
+                }
+
+                String difficulty = "INTERMEDIATE";
+                if (machine.has("is_computer_assisted") && machine.get("is_computer_assisted").asBoolean()) {
+                    difficulty = "ADVANCED";
+                }
+
+                savedExercises.add(exerciseRepository.save(Exercise.builder()
+                        .name(name)
+                        .exerciseType(ExerciseType.MACHINE)
+                        .primaryMuscleGroup(primaryMuscle)
+                        .description(description)
+                        .executionTips(description)
+                        .postureNotes(muscles.toString())
+                        .equipment(equipment)
+                        .thumbnailUrl(thumbnailUrl)
+                        .videoUrl(videoUrl)
+                        .difficultyLevel(difficulty)
+                        .active(true)
+                        .global(true)
+                        .tenantId(TENANT_ID)
+                        .build()));
+            }
+            log.info("Seeded {} Kieser exercises from kieser.json", savedExercises.size());
+        } catch (Exception e) {
+            log.error("Failed to load kieser.json: {}", e.getMessage());
+        }
+        return savedExercises;
+    }
+
+    private void seedExercisesAndPlans(List<Member> members) {
+        List<Exercise> savedExercises = seedKieserExercises();
+
+        if (savedExercises.isEmpty()) {
+            log.warn("No exercises were seeded, skipping training plans");
+            return;
         }
 
         // Create 3 template training plans
         User trainer1 = userRepository.findByEmail("anna.trainer@fitlife.com").orElse(null);
         UUID trainerId = trainer1 != null ? trainer1.getId() : null;
 
-        String[][] planDefs = {
-                {"Full Body Beginner", "A balanced full-body workout for newcomers", "BEGINNER", "General"},
-                {"Push Pull Legs", "Classic 3-day split", "INTERMEDIATE", "Strength"},
-                {"HIIT Circuit", "High-intensity circuit training", "ADVANCED", "Cardio"},
-        };
+        // Back & Core plan (Kieser specialty)
+        TrainingPlan backPlan = planRepository.save(TrainingPlan.builder()
+                .name("Back & Core Fundamentals").description("Kieser back training program targeting spinal health and core stability")
+                .trainerId(trainerId).status(TrainingPlanStatus.PUBLISHED)
+                .template(true).catalog(true)
+                .category("Back Health").difficultyLevel("BEGINNER")
+                .estimatedDurationMinutes(45)
+                .tenantId(TENANT_ID).build());
 
-        int[][] planExerciseIndices = {
-                {0, 5, 12, 18, 27, 32},  // Full body
-                {0, 1, 3, 18, 19, 24, 25}, // Push Pull Legs (push day)
-                {32, 33, 34, 35, 36, 37, 38}, // HIIT
-        };
+        // Full Body plan
+        TrainingPlan fullPlan = planRepository.save(TrainingPlan.builder()
+                .name("Full Body Strength").description("Complete Kieser circuit hitting all major muscle groups")
+                .trainerId(trainerId).status(TrainingPlanStatus.PUBLISHED)
+                .template(true).catalog(true)
+                .category("Strength").difficultyLevel("INTERMEDIATE")
+                .estimatedDurationMinutes(60)
+                .tenantId(TENANT_ID).build());
 
-        for (int p = 0; p < planDefs.length; p++) {
-            TrainingPlan plan = planRepository.save(TrainingPlan.builder()
-                    .name(planDefs[p][0]).description(planDefs[p][1])
-                    .trainerId(trainerId).status(TrainingPlanStatus.PUBLISHED)
-                    .template(true).catalog(true)
-                    .category(planDefs[p][3]).difficultyLevel(planDefs[p][2])
-                    .estimatedDurationMinutes(45 + p * 15)
-                    .tenantId(TENANT_ID).build());
+        // Rehabilitation plan
+        TrainingPlan rehabPlan = planRepository.save(TrainingPlan.builder()
+                .name("Joint & Rehab Program").description("Targeted rehabilitation program for joint stability and injury prevention")
+                .trainerId(trainerId).status(TrainingPlanStatus.PUBLISHED)
+                .template(true).catalog(true)
+                .category("Rehabilitation").difficultyLevel("BEGINNER")
+                .estimatedDurationMinutes(40)
+                .tenantId(TENANT_ID).build());
 
-            for (int e = 0; e < planExerciseIndices[p].length; e++) {
-                planExerciseRepository.save(TrainingPlanExercise.builder()
-                        .planId(plan.getId())
-                        .exerciseId(savedExercises.get(planExerciseIndices[p][e]).getId())
-                        .sortOrder(e + 1).sets(3).reps(12)
-                        .weight(new BigDecimal("20.0")).restSeconds(60)
-                        .tenantId(TENANT_ID).build());
-            }
-        }
+        // Assign exercises to plans by finding machines by name patterns
+        addExercisesToPlan(backPlan, savedExercises, List.of("Lumbal", "Cervical", "Lower Back", "Torso Flexion", "Rotary Torso", "Abdominal", "Pullover"));
+        addExercisesToPlan(fullPlan, savedExercises, List.of("Leg Press", "Leg Extension", "Leg Curl", "Chest Press", "Pullover", "Overhead Press", "Rowing", "Lumbal", "Abdominal", "Calf"));
+        addExercisesToPlan(rehabPlan, savedExercises, List.of("Lumbal", "Cervical", "Pelvic Floor", "Hip Abduction", "Hip Adduction", "Ankle", "Shoulder Rotation"));
 
         // Assign plans to first 10 members
         for (int i = 0; i < Math.min(10, members.size()); i++) {
             Member m = members.get(i);
             TrainingPlan memberPlan = planRepository.save(TrainingPlan.builder()
                     .name("Personal Plan - " + m.getFirstName())
-                    .description("Customized plan")
+                    .description("Customized Kieser training plan")
                     .memberId(m.getId()).trainerId(trainerId)
                     .status(TrainingPlanStatus.PUBLISHED)
                     .template(false).catalog(false)
@@ -633,12 +680,29 @@ public class DataSeeder implements ApplicationRunner {
                 planExerciseRepository.save(TrainingPlanExercise.builder()
                         .planId(memberPlan.getId())
                         .exerciseId(savedExercises.get(exIdx).getId())
-                        .sortOrder(e + 1).sets(3 + (e % 2)).reps(10 + (e * 2))
-                        .weight(new BigDecimal(10 + e * 5 + ".0")).restSeconds(60)
+                        .sortOrder(e + 1).sets(1).reps(12)
+                        .weight(new BigDecimal(10 + e * 5 + ".0")).restSeconds(90)
                         .tenantId(TENANT_ID).build());
             }
         }
         log.info("Seeded {} exercises, 3 template plans, 10 member plans", savedExercises.size());
+    }
+
+    private void addExercisesToPlan(TrainingPlan plan, List<Exercise> exercises, List<String> namePatterns) {
+        int order = 1;
+        for (String pattern : namePatterns) {
+            for (Exercise ex : exercises) {
+                if (ex.getName().toLowerCase().contains(pattern.toLowerCase())) {
+                    planExerciseRepository.save(TrainingPlanExercise.builder()
+                            .planId(plan.getId())
+                            .exerciseId(ex.getId())
+                            .sortOrder(order++).sets(1).reps(12)
+                            .weight(new BigDecimal("20.0")).restSeconds(90)
+                            .tenantId(TENANT_ID).build());
+                    break;
+                }
+            }
+        }
     }
 
     // ---- LEADS ----

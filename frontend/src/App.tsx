@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { useAuthStore } from './store/authStore'
 import Layout from './components/Layout'
 import PortalLayout from './components/PortalLayout'
@@ -22,9 +22,18 @@ import PortalTraining from './pages/portal/PortalTraining'
 import PortalCheckins from './pages/portal/PortalCheckins'
 import PublicStudio from './pages/public/PublicStudio'
 
-function ProtectedRoute({ children }: { children: React.ReactNode }) {
+function StaffRoute({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAuthStore((s) => !!s.accessToken)
+  const role = useAuthStore((s) => s.user?.role)
   if (!isAuthenticated) return <Navigate to="/login" replace />
+  if (role === 'MEMBER') return <Navigate to="/portal" replace />
+  return <>{children}</>
+}
+
+function MemberRoute({ children }: { children: React.ReactNode }) {
+  const isAuthenticated = useAuthStore((s) => !!s.accessToken)
+  const location = useLocation()
+  if (!isAuthenticated) return <Navigate to="/login" state={{ from: location.pathname }} replace />
   return <>{children}</>
 }
 
@@ -32,13 +41,13 @@ export default function App() {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
-      {/* Staff / Admin dashboard */}
+      {/* Staff / Admin dashboard — members get redirected to /portal */}
       <Route
         path="/"
         element={
-          <ProtectedRoute>
+          <StaffRoute>
             <Layout />
-          </ProtectedRoute>
+          </StaffRoute>
         }
       >
         <Route index element={<DashboardPage />} />
@@ -56,9 +65,9 @@ export default function App() {
       <Route
         path="/portal"
         element={
-          <ProtectedRoute>
+          <MemberRoute>
             <PortalLayout />
-          </ProtectedRoute>
+          </MemberRoute>
         }
       >
         <Route index element={<PortalDashboard />} />

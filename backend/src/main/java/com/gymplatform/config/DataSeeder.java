@@ -522,11 +522,60 @@ public class DataSeeder implements ApplicationRunner {
                 {"Resistance Band Pull Apart", ExerciseType.RESISTANCE_BAND, MuscleGroup.SHOULDERS},
         };
 
+        String[][] exerciseDetails = {
+                {"Lie flat on a bench, grip barbell slightly wider than shoulders, lower to chest and press up.", "Keep feet flat, arch slightly, retract shoulder blades.", "Barbell, Flat Bench"},
+                {"Lie on bench with dumbbells, arms extended. Lower in wide arc until chest stretch, return.", "Slight bend in elbows, control the descent.", "Dumbbells, Flat Bench"},
+                {"Hands shoulder-width, lower chest to floor, push back up. Scale on knees if needed.", "Keep core tight, body in straight line, full range of motion.", "None (Bodyweight)"},
+                {"Bench at 30-45 degrees, press dumbbells from chest to lockout overhead.", "Don't flare elbows past 45 degrees, control the negative.", "Dumbbells, Incline Bench"},
+                {"Stand between cable stations, bring handles together in hugging motion.", "Slight forward lean, squeeze chest at the bottom.", "Cable Machine"},
+                {"Bar on upper back, squat until thighs parallel, drive through heels to stand.", "Knees track over toes, chest up, brace core throughout.", "Barbell, Squat Rack"},
+                {"Sit in machine, feet shoulder-width on platform, press away and return with control.", "Don't lock knees at top, keep lower back against pad.", "Leg Press Machine"},
+                {"Hinge at hips with slight knee bend, lower bar along legs, feel hamstring stretch.", "Keep bar close to body, back flat, squeeze glutes at top.", "Barbell or Dumbbells"},
+                {"Sit in machine, extend legs to straight, squeeze at top, lower with control.", "Adjust pad to sit above ankles, don't use momentum.", "Leg Extension Machine"},
+                {"Lie face down in machine, curl heels toward glutes, squeeze at top.", "Control the negative, don't let weight slam down.", "Leg Curl Machine"},
+                {"Step forward into lunge, both knees at 90 degrees, push back to start.", "Keep torso upright, front knee behind toes.", "Dumbbells"},
+                {"Stand on platform, raise heels as high as possible, lower with full stretch.", "Pause at top and bottom, use full range of motion.", "Calf Raise Machine"},
+                {"Hang from bar, pull chin above bar, lower with control.", "Engage lats first, avoid swinging, full extension at bottom.", "Pull-Up Bar"},
+                {"Sit at machine, pull bar to upper chest, squeeze shoulder blades.", "Lean back slightly, pull elbows down and back.", "Cable Lat Pulldown Machine"},
+                {"Bend over 45 degrees, pull barbell to lower chest, squeeze back.", "Keep back flat, brace core, pull elbows past torso.", "Barbell"},
+                {"Sit upright, pull handle to lower chest, squeeze shoulder blades together.", "Keep chest up, don't round the back on the return.", "Cable Row Machine"},
+                {"One hand and knee on bench, row dumbbell to hip with other arm.", "Keep back flat, pull elbow past torso, squeeze lat.", "Dumbbell, Flat Bench"},
+                {"Cable at face height, pull rope to face with elbows high and wide.", "Squeeze rear delts at the end, keep elbows above wrists.", "Cable Machine, Rope Attachment"},
+                {"Press barbell from shoulders to overhead lockout.", "Brace core, don't lean back excessively, full lockout.", "Barbell"},
+                {"Stand with dumbbells at sides, raise to shoulder height with slight bend.", "Control the weight, don't swing, pause at the top.", "Dumbbells"},
+                {"Raise dumbbells in front to shoulder height, alternating or both.", "Keep slight bend in elbows, don't use momentum.", "Dumbbells"},
+                {"Bend forward, raise dumbbells out to sides targeting rear delts.", "Lead with elbows, squeeze shoulder blades at top.", "Dumbbells"},
+                {"Stand with barbell, curl to shoulders keeping elbows stationary.", "Don't swing body, squeeze at top, control descent.", "Barbell or EZ-Bar"},
+                {"Curl dumbbells with neutral grip (palms facing), targeting brachialis.", "Keep elbows at sides, don't swing, full range of motion.", "Dumbbells"},
+                {"Push cable attachment down until arms straight, squeeze triceps.", "Keep elbows pinned to sides, only forearms move.", "Cable Machine"},
+                {"Lie on bench, lower EZ-bar to forehead, extend back up using triceps.", "Keep upper arms vertical, don't flare elbows.", "EZ-Bar, Flat Bench"},
+                {"Grip parallel bars, lower until shoulders below elbows, press back up.", "Lean forward slightly for chest emphasis, upright for triceps.", "Dip Station"},
+                {"Hold push-up position on forearms, maintain straight line from head to heels.", "Brace core, don't let hips sag or pike up.", "None (Bodyweight)"},
+                {"Lie on back, curl shoulders toward pelvis, squeezing abs at top.", "Don't pull on neck, focus on ab contraction.", "None (Bodyweight)"},
+                {"Sit with feet elevated, rotate torso side to side holding weight.", "Keep chest up, control the rotation, breathe steadily.", "Weight Plate or Dumbbell"},
+                {"Lift barbell from floor to lockout with flat back, full hip extension.", "Keep bar close, engage lats, push floor away with legs.", "Barbell"},
+                {"Sit with upper back on bench, drive hips up squeezing glutes at top.", "Chin tucked, pause at top, full range of motion.", "Barbell, Bench"},
+                {"Run at moderate to high intensity on treadmill for cardio conditioning.", "Start with warm-up, maintain good posture, cool down.", "Treadmill"},
+                {"Pull handle on rowing machine with legs-back-arms sequence, return in reverse.", "Drive with legs first, keep core braced, smooth strokes.", "Rowing Machine"},
+                {"Whip heavy ropes in alternating or simultaneous waves.", "Keep core tight, use full arm motion, stay in athletic stance.", "Battle Ropes"},
+                {"Hinge at hips, swing kettlebell between legs and up to chest height.", "Power comes from hips not arms, squeeze glutes at top.", "Kettlebell"},
+                {"Jump onto box, land softly with both feet, step back down.", "Land with soft knees, use arm swing, start with lower box.", "Plyo Box"},
+                {"Squat down, kick feet back to plank, push-up, jump feet forward, jump up.", "Maintain form even when tired, scale by removing push-up.", "None (Bodyweight)"},
+                {"In plank position, drive knees alternately toward chest rapidly.", "Keep hips level, core tight, move as fast as form allows.", "None (Bodyweight)"},
+                {"Hold band at chest, pull apart squeezing shoulder blades.", "Keep arms straight, control the return, focus on rear delts.", "Resistance Band"},
+        };
+
         List<Exercise> savedExercises = new ArrayList<>();
-        for (Object[] ex : exercises) {
+        for (int ei = 0; ei < exercises.length; ei++) {
+            Object[] ex = exercises[ei];
+            String[] detail = exerciseDetails[ei];
             savedExercises.add(exerciseRepository.save(Exercise.builder()
                     .name((String) ex[0]).exerciseType((ExerciseType) ex[1])
                     .primaryMuscleGroup((MuscleGroup) ex[2])
+                    .description(detail[0])
+                    .executionTips(detail[0])
+                    .postureNotes(detail[1])
+                    .equipment(detail[2])
                     .difficultyLevel("INTERMEDIATE").active(true)
                     .global(true).tenantId(TENANT_ID).build()));
         }

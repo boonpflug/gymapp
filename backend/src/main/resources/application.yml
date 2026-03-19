@@ -17,7 +17,6 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-        default_schema: public
         format_sql: true
     open-in-view: false
   liquibase:

@@ -2775,3 +2775,256 @@ databaseChangeLog:
             columns:
               - column:
                   name: clock_in
+
+  - changeSet:
+      id: t-011-facility
+      author: gymplatform
+      changes:
+        - createTable:
+            tableName: facilities
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar(500)
+              - column:
+                  name: street
+                  type: varchar(255)
+              - column:
+                  name: city
+                  type: varchar(100)
+              - column:
+                  name: state
+                  type: varchar(100)
+              - column:
+                  name: postal_code
+                  type: varchar(20)
+              - column:
+                  name: country
+                  type: varchar(100)
+              - column:
+                  name: timezone
+                  type: varchar(50)
+              - column:
+                  name: phone
+                  type: varchar(50)
+              - column:
+                  name: email
+                  type: varchar(255)
+              - column:
+                  name: website_url
+                  type: varchar(500)
+              - column:
+                  name: opening_hours
+                  type: text
+              - column:
+                  name: logo_url
+                  type: varchar(500)
+              - column:
+                  name: brand_color
+                  type: varchar(7)
+              - column:
+                  name: banner_image_url
+                  type: varchar(500)
+              - column:
+                  name: max_occupancy
+                  type: int
+              - column:
+                  name: parent_facility_id
+                  type: uuid
+              - column:
+                  name: active
+                  type: boolean
+                  defaultValueBoolean: true
+              - column:
+                  name: tenant_id
+                  type: varchar(100)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+
+        - createTable:
+            tableName: facility_configurations
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: facility_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: config_key
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: config_value
+                  type: text
+              - column:
+                  name: description
+                  type: varchar(500)
+              - column:
+                  name: tenant_id
+                  type: varchar(100)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+
+        - createTable:
+            tableName: member_facility_access
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: member_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: facility_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: home_facility
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: cross_facility_access
+                  type: boolean
+                  defaultValueBoolean: true
+              - column:
+                  name: tenant_id
+                  type: varchar(100)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: facilities
+            baseColumnNames: parent_facility_id
+            referencedTableName: facilities
+            referencedColumnNames: id
+            constraintName: fk_facilities_parent
+        - addForeignKeyConstraint:
+            baseTableName: facility_configurations
+            baseColumnNames: facility_id
+            referencedTableName: facilities
+            referencedColumnNames: id
+            constraintName: fk_facility_configs_facility
+        - addForeignKeyConstraint:
+            baseTableName: member_facility_access
+            baseColumnNames: member_id
+            referencedTableName: members
+            referencedColumnNames: id
+            constraintName: fk_member_facility_access_member
+        - addForeignKeyConstraint:
+            baseTableName: member_facility_access
+            baseColumnNames: facility_id
+            referencedTableName: facilities
+            referencedColumnNames: id
+            constraintName: fk_member_facility_access_facility
+        - addForeignKeyConstraint:
+            baseTableName: employee_facilities
+            baseColumnNames: facility_id
+            referencedTableName: facilities
+            referencedColumnNames: id
+            constraintName: fk_employee_facilities_facility
+
+        - createIndex:
+            tableName: facilities
+            indexName: idx_facilities_parent
+            columns:
+              - column:
+                  name: parent_facility_id
+        - createIndex:
+            tableName: facilities
+            indexName: idx_facilities_active
+            columns:
+              - column:
+                  name: active
+        - createIndex:
+            tableName: facility_configurations
+            indexName: idx_facility_configs_facility_id
+            columns:
+              - column:
+                  name: facility_id
+        - createIndex:
+            tableName: facility_configurations
+            indexName: idx_facility_configs_key
+            columns:
+              - column:
+                  name: facility_id
+              - column:
+                  name: config_key
+            unique: true
+        - createIndex:
+            tableName: member_facility_access
+            indexName: idx_member_facility_access_member
+            columns:
+              - column:
+                  name: member_id
+        - createIndex:
+            tableName: member_facility_access
+            indexName: idx_member_facility_access_facility
+            columns:
+              - column:
+                  name: facility_id
+        - createIndex:
+            tableName: member_facility_access
+            indexName: idx_member_facility_access_unique
+            columns:
+              - column:
+                  name: member_id
+              - column:
+                  name: facility_id
+            unique: true

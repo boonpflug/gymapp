@@ -11,6 +11,7 @@ const navItems = [
   { path: '/communication', label: 'Communication' },
   { path: '/sales', label: 'Sales' },
   { path: '/staff', label: 'Staff' },
+  { path: '/facilities', label: 'Facilities' },
 ]
 
 export default function Layout() {

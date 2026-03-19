@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -25,4 +26,6 @@ public interface LeadRepository extends JpaRepository<Lead, UUID>, JpaSpecificat
     long countConverted();
 
     Page<Lead> findAllByOrderByCreatedAtDesc(Pageable pageable);
+
+    Optional<Lead> findByEmail(String email);
 }

@@ -50,6 +50,13 @@ export interface MemberDto {
   gender?: string
   street?: string
   city?: string
+  state?: string
+  postalCode?: string
+  country?: string
+  emergencyContactName?: string
+  emergencyContactPhone?: string
+  profilePhotoUrl?: string
+  healthNotes?: string
   status: 'ACTIVE' | 'INACTIVE' | 'DELETED'
   joinDate?: string
   createdAt: string
@@ -65,6 +72,10 @@ export interface ContractDto {
   endDate?: string
   nextBillingDate?: string
   monthlyAmount: number
+  discountCode?: string
+  cancellationDate?: string
+  cancellationEffectiveDate?: string
+  cancellationReason?: string
   autoRenew: boolean
 }
 
@@ -76,19 +87,25 @@ export interface MembershipTierDto {
   billingCycle: 'MONTHLY' | 'QUARTERLY' | 'YEARLY'
   minimumTermMonths: number
   noticePeriodDays: number
+  classAllowance?: number
+  accessRules?: string
   active: boolean
 }
 
 export interface InvoiceDto {
   id: string
   memberId: string
+  contractId?: string
   invoiceNumber: string
   amount: number
+  vatAmount?: number
   totalAmount: number
   currency: string
   status: 'DRAFT' | 'ISSUED' | 'PAID' | 'OVERDUE' | 'CANCELLED'
   issuedAt: string
   dueDate: string
+  paidAt?: string
+  pdfUrl?: string
 }
 
 export interface CheckInDto {
@@ -589,6 +606,72 @@ export interface ShiftReportDto {
   difference: number
   shiftCount: number
   timeEntryCount: number
+}
+
+// Facility / Multi-location types
+
+export interface FacilityDto {
+  id: string
+  name: string
+  description?: string
+  street?: string
+  city?: string
+  state?: string
+  postalCode?: string
+  country?: string
+  timezone?: string
+  phone?: string
+  email?: string
+  websiteUrl?: string
+  openingHours?: string
+  logoUrl?: string
+  brandColor?: string
+  bannerImageUrl?: string
+  maxOccupancy?: number
+  parentFacilityId?: string
+  parentFacilityName?: string
+  active: boolean
+  memberCount: number
+  employeeCount: number
+  childFacilities?: FacilityDto[]
+  createdAt: string
+}
+
+export interface FacilityConfigDto {
+  id: string
+  facilityId: string
+  configKey: string
+  configValue?: string
+  description?: string
+}
+
+export interface MemberFacilityAccessDto {
+  id: string
+  memberId: string
+  memberName?: string
+  facilityId: string
+  facilityName?: string
+  homeFacility: boolean
+  crossFacilityAccess: boolean
+}
+
+export interface FacilitySummaryDto {
+  facility: FacilityDto
+  activeMembers: number
+  checkInsToday: number
+  newMembersThisMonth: number
+  revenueThisMonth: number
+  currentOccupancy: number
+}
+
+export interface ConsolidatedDashboardDto {
+  totalFacilities: number
+  totalActiveMembers: number
+  totalCheckInsToday: number
+  totalNewMembersThisMonth: number
+  totalRevenueThisMonth: number
+  totalOutstandingPayments: number
+  facilitySummaries: FacilitySummaryDto[]
 }
 
 export interface TrainingGoalDto {

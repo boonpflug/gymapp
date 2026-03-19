@@ -213,7 +213,8 @@ export default function CheckInPage() {
                         <CheckInStatusBadge status={ci.status} reason={ci.denialReason} />
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-500">
-                        {new Date(ci.checkInTime).toLocaleTimeString()}
+                        <div>{new Date(ci.checkInTime).toLocaleDateString()}</div>
+                        <div className="text-xs">{new Date(ci.checkInTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
                       </td>
                       <td className="px-6 py-4">
                         {ci.status === 'SUCCESS' && !ci.checkOutTime && (

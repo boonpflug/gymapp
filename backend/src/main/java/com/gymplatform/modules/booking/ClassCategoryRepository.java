@@ -10,4 +10,6 @@ import java.util.UUID;
 public interface ClassCategoryRepository extends JpaRepository<ClassCategory, UUID> {
 
     List<ClassCategory> findByActiveTrue();
+
+    List<ClassCategory> findByActiveTrueOrderByNameAsc();
 }

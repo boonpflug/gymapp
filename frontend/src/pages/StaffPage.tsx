@@ -56,6 +56,7 @@ export default function StaffPage() {
 function EmployeeList() {
   const queryClient = useQueryClient()
   const [showCreate, setShowCreate] = useState(false)
+  const [editEmployee, setEditEmployee] = useState<EmployeeDto | null>(null)
 
   const { data, isLoading } = useQuery({
     queryKey: ['employees'],
@@ -70,6 +71,14 @@ function EmployeeList() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['employees'] })
       setShowCreate(false)
+    },
+  })
+
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: Record<string, unknown> }) => api.post(`/staff/employees/${id}`, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['employees'] })
+      setEditEmployee(null)
     },
   })
 
@@ -108,7 +117,7 @@ function EmployeeList() {
             </thead>
             <tbody className="divide-y divide-gray-200">
               {employees.map((emp) => (
-                <tr key={emp.id} className="hover:bg-gray-50">
+                <tr key={emp.id} className="hover:bg-gray-50 cursor-pointer" onClick={() => setEditEmployee(emp)}>
                   <td className="px-4 py-3 text-sm font-medium">
                     {emp.firstName} {emp.lastName}
                   </td>
@@ -125,13 +134,15 @@ function EmployeeList() {
                   </td>
                   <td className="px-4 py-3 text-sm text-gray-600">{emp.position || '—'}</td>
                   <td className="px-4 py-3 text-sm text-gray-500">{emp.email || emp.phone || '—'}</td>
-                  <td className="px-4 py-3">
-                    <button
-                      onClick={() => deactivateMutation.mutate(emp.id)}
-                      className="text-xs text-red-500 hover:text-red-700"
-                    >
-                      Deactivate
-                    </button>
+                  <td className="px-4 py-3" onClick={e => e.stopPropagation()}>
+                    {emp.active && (
+                      <button
+                        onClick={() => deactivateMutation.mutate(emp.id)}
+                        className="text-xs text-red-500 hover:text-red-700"
+                      >
+                        Deactivate
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}
@@ -147,6 +158,15 @@ function EmployeeList() {
           isLoading={createMutation.isPending}
         />
       )}
+
+      {editEmployee && (
+        <CreateEmployeeModal
+          onClose={() => setEditEmployee(null)}
+          onSubmit={(data) => updateMutation.mutate({ id: editEmployee.id, data })}
+          isLoading={updateMutation.isPending}
+          initialData={editEmployee}
+        />
+      )}
     </div>
   )
 }
@@ -155,27 +175,29 @@ function CreateEmployeeModal({
   onClose,
   onSubmit,
   isLoading,
+  initialData,
 }: {
   onClose: () => void
   onSubmit: (data: Record<string, unknown>) => void
   isLoading: boolean
+  initialData?: EmployeeDto
 }) {
   const [form, setForm] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    role: '',
-    employmentType: 'FULL_TIME' as EmploymentType,
-    position: '',
-    hourlyRate: '',
-    competencies: '',
+    firstName: initialData?.firstName ?? '',
+    lastName: initialData?.lastName ?? '',
+    email: initialData?.email ?? '',
+    phone: initialData?.phone ?? '',
+    role: initialData?.role ?? '',
+    employmentType: (initialData?.employmentType ?? 'FULL_TIME') as EmploymentType,
+    position: initialData?.position ?? '',
+    hourlyRate: initialData?.hourlyRate != null ? String(initialData.hourlyRate) : '',
+    competencies: initialData?.competencies ?? '',
   })
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6">
-        <h2 className="text-lg font-bold mb-4">Add Employee</h2>
+        <h2 className="text-lg font-bold mb-4">{initialData ? 'Edit Employee' : 'Add Employee'}</h2>
         <div className="space-y-3">
           <div className="grid grid-cols-2 gap-3">
             <input placeholder="First name *" value={form.firstName}
@@ -231,7 +253,7 @@ function CreateEmployeeModal({
             disabled={!form.firstName || !form.lastName || isLoading}
             className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-indigo-700 disabled:opacity-50"
           >
-            {isLoading ? 'Creating...' : 'Add Employee'}
+            {isLoading ? 'Saving...' : initialData ? 'Update' : 'Add Employee'}
           </button>
         </div>
       </div>

@@ -428,6 +428,21 @@ function LeadDetailModal({
   const queryClient = useQueryClient()
   const [showAddActivity, setShowAddActivity] = useState(false)
 
+  const { data: pipelineRes } = useQuery({
+    queryKey: ['sales-pipeline'],
+    queryFn: () => api.get<ApiResponse<SalesPipelineDto>>('/sales/leads/pipeline').then(r => r.data),
+  })
+  const stages = pipelineRes?.data?.stages ?? []
+
+  const moveStageMutation = useMutation({
+    mutationFn: (stageId: string) => api.post(`/sales/leads/${lead.id}/move`, { stageId }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['sales-pipeline'] })
+      queryClient.invalidateQueries({ queryKey: ['leads'] })
+      onClose()
+    },
+  })
+
   const { data: activities } = useQuery({
     queryKey: ['lead-activities', lead.id],
     queryFn: async () => {
@@ -465,8 +480,26 @@ function LeadDetailModal({
         <div className="space-y-2 mb-4 text-sm">
           {lead.email && <p>Email: {lead.email}</p>}
           {lead.phone && <p>Phone: {lead.phone}</p>}
+          {lead.stageName && <p>Stage: <span className="font-medium" style={{ color: lead.stageColor || '#374151' }}>{lead.stageName}</span></p>}
+          {lead.assignedStaffName && <p>Assigned: {lead.assignedStaffName}</p>}
           {lead.notes && <p className="text-gray-600">{lead.notes}</p>}
         </div>
+
+        {stages.length > 0 && (
+          <div className="mb-4">
+            <label className="block text-xs font-medium text-gray-500 mb-1">Move to stage</label>
+            <div className="flex flex-wrap gap-1">
+              {stages.map(s => (
+                <button key={s.id} onClick={() => moveStageMutation.mutate(s.id)}
+                  disabled={s.id === lead.stageId || moveStageMutation.isPending}
+                  className={`text-xs px-2 py-1 rounded border ${s.id === lead.stageId ? 'bg-gray-200 text-gray-500 cursor-default' : 'hover:bg-gray-50 cursor-pointer'}`}
+                  style={s.id !== lead.stageId ? { borderColor: s.color || '#d1d5db', color: s.color || '#374151' } : {}}>
+                  {s.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-sm font-medium">Activity Log ({activityList.length})</h3>

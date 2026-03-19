@@ -1,0 +1,38 @@
+
+  How to start
+
+  # 1. Start PostgreSQL, Redis, RabbitMQ
+  cd infra && docker-compose up -d postgres redis rabbitmq
+
+  # 2. Start backend (runs seed automatically on first boot)
+  cd backend && mvn spring-boot:run
+
+  # 3. Start frontend
+  cd frontend && npm install && npm run dev
+
+  URLs
+
+  - Admin dashboard: http://localhost:5173
+  - Member portal: http://localhost:5173/portal
+  - Swagger: http://localhost:8080/swagger-ui.html
+  - RabbitMQ: http://localhost:15672 (gymplatform / gymplatform123)
+
+  Login
+
+  All passwords: password123 — set header X-Tenant-ID: demo-gym
+
+  ┌─────────────────┬────────────────────────────┐
+  │      Role       │           Email            │
+  ├─────────────────┼────────────────────────────┤
+  │ Owner           │ owner@fitlife.com          │
+  ├─────────────────┼────────────────────────────┤
+  │ Manager         │ manager@fitlife.com        │
+  ├─────────────────┼────────────────────────────┤
+  │ Trainer         │ anna.trainer@fitlife.com   │
+  ├─────────────────┼────────────────────────────┤
+  │ Receptionist    │ lisa.reception@fitlife.com │
+  ├─────────────────┼────────────────────────────┤
+  │ Member (portal) │ max.mueller@example.com    │
+  └─────────────────┴────────────────────────────┘
+
+  The seed runs once automatically. To re-seed, drop the tenant_demo_gym schema + delete the tenant row, then restart.

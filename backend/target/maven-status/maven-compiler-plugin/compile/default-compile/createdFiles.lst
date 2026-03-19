@@ -7,6 +7,7 @@ com/gymplatform/modules/training/Exercise.class
 com/gymplatform/modules/staff/ShiftService.class
 com/gymplatform/modules/checkin/dto/ManualCheckInRequest.class
 com/gymplatform/modules/communication/dto/MessageStatsDto$MessageStatsDtoBuilder.class
+com/gymplatform/modules/marketing/AtRiskController.class
 com/gymplatform/modules/sales/LeadActivityRepository.class
 com/gymplatform/modules/training/TrainingPlanStatus.class
 com/gymplatform/modules/contract/dto/CancelContractRequest.class
@@ -118,6 +119,7 @@ com/gymplatform/modules/contract/MembershipTierRepository.class
 com/gymplatform/modules/finance/Payment$PaymentBuilder.class
 com/gymplatform/modules/booking/dto/MarkAttendanceRequest.class
 com/gymplatform/modules/facility/dto/AssignMemberFacilityRequest.class
+com/gymplatform/modules/marketing/CampaignRecipientRepository.class
 com/gymplatform/modules/communication/ChannelType.class
 com/gymplatform/modules/checkin/AccessEventRepository.class
 com/gymplatform/modules/checkin/AccessDevice$AccessDeviceBuilder.class
@@ -162,9 +164,12 @@ com/gymplatform/modules/communication/NotificationRule.class
 com/gymplatform/modules/facility/FacilityConfigurationRepository.class
 com/gymplatform/modules/checkin/MqttAccessControlAdapter.class
 com/gymplatform/modules/contract/MembershipTierService.class
+com/gymplatform/modules/marketing/dto/AudienceCriteria.class
 com/gymplatform/modules/staff/EmployeeFacilityRepository.class
 com/gymplatform/config/multitenancy/TenantConnectionProvider.class
+com/gymplatform/modules/marketing/Campaign.class
 com/gymplatform/modules/auth/dto/RefreshTokenRequest.class
+com/gymplatform/modules/marketing/dto/CampaignRecipientDto.class
 com/gymplatform/modules/training/ExerciseType.class
 com/gymplatform/modules/checkin/AccessDeviceController.class
 com/gymplatform/modules/sales/Lead.class
@@ -203,6 +208,7 @@ com/gymplatform/modules/tenant/Tenant.class
 com/gymplatform/modules/booking/WaitlistStatus.class
 com/gymplatform/modules/communication/dto/TemplatePreviewDto$TemplatePreviewDtoBuilder.class
 com/gymplatform/shared/PageMeta.class
+com/gymplatform/modules/marketing/CampaignEventRepository.class
 com/gymplatform/modules/auth/dto/LoginRequest.class
 com/gymplatform/modules/training/TrainingSessionController.class
 com/gymplatform/config/JwtAuthenticationFilter.class
@@ -217,6 +223,7 @@ com/gymplatform/modules/facility/FacilityConfiguration$FacilityConfigurationBuil
 com/gymplatform/config/multitenancy/TenantIdentifierResolver.class
 com/gymplatform/modules/finance/PaymentMethod.class
 com/gymplatform/modules/booking/dto/WaitlistEntryDto$WaitlistEntryDtoBuilder.class
+com/gymplatform/modules/marketing/CampaignEvent.class
 com/gymplatform/modules/training/TrainingSessionService.class
 com/gymplatform/modules/contract/dto/CreateMembershipTierRequest.class
 com/gymplatform/modules/auth/UserRepository.class
@@ -280,6 +287,7 @@ com/gymplatform/modules/sales/PromoCode.class
 com/gymplatform/modules/facility/MemberFacilityAccess$MemberFacilityAccessBuilder.class
 com/gymplatform/modules/contract/dto/CreateContractRequest.class
 com/gymplatform/modules/tenant/dto/CreateTenantRequest.class
+com/gymplatform/modules/marketing/CampaignService.class
 com/gymplatform/modules/booking/ClassSchedule.class
 com/gymplatform/modules/member/MemberRepository.class
 com/gymplatform/modules/checkin/CheckInResult$CheckInResultBuilder.class
@@ -288,6 +296,7 @@ com/gymplatform/modules/sales/dto/SalesPipelineDto.class
 com/gymplatform/modules/checkin/AccessRestriction$AccessRestrictionBuilder.class
 com/gymplatform/modules/finance/PaymentService.class
 com/gymplatform/modules/sales/dto/LeadActivityDto.class
+com/gymplatform/modules/marketing/dto/AudiencePreviewDto.class
 com/gymplatform/shared/AuditLog.class
 com/gymplatform/modules/booking/ClassDefinitionController.class
 com/gymplatform/modules/finance/PaymentRunService.class
@@ -301,6 +310,7 @@ com/gymplatform/modules/checkin/AccessRestrictionService.class
 com/gymplatform/modules/booking/BookingStatus.class
 com/gymplatform/modules/sales/LeadController.class
 com/gymplatform/modules/training/TrainingSession$TrainingSessionBuilder.class
+com/gymplatform/modules/marketing/dto/CreateCampaignRequest.class
 com/gymplatform/modules/staff/dto/ShiftDto$ShiftDtoBuilder.class
 com/gymplatform/modules/portal/dto/StudioProfileDto$FacilitySummary$FacilitySummaryBuilder.class
 com/gymplatform/modules/sales/dto/CreatePromoCodeRequest.class
@@ -319,6 +329,7 @@ com/gymplatform/modules/finance/DunningLevel$DunningLevelBuilder.class
 com/gymplatform/modules/booking/RecurrenceRule.class
 com/gymplatform/modules/checkin/AccessRestrictionRepository.class
 com/gymplatform/modules/checkin/AccessRestrictionController.class
+com/gymplatform/modules/marketing/AudienceBuilderService.class
 com/gymplatform/modules/checkin/DeviceStatus$DeviceStatusBuilder.class
 com/gymplatform/modules/member/MemberController.class
 com/gymplatform/modules/checkin/CheckInService.class
@@ -352,7 +363,9 @@ com/gymplatform/modules/staff/ShiftStatus.class
 com/gymplatform/modules/booking/ClassScheduleRepository.class
 com/gymplatform/modules/sales/dto/CreateLeadActivityRequest.class
 com/gymplatform/modules/communication/dto/SendMessageRequest.class
+com/gymplatform/modules/marketing/CampaignRepository.class
 com/gymplatform/modules/finance/InvoiceController.class
+com/gymplatform/modules/marketing/CampaignRecipient.class
 com/gymplatform/modules/contract/ContractController.class
 com/gymplatform/modules/contract/dto/ContractDto$ContractDtoBuilder.class
 com/gymplatform/modules/checkin/AccessRestriction.class
@@ -372,11 +385,14 @@ com/gymplatform/shared/BusinessException.class
 com/gymplatform/modules/marketing/dto/CampaignRecipientDto$CampaignRecipientDtoBuilder.class
 com/gymplatform/modules/sales/LeadService.class
 com/gymplatform/modules/training/MuscleGroup.class
+com/gymplatform/modules/marketing/dto/CampaignDto.class
 com/gymplatform/modules/portal/dto/StudioProfileDto.class
 com/gymplatform/modules/staff/TimeTrackingService.class
 com/gymplatform/modules/marketing/dto/AudiencePreviewDto$AudienceMemberSummary$AudienceMemberSummaryBuilder.class
+com/gymplatform/modules/marketing/dto/AtRiskMemberDto.class
 com/gymplatform/modules/staff/EmployeeFacility$EmployeeFacilityBuilder.class
 com/gymplatform/modules/checkin/dto/AccessRestrictionDto$AccessRestrictionDtoBuilder.class
+com/gymplatform/modules/marketing/AtRiskDetectionService.class
 com/gymplatform/modules/training/ExerciseController.class
 com/gymplatform/modules/contract/IdlePeriod$IdlePeriodBuilder.class
 com/gymplatform/modules/checkin/dto/CheckInDto$CheckInDtoBuilder.class
@@ -392,15 +408,18 @@ com/gymplatform/modules/sales/dto/LeadDto.class
 com/gymplatform/modules/checkin/dto/AccessRestrictionDto.class
 com/gymplatform/modules/booking/dto/ClassBookingDto.class
 com/gymplatform/modules/sales/LeadRepository.class
+com/gymplatform/modules/marketing/dto/AudiencePreviewDto$AudienceMemberSummary.class
 com/gymplatform/modules/portal/MemberPortalController.class
 com/gymplatform/modules/sales/dto/MoveLeadRequest.class
 com/gymplatform/modules/communication/SentMessageRepository.class
+com/gymplatform/modules/marketing/CampaignController.class
 com/gymplatform/modules/contract/ContractService.class
 com/gymplatform/modules/sales/PromoCodeService.class
 com/gymplatform/modules/auth/AuthService.class
 com/gymplatform/modules/booking/dto/ClassBookingDto$ClassBookingDtoBuilder.class
 com/gymplatform/modules/training/dto/TrainingPlanDto$TrainingPlanDtoBuilder.class
 com/gymplatform/modules/finance/DunningLevelRepository.class
+com/gymplatform/modules/marketing/dto/CampaignStatsDto.class
 com/gymplatform/modules/checkin/AccessDeviceService.class
 com/gymplatform/modules/finance/StripeWebhookController.class
 com/gymplatform/modules/auth/dto/AuthResponse.class
@@ -412,6 +431,7 @@ com/gymplatform/modules/staff/dto/ShiftReportDto.class
 com/gymplatform/modules/booking/ClassScheduleService.class
 com/gymplatform/modules/training/dto/ExerciseDto.class
 com/gymplatform/modules/checkin/OccupancyService.class
+com/gymplatform/modules/marketing/CampaignEventType.class
 com/gymplatform/modules/member/dto/MemberNoteDto$MemberNoteDtoBuilder.class
 com/gymplatform/modules/checkin/CheckInResult.class
 com/gymplatform/modules/training/dto/TrainingGoalDto.class
@@ -426,6 +446,8 @@ com/gymplatform/modules/training/dto/StartSessionRequest.class
 com/gymplatform/modules/staff/EmployeeController.class
 com/gymplatform/modules/checkin/CheckInRepository.class
 com/gymplatform/modules/training/dto/PlanExerciseRequest.class
+com/gymplatform/modules/marketing/CampaignType.class
 com/gymplatform/modules/finance/Invoice.class
 com/gymplatform/modules/finance/Invoice$InvoiceBuilder.class
 com/gymplatform/modules/member/dto/MemberDto.class
+com/gymplatform/modules/marketing/CampaignStatus.class

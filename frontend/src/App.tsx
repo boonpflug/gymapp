@@ -21,6 +21,7 @@ import PortalInvoices from './pages/portal/PortalInvoices'
 import PortalClasses from './pages/portal/PortalClasses'
 import PortalTraining from './pages/portal/PortalTraining'
 import PortalCheckins from './pages/portal/PortalCheckins'
+import PortalPhone from './pages/portal/PortalPhone'
 import PublicStudio from './pages/public/PublicStudio'
 
 function StaffRoute({ children }: { children: React.ReactNode }) {
@@ -79,6 +80,7 @@ export default function App() {
         <Route path="classes" element={<PortalClasses />} />
         <Route path="training" element={<PortalTraining />} />
         <Route path="checkins" element={<PortalCheckins />} />
+        <Route path="phone" element={<PortalPhone />} />
       </Route>
       {/* Public studio portal (no login required) */}
       <Route path="/studio/:slug" element={<PublicStudio />} />

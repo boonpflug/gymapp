@@ -2,8 +2,11 @@ package com.gymplatform.modules.portal;
 
 import com.gymplatform.modules.checkin.CheckIn;
 import com.gymplatform.modules.checkin.CheckInRepository;
+import com.gymplatform.modules.checkin.CheckInService;
 import com.gymplatform.modules.checkin.OccupancyService;
 import com.gymplatform.modules.checkin.dto.CheckInDto;
+import com.gymplatform.modules.checkin.dto.CheckOutRequest;
+import com.gymplatform.modules.checkin.dto.ManualCheckInRequest;
 import com.gymplatform.modules.contract.ContractService;
 import com.gymplatform.modules.contract.dto.CancelContractRequest;
 import com.gymplatform.modules.contract.dto.ContractDto;
@@ -42,6 +45,7 @@ public class MemberPortalController {
     private final ContractService contractService;
     private final InvoiceService invoiceService;
     private final CheckInRepository checkInRepository;
+    private final CheckInService checkInService;
     private final OccupancyService occupancyService;
 
     // --- Profile ---
@@ -113,6 +117,28 @@ public class MemberPortalController {
             throw BusinessException.badRequest("You can only view your own invoices");
         }
         return ResponseEntity.ok(ApiResponse.success(invoice));
+    }
+
+    // --- Self Check-in / Check-out ---
+
+    @PostMapping("/checkin")
+    public ResponseEntity<ApiResponse<CheckInDto>> selfCheckIn(
+            @AuthenticationPrincipal UserDetails user) {
+        Member member = resolveCurrentMember(user);
+        ManualCheckInRequest request = new ManualCheckInRequest();
+        request.setMemberId(member.getId());
+        CheckInDto result = checkInService.manualCheckIn(request, null);
+        return ResponseEntity.ok(ApiResponse.success(result));
+    }
+
+    @PostMapping("/checkout")
+    public ResponseEntity<ApiResponse<Void>> selfCheckOut(
+            @AuthenticationPrincipal UserDetails user) {
+        Member member = resolveCurrentMember(user);
+        CheckOutRequest request = new CheckOutRequest();
+        request.setMemberId(member.getId());
+        checkInService.checkOut(request);
+        return ResponseEntity.ok(ApiResponse.success(null));
     }
 
     // --- Check-in history ---

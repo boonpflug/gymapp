@@ -9,6 +9,7 @@ const portalNavItems = [
   { path: '/portal/classes', label: 'Classes', icon: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z' },
   { path: '/portal/training', label: 'Training', icon: 'M13 10V3L4 14h7v7l9-11h-7z' },
   { path: '/portal/checkins', label: 'Check-in History', icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' },
+  { path: '/portal/phone', label: 'Mobile App', icon: 'M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3' },
 ]
 
 function NavIcon({ d }: { d: string }) {

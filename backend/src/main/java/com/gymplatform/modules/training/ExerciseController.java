@@ -73,6 +73,12 @@ public class ExerciseController {
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
+    @GetMapping("/suggest")
+    @PreAuthorize("hasAnyRole('STUDIO_OWNER', 'MANAGER', 'TRAINER')")
+    public ResponseEntity<ApiResponse<List<ExerciseDto>>> suggest(@RequestParam String name) {
+        return ResponseEntity.ok(ApiResponse.success(exerciseService.suggest(name)));
+    }
+
     @GetMapping("/equipment")
     @PreAuthorize("hasAnyRole('STUDIO_OWNER', 'MANAGER', 'TRAINER', 'MEMBER')")
     public ResponseEntity<ApiResponse<List<String>>> getEquipment() {

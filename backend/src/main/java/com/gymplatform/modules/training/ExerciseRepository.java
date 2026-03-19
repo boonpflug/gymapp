@@ -25,4 +25,10 @@ public interface ExerciseRepository extends JpaRepository<Exercise, UUID>, JpaSp
 
     @Query("SELECT DISTINCT e.equipment FROM Exercise e WHERE e.equipment IS NOT NULL AND e.active = true ORDER BY e.equipment")
     List<String> findDistinctEquipment();
+
+    @Query("SELECT e FROM Exercise e WHERE e.active = true AND LOWER(e.name) LIKE LOWER(CONCAT('%', :term, '%')) ORDER BY " +
+            "CASE WHEN LOWER(e.name) = LOWER(:term) THEN 0 " +
+            "WHEN LOWER(e.name) LIKE LOWER(CONCAT(:term, '%')) THEN 1 " +
+            "ELSE 2 END, LENGTH(e.name)")
+    List<Exercise> suggestByName(@Param("term") String term, Pageable pageable);
 }

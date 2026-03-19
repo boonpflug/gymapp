@@ -99,6 +99,33 @@ public class ExerciseService {
         return exerciseRepository.findDistinctEquipment();
     }
 
+    public List<ExerciseDto> suggest(String term) {
+        if (term == null || term.length() < 2) return List.of();
+        // Try full term first
+        var results = exerciseRepository.suggestByName(term, org.springframework.data.domain.PageRequest.of(0, 5));
+        if (!results.isEmpty()) return results.stream().map(this::toDto).toList();
+        // If no results, try each word individually and intersect
+        String[] words = term.trim().split("\\s+");
+        if (words.length > 1) {
+            // Search with the longest word first
+            String longest = "";
+            for (String w : words) if (w.length() > longest.length()) longest = w;
+            var candidates = exerciseRepository.suggestByName(longest, org.springframework.data.domain.PageRequest.of(0, 20));
+            String termLower = term.toLowerCase();
+            return candidates.stream()
+                    .filter(e -> {
+                        String nameLower = e.getName().toLowerCase();
+                        for (String w : words) {
+                            if (w.length() >= 2 && !nameLower.contains(w.toLowerCase())) return false;
+                        }
+                        return true;
+                    })
+                    .limit(5)
+                    .map(this::toDto).toList();
+        }
+        return List.of();
+    }
+
     private ExerciseDto toDto(Exercise e) {
         return ExerciseDto.builder()
                 .id(e.getId())

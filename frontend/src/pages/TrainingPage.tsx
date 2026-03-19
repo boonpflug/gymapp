@@ -156,13 +156,92 @@ function ExerciseModal({ initial, onClose, onSubmit, isLoading }: {
     executionTips: initial?.executionTips ?? '', postureNotes: initial?.postureNotes ?? '',
     difficultyLevel: initial?.difficultyLevel ?? 'BEGINNER',
   })
+  const [suggestTerm, setSuggestTerm] = useState('')
+  const [showSuggestions, setShowSuggestions] = useState(false)
+  const [appliedSuggestion, setAppliedSuggestion] = useState<string | null>(null)
+
+  // Fuzzy suggest query — fires as user types exercise name (only for new exercises)
+  const { data: suggestRes } = useQuery({
+    queryKey: ['exercise-suggest', suggestTerm],
+    queryFn: () => api.get<ApiResponse<ExerciseDto[]>>('/training/exercises/suggest', { params: { name: suggestTerm } }).then(r => r.data),
+    enabled: !initial && suggestTerm.length >= 3 && showSuggestions,
+  })
+  const suggestions: ExerciseDto[] = Array.isArray(suggestRes?.data) ? suggestRes!.data : []
+
+  const handleNameChange = (value: string) => {
+    setForm({ ...form, name: value })
+    setSuggestTerm(value)
+    setShowSuggestions(true)
+    setAppliedSuggestion(null)
+  }
+
+  const applySuggestion = (ex: ExerciseDto) => {
+    setForm({
+      name: form.name, // keep the name the user typed
+      description: ex.description || form.description,
+      exerciseType: ex.exerciseType || form.exerciseType,
+      primaryMuscleGroup: ex.primaryMuscleGroup || form.primaryMuscleGroup,
+      secondaryMuscleGroup: ex.secondaryMuscleGroup || form.secondaryMuscleGroup,
+      equipment: ex.equipment || form.equipment,
+      videoUrl: ex.videoUrl || form.videoUrl,
+      executionTips: ex.executionTips || form.executionTips,
+      postureNotes: ex.postureNotes || form.postureNotes,
+      difficultyLevel: ex.difficultyLevel || form.difficultyLevel,
+    })
+    setShowSuggestions(false)
+    setAppliedSuggestion(ex.name)
+  }
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto p-6">
         <h2 className="text-lg font-bold mb-4">{initial ? 'Edit Exercise' : 'Add Exercise'}</h2>
         <div className="space-y-3">
-          <input placeholder="Exercise name *" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} className="w-full border rounded px-3 py-2 text-sm" />
+          {/* Name field with smart suggest */}
+          <div className="relative">
+            <input placeholder="Exercise name *" value={form.name}
+              onChange={e => handleNameChange(e.target.value)}
+              onFocus={() => form.name.length >= 3 && setShowSuggestions(true)}
+              className="w-full border rounded px-3 py-2 text-sm" />
+            {!initial && showSuggestions && suggestions.length > 0 && (
+              <div className="absolute z-20 w-full bg-white border border-indigo-200 rounded-lg shadow-lg mt-1 overflow-hidden">
+                <div className="px-3 py-1.5 bg-indigo-50 text-xs text-indigo-600 font-medium">
+                  Auto-fill from similar exercises
+                </div>
+                {suggestions.map(s => (
+                  <button key={s.id} onClick={() => applySuggestion(s)}
+                    className="w-full text-left px-3 py-2.5 text-sm hover:bg-indigo-50 flex items-center gap-3 border-t border-gray-100">
+                    {s.thumbnailUrl ? (
+                      <img src={s.thumbnailUrl} alt="" className="w-10 h-7 object-cover rounded flex-shrink-0" />
+                    ) : (
+                      <div className="w-10 h-7 bg-gray-100 rounded flex-shrink-0 flex items-center justify-center text-xs">🏋️</div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium truncate">{s.name}</p>
+                      <p className="text-xs text-gray-400 truncate">
+                        {s.primaryMuscleGroup?.replace(/_/g, ' ')} &middot; {s.exerciseType?.replace(/_/g, ' ')}
+                        {s.equipment && <> &middot; {s.equipment}</>}
+                      </p>
+                    </div>
+                    <span className="text-xs text-indigo-500 flex-shrink-0">Fill</span>
+                  </button>
+                ))}
+                <button onClick={() => setShowSuggestions(false)}
+                  className="w-full text-center py-1.5 text-xs text-gray-400 hover:text-gray-600 border-t">
+                  Dismiss
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Applied suggestion banner */}
+          {appliedSuggestion && (
+            <div className="bg-green-50 border border-green-200 rounded-lg px-3 py-2 text-xs text-green-700 flex items-center justify-between">
+              <span>Auto-filled from: <strong>{appliedSuggestion}</strong></span>
+              <button onClick={() => setAppliedSuggestion(null)} className="text-green-500 hover:text-green-700">&times;</button>
+            </div>
+          )}
+
           <textarea placeholder="Description" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} className="w-full border rounded px-3 py-2 text-sm" rows={2} />
           <div className="grid grid-cols-2 gap-3">
             <select value={form.exerciseType} onChange={e => setForm({ ...form, exerciseType: e.target.value as ExerciseType })} className="border rounded px-3 py-2 text-sm">

@@ -3,9 +3,34 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import api from '../../api/client'
 import type { ApiResponse, ClassScheduleDto, ClassBookingDto, MemberDto } from '../../types'
 
+/** Format date as YYYY-MM-DD in LOCAL timezone (not UTC) */
+function localDateStr(d: Date): string {
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${y}-${m}-${day}`
+}
+
+/** Get the day-of-week index (0=Mon..6=Sun) for a UTC timestamp, in local time */
+function localDayIndex(isoString: string): number {
+  const d = new Date(isoString)
+  const day = d.getDay() // 0=Sun..6=Sat
+  return day === 0 ? 6 : day - 1 // convert to 0=Mon..6=Sun
+}
+
+function getMonday(date: Date): Date {
+  const d = new Date(date)
+  d.setHours(12, 0, 0, 0) // noon local avoids UTC date-shift at midnight
+  const day = d.getDay()
+  const diff = d.getDate() - day + (day === 0 ? -6 : 1)
+  d.setDate(diff)
+  return d
+}
+
 export default function PortalClasses() {
   const qc = useQueryClient()
   const [tab, setTab] = useState<'schedule' | 'bookings'>('schedule')
+  const [weekOffset, setWeekOffset] = useState(0)
 
   const { data: profileRes } = useQuery({
     queryKey: ['portal-profile'],
@@ -13,12 +38,17 @@ export default function PortalClasses() {
   })
   const memberId = profileRes?.data?.id
 
-  // Weekly schedule
-  const weekStart = new Date()
-  weekStart.setHours(0, 0, 0, 0)
-  weekStart.setDate(weekStart.getDate() - weekStart.getDay() + 1)
+  // Weekly schedule with navigation
+  const baseMonday = getMonday(new Date())
+  const weekStart = new Date(baseMonday)
+  weekStart.setDate(weekStart.getDate() + weekOffset * 7)
+  const weekEnd = new Date(weekStart)
+  weekEnd.setDate(weekEnd.getDate() + 6)
 
-  const { data: scheduleRes } = useQuery({
+  const weekLabel = `${weekStart.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} — ${weekEnd.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}`
+  const isCurrentWeek = weekOffset === 0
+
+  const { data: scheduleRes, isLoading: schedulesLoading } = useQuery({
     queryKey: ['portal-schedule', weekStart.toISOString()],
     queryFn: () =>
       api.get<ApiResponse<ClassScheduleDto[]>>('/booking/schedules/weekly', {
@@ -29,6 +59,15 @@ export default function PortalClasses() {
   const schedules: ClassScheduleDto[] = Array.isArray(rawSchedules)
     ? rawSchedules
     : (rawSchedules as any)?.content ?? []
+
+  // Group schedules by local day index (0=Mon..6=Sun)
+  const schedulesByDay: Record<number, ClassScheduleDto[]> = {}
+  for (const s of schedules) {
+    if (s.cancelled) continue
+    const idx = localDayIndex(s.startTime)
+    if (!schedulesByDay[idx]) schedulesByDay[idx] = []
+    schedulesByDay[idx].push(s)
+  }
 
   // My bookings
   const { data: bookingsRes } = useQuery({
@@ -65,6 +104,8 @@ export default function PortalClasses() {
   )
 
   const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+  const now = new Date()
+  const todayStr = localDateStr(now)
 
   return (
     <div>
@@ -90,69 +131,111 @@ export default function PortalClasses() {
       </div>
 
       {tab === 'schedule' && (
-        <div className="grid grid-cols-1 md:grid-cols-7 gap-2">
-          {dayNames.map((day, i) => {
-            const dayDate = new Date(weekStart)
-            dayDate.setDate(dayDate.getDate() + i)
-            const dayStr = dayDate.toISOString().split('T')[0]
-            const daySchedules = schedules.filter(s => s.startTime.startsWith(dayStr) && !s.cancelled)
+        <div>
+          {/* Week navigation */}
+          <div className="flex items-center justify-between mb-4">
+            <button
+              onClick={() => setWeekOffset(w => w - 1)}
+              className="px-3 py-1.5 text-sm border rounded-lg hover:bg-gray-50"
+            >
+              &larr; Previous
+            </button>
+            <div className="text-center">
+              <p className="text-sm font-semibold text-gray-700">{weekLabel}</p>
+              {!isCurrentWeek && (
+                <button
+                  onClick={() => setWeekOffset(0)}
+                  className="text-xs text-brand-600 hover:text-brand-700"
+                >
+                  Back to this week
+                </button>
+              )}
+            </div>
+            <button
+              onClick={() => setWeekOffset(w => w + 1)}
+              className="px-3 py-1.5 text-sm border rounded-lg hover:bg-gray-50"
+            >
+              Next &rarr;
+            </button>
+          </div>
 
-            return (
-              <div key={day} className="bg-white rounded-lg shadow p-3">
-                <h3 className="font-semibold text-sm text-gray-700 mb-2 text-center">{day}</h3>
-                <p className="text-xs text-gray-400 text-center mb-3">{dayDate.toLocaleDateString()}</p>
-                {daySchedules.length === 0 ? (
-                  <p className="text-xs text-gray-400 text-center">No classes</p>
-                ) : (
-                  <div className="space-y-2">
-                    {daySchedules.map(s => {
-                      const isBooked = bookedScheduleIds.has(s.id)
-                      const isFull = s.bookedCount >= s.capacity
-                      return (
-                        <div key={s.id}
-                          className={`p-2 rounded text-xs border ${
-                            isBooked ? 'border-brand-300 bg-brand-50' : 'border-gray-200'
-                          }`}
-                        >
-                          <p className="font-semibold" style={{ color: s.categoryColor || '#374151' }}>
-                            {s.className}
-                          </p>
-                          <p className="text-gray-500">
-                            {new Date(s.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                          </p>
-                          <p className="text-gray-500">{s.trainerName}</p>
-                          <p className={`${isFull ? 'text-red-500' : 'text-gray-500'}`}>
-                            {s.bookedCount}/{s.capacity}
-                            {s.waitlistCount > 0 ? ` (+${s.waitlistCount} waitlist)` : ''}
-                          </p>
-                          {isBooked ? (
-                            <span className="text-brand-600 font-medium">Booked</span>
-                          ) : (
-                            <button
-                              onClick={() => bookMutation.mutate(s.id)}
-                              disabled={bookMutation.isPending}
-                              className={`mt-1 w-full py-1 rounded text-white text-xs ${
-                                isFull ? 'bg-orange-500 hover:bg-orange-600' : 'bg-brand-600 hover:bg-brand-700'
+          {schedulesLoading ? (
+            <p className="text-sm text-gray-400 text-center py-8">Loading schedule...</p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-7 gap-2">
+              {dayNames.map((day, i) => {
+                const dayDate = new Date(weekStart)
+                dayDate.setDate(dayDate.getDate() + i)
+                const dayDateStr = localDateStr(dayDate)
+                const daySchedules = schedulesByDay[i] ?? []
+                const isToday = dayDateStr === todayStr
+                const isPast = dayDateStr < todayStr
+
+                return (
+                  <div key={day} className={`bg-white rounded-lg shadow p-3 ${isToday ? 'ring-2 ring-brand-400' : ''} ${isPast ? 'opacity-60' : ''}`}>
+                    <h3 className={`font-semibold text-sm mb-1 text-center ${isToday ? 'text-brand-600' : 'text-gray-700'}`}>
+                      {day}
+                    </h3>
+                    <p className="text-xs text-gray-400 text-center mb-3">{dayDate.toLocaleDateString()}</p>
+                    {daySchedules.length === 0 ? (
+                      <p className="text-xs text-gray-400 text-center">No classes</p>
+                    ) : (
+                      <div className="space-y-2">
+                        {daySchedules.map(s => {
+                          const isBooked = bookedScheduleIds.has(s.id)
+                          const isFull = s.bookedCount >= s.capacity
+                          const classTime = new Date(s.startTime)
+                          const isPastClass = classTime < now
+
+                          return (
+                            <div key={s.id}
+                              className={`p-2 rounded text-xs border ${
+                                isBooked ? 'border-brand-300 bg-brand-50' : 'border-gray-200'
                               }`}
                             >
-                              {isFull ? 'Join Waitlist' : 'Book'}
-                            </button>
-                          )}
-                        </div>
-                      )
-                    })}
+                              <p className="font-semibold" style={{ color: s.categoryColor || '#374151' }}>
+                                {s.className}
+                              </p>
+                              <p className="text-gray-500">
+                                {classTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                              </p>
+                              <p className="text-gray-500">{s.trainerName}</p>
+                              <p className={`${isFull ? 'text-red-500' : 'text-gray-500'}`}>
+                                {s.bookedCount}/{s.capacity}
+                                {s.waitlistCount > 0 ? ` (+${s.waitlistCount} waitlist)` : ''}
+                              </p>
+                              {isPastClass ? (
+                                <span className="text-gray-400 text-[10px]">Past</span>
+                              ) : isBooked ? (
+                                <span className="text-brand-600 font-medium">Booked</span>
+                              ) : (
+                                <button
+                                  onClick={() => bookMutation.mutate(s.id)}
+                                  disabled={bookMutation.isPending}
+                                  className={`mt-1 w-full py-1 rounded text-white text-xs ${
+                                    isFull ? 'bg-orange-500 hover:bg-orange-600' : 'bg-brand-600 hover:bg-brand-700'
+                                  }`}
+                                >
+                                  {bookMutation.isPending ? '...' : isFull ? 'Join Waitlist' : 'Book'}
+                                </button>
+                              )}
+                            </div>
+                          )
+                        })}
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            )
-          })}
+                )
+              })}
+            </div>
+          )}
         </div>
       )}
 
       {tab === 'bookings' && (
         <div className="space-y-3">
           {bookings.length === 0 ? (
-            <p className="text-gray-500">No bookings yet.</p>
+            <p className="text-gray-500">No bookings yet. Go to the schedule to book a class!</p>
           ) : (
             bookings.map(b => (
               <div key={b.id} className="bg-white rounded-lg shadow p-4 flex items-center justify-between">

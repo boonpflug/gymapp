@@ -18,13 +18,13 @@ export default function ClassesPage() {
   const [showCreateSchedule, setShowCreateSchedule] = useState(false)
   const queryClient = useQueryClient()
 
-  // Current week range
+  // Current week range — use noon to avoid timezone date-shift issues
   const weekStart = useMemo(() => {
     const now = new Date()
     const day = now.getDay()
     const diff = now.getDate() - day + (day === 0 ? -6 : 1) // Monday
     const monday = new Date(now.setDate(diff))
-    monday.setHours(0, 0, 0, 0)
+    monday.setHours(12, 0, 0, 0) // noon local avoids UTC date shift
     return monday.toISOString()
   }, [])
 

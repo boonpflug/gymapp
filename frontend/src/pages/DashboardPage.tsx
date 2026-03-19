@@ -17,7 +17,7 @@ export default function DashboardPage() {
   const recentCheckins: CheckInDto[] = checkinsRes?.data?.content ?? (Array.isArray(checkinsRes?.data) ? checkinsRes!.data as unknown as CheckInDto[] : [])
 
   const weekStart = new Date()
-  weekStart.setHours(0, 0, 0, 0)
+  weekStart.setHours(6, 0, 0, 0) // early morning local, avoids UTC date shift
 
   const { data: scheduleRes } = useQuery({
     queryKey: ['dashboard-schedule'],

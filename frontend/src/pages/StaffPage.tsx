@@ -34,7 +34,7 @@ export default function StaffPage() {
               onClick={() => setActiveTab(tab.key)}
               className={`pb-3 px-1 text-sm font-medium border-b-2 ${
                 activeTab === tab.key
-                  ? 'border-indigo-500 text-indigo-600'
+                  ? 'border-brand-500 text-brand-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
@@ -94,7 +94,7 @@ function EmployeeList() {
       <div className="flex justify-end mb-4">
         <button
           onClick={() => setShowCreate(true)}
-          className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-indigo-700"
+          className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-700"
         >
           Add Employee
         </button>
@@ -251,7 +251,7 @@ function CreateEmployeeModal({
               competencies: form.competencies || undefined,
             })}
             disabled={!form.firstName || !form.lastName || isLoading}
-            className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-indigo-700 disabled:opacity-50"
+            className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-700 disabled:opacity-50"
           >
             {isLoading ? 'Saving...' : initialData ? 'Update' : 'Add Employee'}
           </button>
@@ -293,7 +293,7 @@ function ShiftSchedule() {
   const statusColor = (status: ShiftStatus) => {
     const colors: Record<ShiftStatus, string> = {
       SCHEDULED: 'bg-blue-100 text-blue-700',
-      CONFIRMED: 'bg-indigo-100 text-indigo-700',
+      CONFIRMED: 'bg-brand-100 text-brand-700',
       IN_PROGRESS: 'bg-yellow-100 text-yellow-700',
       COMPLETED: 'bg-green-100 text-green-700',
       CANCELLED: 'bg-gray-100 text-gray-500',
@@ -306,7 +306,7 @@ function ShiftSchedule() {
     <div>
       <div className="flex justify-end mb-4">
         <button onClick={() => setShowCreate(true)}
-          className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-indigo-700">
+          className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-700">
           Add Shift
         </button>
       </div>
@@ -400,7 +400,7 @@ function CreateShiftModal({
               notes: form.notes || undefined,
             })}
             disabled={!form.employeeId || !form.startTime || !form.endTime || isLoading}
-            className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-indigo-700 disabled:opacity-50"
+            className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-700 disabled:opacity-50"
           >
             {isLoading ? 'Creating...' : 'Add Shift'}
           </button>

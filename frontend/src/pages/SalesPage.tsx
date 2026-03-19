@@ -45,7 +45,7 @@ export default function SalesPage() {
               onClick={() => setActiveTab(tab.key)}
               className={`pb-3 px-1 text-sm font-medium border-b-2 ${
                 activeTab === tab.key
-                  ? 'border-indigo-500 text-indigo-600'
+                  ? 'border-brand-500 text-brand-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
@@ -89,7 +89,7 @@ function PipelineView() {
         <p className="text-gray-500 mb-4">No pipeline stages configured yet.</p>
         <button
           onClick={() => initMutation.mutate()}
-          className="bg-indigo-600 text-white px-6 py-2 rounded-lg text-sm hover:bg-indigo-700"
+          className="bg-brand-600 text-white px-6 py-2 rounded-lg text-sm hover:bg-brand-700"
         >
           Initialize Default Stages
         </button>
@@ -109,7 +109,7 @@ function PipelineView() {
           <p className="text-sm text-gray-500">Converted</p>
         </div>
         <div className="bg-white rounded-lg shadow p-4">
-          <p className="text-2xl font-bold text-indigo-600">{pipeline.conversionRate.toFixed(1)}%</p>
+          <p className="text-2xl font-bold text-brand-600">{pipeline.conversionRate.toFixed(1)}%</p>
           <p className="text-sm text-gray-500">Conversion Rate</p>
         </div>
       </div>
@@ -160,7 +160,7 @@ function PipelineColumn({ stage }: { stage: LeadStageDto }) {
             {lead.email && <p className="text-xs text-gray-400 mt-1">{lead.email}</p>}
             <div className="flex items-center justify-between mt-2">
               {lead.assignedStaffName && (
-                <span className="text-xs text-indigo-600">{lead.assignedStaffName}</span>
+                <span className="text-xs text-brand-600">{lead.assignedStaffName}</span>
               )}
               <span className="text-xs text-gray-400">{lead.activityCount} activities</span>
             </div>
@@ -235,7 +235,7 @@ function LeadsList() {
         </div>
         <button
           onClick={() => setShowCreate(true)}
-          className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-indigo-700"
+          className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-700"
         >
           Add Lead
         </button>
@@ -262,7 +262,7 @@ function LeadsList() {
                   <td className="px-4 py-3">
                     <button
                       onClick={() => setSelectedLead(lead)}
-                      className="text-sm font-medium text-indigo-600 hover:underline"
+                      className="text-sm font-medium text-brand-600 hover:underline"
                     >
                       {lead.firstName} {lead.lastName}
                     </button>
@@ -408,7 +408,7 @@ function CreateLeadModal({
               notes: form.notes || undefined,
             })}
             disabled={!form.firstName || !form.lastName || isLoading}
-            className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-indigo-700 disabled:opacity-50"
+            className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-700 disabled:opacity-50"
           >
             {isLoading ? 'Creating...' : 'Add Lead'}
           </button>
@@ -505,7 +505,7 @@ function LeadDetailModal({
           <h3 className="text-sm font-medium">Activity Log ({activityList.length})</h3>
           <button
             onClick={() => setShowAddActivity(!showAddActivity)}
-            className="text-xs text-indigo-600 hover:text-indigo-800"
+            className="text-xs text-brand-600 hover:text-brand-700"
           >
             + Add Activity
           </button>
@@ -523,7 +523,7 @@ function LeadDetailModal({
           {activityList.map((a) => (
             <div key={a.id} className="bg-gray-50 rounded p-3">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">
+                <span className="text-xs font-medium bg-brand-100 text-brand-700 px-2 py-0.5 rounded">
                   {a.activityType}
                 </span>
                 <span className="text-xs text-gray-400">
@@ -599,7 +599,7 @@ function AddActivityForm({
           dueDate: form.dueDate || undefined,
         })}
         disabled={isLoading}
-        className="bg-indigo-600 text-white px-3 py-1 rounded text-xs hover:bg-indigo-700 disabled:opacity-50"
+        className="bg-brand-600 text-white px-3 py-1 rounded text-xs hover:bg-brand-700 disabled:opacity-50"
       >
         {isLoading ? 'Adding...' : 'Add'}
       </button>
@@ -641,7 +641,7 @@ function PromoCodeList() {
       <div className="flex justify-end mb-4">
         <button
           onClick={() => setShowCreate(true)}
-          className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-indigo-700"
+          className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-700"
         >
           Create Promo Code
         </button>
@@ -780,7 +780,7 @@ function CreatePromoModal({
               maxUsages: form.maxUsages ? parseInt(form.maxUsages) : undefined,
             })}
             disabled={!form.code || !form.discountValue || isLoading}
-            className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-indigo-700 disabled:opacity-50"
+            className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-700 disabled:opacity-50"
           >
             {isLoading ? 'Creating...' : 'Create Code'}
           </button>

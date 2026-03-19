@@ -38,7 +38,7 @@ export default function PortalTraining() {
       <div className="flex space-x-4 mb-6 border-b">
         {tabs.map(t => (
           <button key={t.key} onClick={() => setTab(t.key)}
-            className={`pb-2 px-1 text-sm font-medium ${tab === t.key ? 'border-b-2 border-emerald-600 text-emerald-600' : 'text-gray-500'}`}>
+            className={`pb-2 px-1 text-sm font-medium ${tab === t.key ? 'border-b-2 border-brand-600 text-brand-600' : 'text-gray-500'}`}>
             {t.label}
           </button>
         ))}
@@ -175,7 +175,7 @@ function PlansTab({ memberId }: { memberId?: string }) {
                                 </div>
 
                                 {ex.trainerComment && (
-                                  <p className="mt-2 text-xs text-emerald-700 italic">"{ex.trainerComment}"</p>
+                                  <p className="mt-2 text-xs text-brand-700 italic">"{ex.trainerComment}"</p>
                                 )}
                               </div>
 
@@ -297,7 +297,7 @@ function ExerciseDetailModal({ exercise, onClose }: { exercise: TrainingPlanExer
           {/* Your prescription */}
           <div className="mt-6 bg-gray-50 rounded-xl p-4">
             <h3 className="text-sm font-semibold text-gray-800 uppercase tracking-wide mb-3 flex items-center gap-2">
-              <span className="w-1 h-4 rounded-full bg-emerald-500"></span> Your Prescription
+              <span className="w-1 h-4 rounded-full bg-brand-500"></span> Your Prescription
             </h3>
             <div className="grid grid-cols-4 gap-3 text-center">
               <div className="bg-white rounded-lg p-3 shadow-sm border">
@@ -320,11 +320,11 @@ function ExerciseDetailModal({ exercise, onClose }: { exercise: TrainingPlanExer
           </div>
 
           {exercise.trainerComment && (
-            <div className="mt-4 bg-emerald-50 border border-emerald-200 rounded-xl p-4">
-              <h3 className="text-sm font-semibold text-emerald-800 mb-1 flex items-center gap-2">
+            <div className="mt-4 bg-brand-50 border border-brand-200 rounded-xl p-4">
+              <h3 className="text-sm font-semibold text-brand-800 mb-1 flex items-center gap-2">
                 <span className="text-base">💬</span> Trainer Note
               </h3>
-              <p className="text-sm text-emerald-700 italic">"{exercise.trainerComment}"</p>
+              <p className="text-sm text-brand-700 italic">"{exercise.trainerComment}"</p>
             </div>
           )}
         </div>
@@ -406,7 +406,7 @@ function GoalsTab({ memberId }: { memberId?: string }) {
                 <span>{g.targetValue} {g.unit}</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2.5">
-                <div className="bg-emerald-500 h-2.5 rounded-full transition-all" style={{ width: `${Math.min((g.progressPercent ?? 0), 100)}%` }} />
+                <div className="bg-brand-500 h-2.5 rounded-full transition-all" style={{ width: `${Math.min((g.progressPercent ?? 0), 100)}%` }} />
               </div>
               <p className="text-xs text-gray-400 mt-1">{(g.progressPercent ?? 0).toFixed(0)}% complete</p>
             </div>

@@ -113,7 +113,7 @@ export default function CheckInPage() {
               placeholder="Search member by name or number..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500"
             />
 
             {search.length >= 2 && (
@@ -220,7 +220,7 @@ export default function CheckInPage() {
                         {ci.status === 'SUCCESS' && !ci.checkOutTime && (
                           <button
                             onClick={() => checkOutMutation.mutate(ci.memberId)}
-                            className="text-sm text-indigo-600 hover:text-indigo-800"
+                            className="text-sm text-brand-600 hover:text-brand-700"
                           >
                             Check Out
                           </button>

@@ -46,7 +46,7 @@ export default function TrainingPage() {
         <nav className="flex space-x-8">
           {tabs.map((tab) => (
             <button key={tab.key} onClick={() => setActiveTab(tab.key)}
-              className={`pb-3 px-1 text-sm font-medium border-b-2 ${activeTab === tab.key ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>
+              className={`pb-3 px-1 text-sm font-medium border-b-2 ${activeTab === tab.key ? 'border-brand-500 text-brand-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>
               {tab.label}
             </button>
           ))}
@@ -106,7 +106,7 @@ function ExerciseLibrary() {
             {EXERCISE_TYPES.map(t => <option key={t} value={t}>{t.replace(/_/g, ' ')}</option>)}
           </select>
         </div>
-        <button onClick={openCreate} className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-indigo-700">Add Exercise</button>
+        <button onClick={openCreate} className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-700">Add Exercise</button>
       </div>
 
       {isLoading ? <p className="text-gray-500">Loading...</p> : (
@@ -204,13 +204,13 @@ function ExerciseModal({ initial, onClose, onSubmit, isLoading }: {
               onFocus={() => form.name.length >= 3 && setShowSuggestions(true)}
               className="w-full border rounded px-3 py-2 text-sm" />
             {!initial && showSuggestions && suggestions.length > 0 && (
-              <div className="absolute z-20 w-full bg-white border border-indigo-200 rounded-lg shadow-lg mt-1 overflow-hidden">
-                <div className="px-3 py-1.5 bg-indigo-50 text-xs text-indigo-600 font-medium">
+              <div className="absolute z-20 w-full bg-white border border-brand-200 rounded-lg shadow-lg mt-1 overflow-hidden">
+                <div className="px-3 py-1.5 bg-brand-50 text-xs text-brand-600 font-medium">
                   Auto-fill from similar exercises
                 </div>
                 {suggestions.map(s => (
                   <button key={s.id} onClick={() => applySuggestion(s)}
-                    className="w-full text-left px-3 py-2.5 text-sm hover:bg-indigo-50 flex items-center gap-3 border-t border-gray-100">
+                    className="w-full text-left px-3 py-2.5 text-sm hover:bg-brand-50 flex items-center gap-3 border-t border-gray-100">
                     {s.thumbnailUrl ? (
                       <img src={s.thumbnailUrl} alt="" className="w-10 h-7 object-cover rounded flex-shrink-0" />
                     ) : (
@@ -223,7 +223,7 @@ function ExerciseModal({ initial, onClose, onSubmit, isLoading }: {
                         {s.equipment && <> &middot; {s.equipment}</>}
                       </p>
                     </div>
-                    <span className="text-xs text-indigo-500 flex-shrink-0">Fill</span>
+                    <span className="text-xs text-brand-500 flex-shrink-0">Fill</span>
                   </button>
                 ))}
                 <button onClick={() => setShowSuggestions(false)}
@@ -266,7 +266,7 @@ function ExerciseModal({ initial, onClose, onSubmit, isLoading }: {
         <div className="flex justify-end gap-3 mt-6">
           <button onClick={onClose} className="px-4 py-2 text-sm text-gray-600">Cancel</button>
           <button onClick={() => onSubmit({ ...form, secondaryMuscleGroup: form.secondaryMuscleGroup || undefined })}
-            disabled={!form.name || isLoading} className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm disabled:opacity-50">
+            disabled={!form.name || isLoading} className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm disabled:opacity-50">
             {isLoading ? 'Saving...' : initial ? 'Update' : 'Create'}
           </button>
         </div>
@@ -331,12 +331,12 @@ function TrainingPlans() {
         <div className="relative max-w-md">
           <input type="text" placeholder="Search member by name..." value={memberSearch}
             onChange={e => { setMemberSearch(e.target.value); if (selectedMember) setSelectedMember(null) }}
-            className="w-full border rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500" />
+            className="w-full border rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-brand-500" />
           {!selectedMember && (membersRes?.data ?? []).length > 0 && (
             <div className="absolute z-10 w-full bg-white border rounded-lg shadow-lg mt-1 max-h-48 overflow-y-auto">
               {(membersRes?.data ?? []).map(m => (
                 <button key={m.id} onClick={() => { setSelectedMember(m); setMemberSearch(m.firstName + ' ' + m.lastName) }}
-                  className="w-full text-left px-4 py-3 text-sm hover:bg-indigo-50 border-b last:border-0">
+                  className="w-full text-left px-4 py-3 text-sm hover:bg-brand-50 border-b last:border-0">
                   <span className="font-medium">{m.firstName} {m.lastName}</span>
                   <span className="text-gray-400 ml-2">#{m.memberNumber}</span>
                 </button>
@@ -346,7 +346,7 @@ function TrainingPlans() {
         </div>
         {selectedMember && (
           <div className="flex items-center gap-2 mt-2">
-            <span className="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-sm font-medium">
+            <span className="bg-brand-100 text-brand-700 px-3 py-1 rounded-full text-sm font-medium">
               {selectedMember.firstName} {selectedMember.lastName}
             </span>
             <button onClick={() => { setSelectedMember(null); setMemberSearch('') }} className="text-xs text-gray-500 hover:text-red-500">Clear</button>
@@ -360,7 +360,7 @@ function TrainingPlans() {
         <>
           {/* Actions */}
           <div className="flex gap-3 mb-4">
-            <button onClick={() => setShowCreate(true)} className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-indigo-700">
+            <button onClick={() => setShowCreate(true)} className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-700">
               Create Custom Plan
             </button>
             <button onClick={() => setShowAssignTemplate(true)} className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-purple-700">
@@ -535,11 +535,11 @@ function CreatePlanModal({ onClose, onCreated, defaultMemberId, defaultTemplate 
             <div className="max-w-lg mx-auto space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Plan Name *</label>
-                <input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} className="w-full border rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="e.g., Full Body Strength" />
+                <input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} className="w-full border rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500" placeholder="e.g., Full Body Strength" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                <textarea value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} className="w-full border rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500" rows={3} placeholder="What this plan focuses on..." />
+                <textarea value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} className="w-full border rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-brand-500" rows={3} placeholder="What this plan focuses on..." />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -565,11 +565,11 @@ function CreatePlanModal({ onClose, onCreated, defaultMemberId, defaultTemplate 
               </div>
               <div className="flex gap-6 pt-2">
                 <label className="flex items-center gap-2 text-sm cursor-pointer">
-                  <input type="checkbox" checked={form.template} onChange={e => setForm({ ...form, template: e.target.checked })} className="rounded text-indigo-600" />
+                  <input type="checkbox" checked={form.template} onChange={e => setForm({ ...form, template: e.target.checked })} className="rounded text-brand-600" />
                   <span>Save as Template</span>
                 </label>
                 <label className="flex items-center gap-2 text-sm cursor-pointer">
-                  <input type="checkbox" checked={form.catalog} onChange={e => setForm({ ...form, catalog: e.target.checked })} className="rounded text-indigo-600" />
+                  <input type="checkbox" checked={form.catalog} onChange={e => setForm({ ...form, catalog: e.target.checked })} className="rounded text-brand-600" />
                   <span>Show in Catalog</span>
                 </label>
               </div>
@@ -598,7 +598,7 @@ function CreatePlanModal({ onClose, onCreated, defaultMemberId, defaultTemplate 
                     <div key={ex.id}
                       onClick={() => !added && addExercise(ex)}
                       className={`rounded-lg border p-3 transition-all ${
-                        added ? 'border-green-300 bg-green-50 opacity-60' : 'border-gray-200 hover:border-indigo-300 hover:shadow-sm cursor-pointer'
+                        added ? 'border-green-300 bg-green-50 opacity-60' : 'border-gray-200 hover:border-brand-300 hover:shadow-sm cursor-pointer'
                       }`}>
                       <div className="flex items-center justify-between">
                         <div className="flex-1 min-w-0">
@@ -613,7 +613,7 @@ function CreatePlanModal({ onClose, onCreated, defaultMemberId, defaultTemplate 
                         {added ? (
                           <span className="text-xs text-green-600 font-medium ml-2">Added</span>
                         ) : (
-                          <button className="ml-2 w-7 h-7 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-lg hover:bg-indigo-200">+</button>
+                          <button className="ml-2 w-7 h-7 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center text-lg hover:bg-brand-200">+</button>
                         )}
                       </div>
                     </div>
@@ -700,7 +700,7 @@ function CreatePlanModal({ onClose, onCreated, defaultMemberId, defaultTemplate 
             <button onClick={onClose} className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800">Cancel</button>
             {step === 'details' ? (
               <button onClick={() => setStep('exercises')} disabled={!form.name}
-                className="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm hover:bg-indigo-700 disabled:opacity-50">
+                className="bg-brand-600 text-white px-5 py-2 rounded-lg text-sm hover:bg-brand-700 disabled:opacity-50">
                 Next: Add Exercises
               </button>
             ) : (
@@ -781,7 +781,7 @@ function PlanDetailModal({ planId, onClose, onPublish, onArchive }: { planId: st
                     {ex.weight ? <> @ <strong>{ex.weight}kg</strong></> : ''}
                     {ex.restSeconds ? <> &middot; {ex.restSeconds}s rest</> : ''}
                   </p>
-                  {ex.trainerComment && <p className="text-xs text-indigo-600 mt-1 italic">"{ex.trainerComment}"</p>}
+                  {ex.trainerComment && <p className="text-xs text-brand-600 mt-1 italic">"{ex.trainerComment}"</p>}
                 </div>
                 {ex.primaryMuscleGroup && (
                   <span className="text-xs px-2 py-0.5 rounded text-white" style={{ backgroundColor: muscleColor[ex.primaryMuscleGroup] || '#6b7280' }}>
@@ -940,7 +940,7 @@ function GoalsList() {
           )}
           {selectedMember && <button onClick={() => { setSelectedMember(null); setMemberSearch('') }} className="text-xs text-gray-500 underline mt-1">Clear</button>}
         </div>
-        <button onClick={() => setShowCreate(true)} className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-indigo-700">Create Goal</button>
+        <button onClick={() => setShowCreate(true)} className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-700">Create Goal</button>
       </div>
 
       {!selectedMember ? <p className="text-gray-400">Search a member to view their goals.</p> : isLoading ? <p className="text-gray-500">Loading...</p> : goals.length === 0 ? <p className="text-gray-400">No goals for this member.</p> : (
@@ -957,7 +957,7 @@ function GoalsList() {
               {g.targetValue != null && (
                 <div className="mt-2">
                   <div className="flex justify-between text-xs text-gray-500 mb-1"><span>{g.currentValue ?? 0} {g.unit}</span><span>{g.targetValue} {g.unit}</span></div>
-                  <div className="w-full bg-gray-200 rounded-full h-2"><div className="bg-indigo-600 h-2 rounded-full" style={{ width: `${Math.min(g.progressPercent ?? 0, 100)}%` }} /></div>
+                  <div className="w-full bg-gray-200 rounded-full h-2"><div className="bg-brand-600 h-2 rounded-full" style={{ width: `${Math.min(g.progressPercent ?? 0, 100)}%` }} /></div>
                 </div>
               )}
               {g.status === 'ACTIVE' && (
@@ -1002,7 +1002,7 @@ function CreateGoalModal({ onClose, onCreated, defaultMemberId }: { onClose: () 
         <div className="flex justify-end gap-3 mt-6">
           <button onClick={onClose} className="px-4 py-2 text-sm text-gray-600">Cancel</button>
           <button onClick={() => createMut.mutate({ memberId: form.memberId, goalType: form.goalType, title: form.title, description: form.description || undefined, targetValue: form.targetValue ? parseFloat(form.targetValue) : undefined, currentValue: form.currentValue ? parseFloat(form.currentValue) : undefined, unit: form.unit || undefined, targetDate: form.targetDate || undefined })}
-            disabled={!form.memberId || !form.title || createMut.isPending} className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm disabled:opacity-50">
+            disabled={!form.memberId || !form.title || createMut.isPending} className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm disabled:opacity-50">
             {createMut.isPending ? 'Creating...' : 'Create Goal'}
           </button>
         </div>

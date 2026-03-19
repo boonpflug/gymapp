@@ -11,7 +11,7 @@ export default function ContractsPage() {
       <div className="flex space-x-4 mb-6 border-b">
         {[{ key: 'tiers' as const, label: 'Membership Tiers' }, { key: 'contracts' as const, label: 'Member Contracts' }].map(t => (
           <button key={t.key} onClick={() => setTab(t.key)}
-            className={`pb-2 px-1 text-sm font-medium ${tab === t.key ? 'border-b-2 border-indigo-600 text-indigo-600' : 'text-gray-500 hover:text-gray-700'}`}>
+            className={`pb-2 px-1 text-sm font-medium ${tab === t.key ? 'border-b-2 border-brand-600 text-brand-600' : 'text-gray-500 hover:text-gray-700'}`}>
             {t.label}
           </button>
         ))}
@@ -54,13 +54,13 @@ function TiersTab() {
   return (
     <>
       <div className="flex justify-end mb-4">
-        <button onClick={openCreate} className="bg-indigo-600 text-white px-4 py-2 rounded text-sm hover:bg-indigo-700">Add Tier</button>
+        <button onClick={openCreate} className="bg-brand-600 text-white px-4 py-2 rounded text-sm hover:bg-brand-700">Add Tier</button>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {tiers.map(t => (
           <div key={t.id} className="bg-white rounded-lg shadow p-5">
             <h3 className="text-lg font-semibold">{t.name}</h3>
-            <p className="text-3xl font-bold text-indigo-600 mt-2">&euro;{t.monthlyPrice}<span className="text-sm font-normal text-gray-400">/mo</span></p>
+            <p className="text-3xl font-bold text-brand-600 mt-2">&euro;{t.monthlyPrice}<span className="text-sm font-normal text-gray-400">/mo</span></p>
             {t.description && <p className="text-sm text-gray-500 mt-2">{t.description}</p>}
             <div className="text-xs text-gray-500 mt-3 space-y-1">
               <p>Billing: {t.billingCycle}</p>
@@ -69,7 +69,7 @@ function TiersTab() {
               {t.classAllowance != null && <p>Classes: {t.classAllowance === 0 ? 'Unlimited' : t.classAllowance + '/mo'}</p>}
             </div>
             <div className="flex gap-2 mt-4 border-t pt-3">
-              <button onClick={() => openEdit(t)} className="text-xs text-indigo-600 hover:text-indigo-800">Edit</button>
+              <button onClick={() => openEdit(t)} className="text-xs text-brand-600 hover:text-brand-700">Edit</button>
               <button onClick={() => deleteMutation.mutate(t.id)} className="text-xs text-red-600 hover:text-red-800">Delete</button>
             </div>
           </div>
@@ -95,7 +95,7 @@ function TiersTab() {
               <Inp label="Access Rules" value={form.accessRules} onChange={v => setForm({ ...form, accessRules: v })} />
               <div className="flex justify-end gap-3 pt-2">
                 <button type="button" onClick={close} className="px-4 py-2 text-sm text-gray-600">Cancel</button>
-                <button type="submit" disabled={saveMutation.isPending} className="bg-indigo-600 text-white px-4 py-2 rounded text-sm disabled:opacity-50">{saveMutation.isPending ? 'Saving...' : editId ? 'Update' : 'Create'}</button>
+                <button type="submit" disabled={saveMutation.isPending} className="bg-brand-600 text-white px-4 py-2 rounded text-sm disabled:opacity-50">{saveMutation.isPending ? 'Saving...' : editId ? 'Update' : 'Create'}</button>
               </div>
             </form>
           </div>
@@ -171,7 +171,7 @@ function ContractsTab() {
         <>
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-semibold">Contracts for {selectedMember.firstName} {selectedMember.lastName}</h3>
-            <button onClick={() => setShowCreate(true)} className="bg-indigo-600 text-white px-4 py-2 rounded text-sm hover:bg-indigo-700">New Contract</button>
+            <button onClick={() => setShowCreate(true)} className="bg-brand-600 text-white px-4 py-2 rounded text-sm hover:bg-brand-700">New Contract</button>
           </div>
 
           {contracts.length === 0 ? <p className="text-gray-500">No contracts.</p> : (
@@ -230,7 +230,7 @@ function ContractsTab() {
                   <Inp label="Discount Code" value={createForm.discountCode} onChange={v => setCreateForm({ ...createForm, discountCode: v })} />
                   <div className="flex justify-end gap-3 pt-2">
                     <button type="button" onClick={() => setShowCreate(false)} className="px-4 py-2 text-sm text-gray-600">Cancel</button>
-                    <button type="submit" disabled={createMut.isPending || !createForm.membershipTierId} className="bg-indigo-600 text-white px-4 py-2 rounded text-sm disabled:opacity-50">{createMut.isPending ? 'Creating...' : 'Create'}</button>
+                    <button type="submit" disabled={createMut.isPending || !createForm.membershipTierId} className="bg-brand-600 text-white px-4 py-2 rounded text-sm disabled:opacity-50">{createMut.isPending ? 'Creating...' : 'Create'}</button>
                   </div>
                 </form>
               </div>

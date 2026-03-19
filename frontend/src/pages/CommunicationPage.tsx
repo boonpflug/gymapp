@@ -44,7 +44,7 @@ export default function CommunicationPage() {
               onClick={() => setActiveTab(tab.key)}
               className={`pb-3 px-1 text-sm font-medium border-b-2 ${
                 activeTab === tab.key
-                  ? 'border-indigo-500 text-indigo-600'
+                  ? 'border-brand-500 text-brand-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
@@ -127,7 +127,7 @@ function TemplateList() {
         </select>
         <button
           onClick={() => setShowCreate(true)}
-          className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-indigo-700"
+          className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-700"
         >
           Create Template
         </button>
@@ -273,7 +273,7 @@ function CreateTemplateModal({
               category: form.category || undefined,
             })}
             disabled={!form.name || isLoading}
-            className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-indigo-700 disabled:opacity-50"
+            className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-700 disabled:opacity-50"
           >
             {isLoading ? 'Creating...' : 'Create Template'}
           </button>
@@ -375,7 +375,7 @@ function RuleList() {
       <div className="flex justify-end mb-4">
         <button
           onClick={() => setShowCreate(true)}
-          className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-indigo-700"
+          className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-700"
         >
           Create Rule
         </button>
@@ -543,7 +543,7 @@ function CreateRuleModal({
               description: form.description || undefined,
             })}
             disabled={!form.name || !form.templateId || isLoading}
-            className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-indigo-700 disabled:opacity-50"
+            className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-700 disabled:opacity-50"
           >
             {isLoading ? 'Creating...' : 'Create Rule'}
           </button>
@@ -643,7 +643,7 @@ function MessageHistory() {
                     {msg.status === 'FAILED' && (
                       <button
                         onClick={() => resendMutation.mutate(msg.id)}
-                        className="text-xs text-indigo-600 hover:text-indigo-800"
+                        className="text-xs text-brand-600 hover:text-brand-700"
                       >
                         Resend
                       </button>

@@ -164,7 +164,7 @@ export default function FacilitiesPage() {
             onClick={() => setTab(t.key)}
             className={`pb-2 px-1 text-sm font-medium ${
               tab === t.key
-                ? 'border-b-2 border-indigo-600 text-indigo-600'
+                ? 'border-b-2 border-brand-600 text-brand-600'
                 : 'text-gray-500 hover:text-gray-700'
             }`}
           >
@@ -250,7 +250,7 @@ export default function FacilitiesPage() {
           <div className="flex justify-end mb-4">
             <button
               onClick={() => { setShowCreate(true); setEditId(null); setForm(emptyForm) }}
-              className="bg-indigo-600 text-white px-4 py-2 rounded text-sm hover:bg-indigo-700"
+              className="bg-brand-600 text-white px-4 py-2 rounded text-sm hover:bg-brand-700"
             >
               Add Facility
             </button>
@@ -280,7 +280,7 @@ export default function FacilitiesPage() {
                   {f.timezone && <p>TZ: {f.timezone}</p>}
                   {f.maxOccupancy && <p>Max Occupancy: {f.maxOccupancy}</p>}
                   {f.parentFacilityName && (
-                    <p className="text-indigo-600">Parent: {f.parentFacilityName}</p>
+                    <p className="text-brand-600">Parent: {f.parentFacilityName}</p>
                   )}
                 </div>
                 <div className="flex items-center justify-between text-sm">
@@ -288,7 +288,7 @@ export default function FacilitiesPage() {
                   <div className="flex gap-2">
                     <button
                       onClick={() => openEdit(f)}
-                      className="text-indigo-600 hover:text-indigo-800"
+                      className="text-brand-600 hover:text-brand-700"
                     >
                       Edit
                     </button>
@@ -418,7 +418,7 @@ export default function FacilitiesPage() {
                 <button
                   type="submit"
                   disabled={createMutation.isPending}
-                  className="bg-indigo-600 text-white px-4 py-2 rounded text-sm hover:bg-indigo-700 disabled:opacity-50"
+                  className="bg-brand-600 text-white px-4 py-2 rounded text-sm hover:bg-brand-700 disabled:opacity-50"
                 >
                   {createMutation.isPending ? 'Saving...' : editId ? 'Update' : 'Create'}
                 </button>

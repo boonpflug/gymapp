@@ -1,9 +1,164 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ── Theme Variables ── */
+:root {
+  --brand-50:  237 252 246;
+  --brand-100: 211 248 232;
+  --brand-200: 170 239 213;
+  --brand-300: 115 225 188;
+  --brand-400: 59 203 158;
+  --brand-500: 23 176 133;
+  --brand-600: 11 142 108;
+  --brand-700: 9 114 89;
+  --brand-800: 10 90 72;
+  --brand-900: 9 74 60;
+  --brand-950: 3 41 34;
+  --accent:       23 176 133;
+  --accent-light: 211 248 232;
+}
+
+.theme-kieser {
+  --brand-50:  240 244 250;
+  --brand-100: 214 226 242;
+  --brand-200: 174 199 230;
+  --brand-300: 124 164 212;
+  --brand-400: 74 130 190;
+  --brand-500: 49 107 170;
+  --brand-600: 37 85 140;
+  --brand-700: 30 69 115;
+  --brand-800: 25 55 92;
+  --brand-900: 18 38 66;
+  --brand-950: 12 24 46;
+  --accent:       184 150 62;
+  --accent-light: 250 243 224;
+}
+
+.theme-coral {
+  --brand-50:  255 241 237;
+  --brand-100: 255 218 207;
+  --brand-200: 255 185 167;
+  --brand-300: 255 143 116;
+  --brand-400: 248 108 80;
+  --brand-500: 232 78 50;
+  --brand-600: 200 58 35;
+  --brand-700: 165 45 28;
+  --brand-800: 130 38 26;
+  --brand-900: 90 28 20;
+  --brand-950: 52 15 10;
+  --accent:       232 78 50;
+  --accent-light: 255 218 207;
+}
+
+.theme-slate {
+  --brand-50:  248 250 252;
+  --brand-100: 226 232 240;
+  --brand-200: 203 213 225;
+  --brand-300: 148 163 184;
+  --brand-400: 100 116 139;
+  --brand-500: 71 85 105;
+  --brand-600: 51 65 85;
+  --brand-700: 45 55 72;
+  --brand-800: 30 41 59;
+  --brand-900: 15 23 42;
+  --brand-950: 2 6 23;
+  --accent:       99 102 241;
+  --accent-light: 224 231 255;
+}
+
+/* ── Brand Color Utilities (dynamic, theme-aware) ── */
+@layer utilities {
+  /* Backgrounds */
+  .bg-brand-50  { background-color: rgb(var(--brand-50)); }
+  .bg-brand-100 { background-color: rgb(var(--brand-100)); }
+  .bg-brand-200 { background-color: rgb(var(--brand-200)); }
+  .bg-brand-300 { background-color: rgb(var(--brand-300)); }
+  .bg-brand-400 { background-color: rgb(var(--brand-400)); }
+  .bg-brand-500 { background-color: rgb(var(--brand-500)); }
+  .bg-brand-600 { background-color: rgb(var(--brand-600)); }
+  .bg-brand-700 { background-color: rgb(var(--brand-700)); }
+  .bg-brand-800 { background-color: rgb(var(--brand-800)); }
+  .bg-brand-900 { background-color: rgb(var(--brand-900)); }
+  .bg-brand-950 { background-color: rgb(var(--brand-950)); }
+  .bg-accent     { background-color: rgb(var(--accent)); }
+  .bg-accent-light { background-color: rgb(var(--accent-light)); }
+
+  /* Background with opacity */
+  .bg-brand-500\/20 { background-color: rgb(var(--brand-500) / 0.2); }
+  .bg-brand-500\/30 { background-color: rgb(var(--brand-500) / 0.3); }
+  .bg-brand-600\/30 { background-color: rgb(var(--brand-600) / 0.3); }
+  .bg-brand-800\/60 { background-color: rgb(var(--brand-800) / 0.6); }
+
+  /* Text */
+  .text-brand-50  { color: rgb(var(--brand-50)); }
+  .text-brand-100 { color: rgb(var(--brand-100)); }
+  .text-brand-200 { color: rgb(var(--brand-200)); }
+  .text-brand-300 { color: rgb(var(--brand-300)); }
+  .text-brand-400 { color: rgb(var(--brand-400)); }
+  .text-brand-500 { color: rgb(var(--brand-500)); }
+  .text-brand-600 { color: rgb(var(--brand-600)); }
+  .text-brand-700 { color: rgb(var(--brand-700)); }
+  .text-brand-800 { color: rgb(var(--brand-800)); }
+  .text-brand-900 { color: rgb(var(--brand-900)); }
+  .text-brand-950 { color: rgb(var(--brand-950)); }
+  .text-accent    { color: rgb(var(--accent)); }
+
+  /* Text with opacity */
+  .text-brand-300\/70 { color: rgb(var(--brand-300) / 0.7); }
+  .text-brand-300\/80 { color: rgb(var(--brand-300) / 0.8); }
+  .text-brand-400\/70 { color: rgb(var(--brand-400) / 0.7); }
+  .text-brand-400\/80 { color: rgb(var(--brand-400) / 0.8); }
+  .text-brand-600\/50 { color: rgb(var(--brand-600) / 0.5); }
+
+  /* Borders */
+  .border-brand-100 { border-color: rgb(var(--brand-100)); }
+  .border-brand-200 { border-color: rgb(var(--brand-200)); }
+  .border-brand-300 { border-color: rgb(var(--brand-300)); }
+  .border-brand-400 { border-color: rgb(var(--brand-400)); }
+  .border-brand-500 { border-color: rgb(var(--brand-500)); }
+  .border-brand-600 { border-color: rgb(var(--brand-600)); }
+  .border-brand-700 { border-color: rgb(var(--brand-700)); }
+  .border-brand-900 { border-color: rgb(var(--brand-900)); }
+
+  /* Ring */
+  .ring-brand-500 { --tw-ring-color: rgb(var(--brand-500)); }
+
+  /* Shadows */
+  .shadow-brand-500\/30 { --tw-shadow-color: rgb(var(--brand-500) / 0.3); --tw-shadow: var(--tw-shadow-colored); }
+  .shadow-brand-600\/30 { --tw-shadow-color: rgb(var(--brand-600) / 0.3); --tw-shadow: var(--tw-shadow-colored); }
+
+  /* Gradient stops */
+  .from-brand-400 { --tw-gradient-from: rgb(var(--brand-400)) var(--tw-gradient-from-position); --tw-gradient-to: rgb(var(--brand-400) / 0) var(--tw-gradient-to-position); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to); }
+  .from-brand-950 { --tw-gradient-from: rgb(var(--brand-950)) var(--tw-gradient-from-position); --tw-gradient-to: rgb(var(--brand-950) / 0) var(--tw-gradient-to-position); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to); }
+  .via-brand-900  { --tw-gradient-to: rgb(var(--brand-900) / 0) var(--tw-gradient-to-position); --tw-gradient-stops: var(--tw-gradient-from), rgb(var(--brand-900)) var(--tw-gradient-via-position), var(--tw-gradient-to); }
+  .to-brand-600   { --tw-gradient-to: rgb(var(--brand-600)) var(--tw-gradient-to-position); }
+  .to-brand-950   { --tw-gradient-to: rgb(var(--brand-950)) var(--tw-gradient-to-position); }
+
+  /* Focus */
+  .focus\:ring-brand-500:focus { --tw-ring-color: rgb(var(--brand-500)); }
+  .focus\:ring-offset-brand-500:focus { --tw-ring-offset-color: rgb(var(--brand-500)); }
+
+  /* Hover — backgrounds */
+  .hover\:bg-brand-50:hover { background-color: rgb(var(--brand-50)); }
+  .hover\:bg-brand-200:hover { background-color: rgb(var(--brand-200)); }
+  .hover\:bg-brand-700:hover { background-color: rgb(var(--brand-700)); }
+  .hover\:bg-brand-900:hover { background-color: rgb(var(--brand-900)); }
+
+  /* Hover — text */
+  .hover\:text-brand-200:hover { color: rgb(var(--brand-200)); }
+  .hover\:text-brand-600:hover { color: rgb(var(--brand-600)); }
+  .hover\:text-brand-700:hover { color: rgb(var(--brand-700)); }
+
+  /* Hover — borders */
+  .hover\:border-brand-300:hover { border-color: rgb(var(--brand-300)); }
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }

@@ -36,7 +36,7 @@ export default function ClassesPage() {
           {tab === 'schedule' && (
             <button
               onClick={() => setShowCreateSchedule(true)}
-              className="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm hover:bg-indigo-700"
+              className="bg-brand-600 text-white px-4 py-2 rounded-md text-sm hover:bg-brand-700"
             >
               + Schedule Class
             </button>
@@ -44,7 +44,7 @@ export default function ClassesPage() {
           {tab === 'classes' && (
             <button
               onClick={() => setShowCreateClass(true)}
-              className="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm hover:bg-indigo-700"
+              className="bg-brand-600 text-white px-4 py-2 rounded-md text-sm hover:bg-brand-700"
             >
               + New Class
             </button>
@@ -52,7 +52,7 @@ export default function ClassesPage() {
           {tab === 'categories' && (
             <button
               onClick={() => setShowCreateCategory(true)}
-              className="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm hover:bg-indigo-700"
+              className="bg-brand-600 text-white px-4 py-2 rounded-md text-sm hover:bg-brand-700"
             >
               + New Category
             </button>
@@ -68,7 +68,7 @@ export default function ClassesPage() {
             onClick={() => setTab(t)}
             className={`px-4 py-2 text-sm font-medium border-b-2 ${
               tab === t
-                ? 'border-indigo-600 text-indigo-600'
+                ? 'border-brand-600 text-brand-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700'
             }`}
           >
@@ -177,7 +177,7 @@ function ScheduleTab({
                       onClick={() => onSelect(s)}
                       className={`w-full text-left p-2 rounded text-xs ${
                         selectedSchedule?.id === s.id
-                          ? 'bg-indigo-100 border border-indigo-300'
+                          ? 'bg-brand-100 border border-brand-300'
                           : 'bg-gray-50 hover:bg-gray-100'
                       }`}
                     >
@@ -294,7 +294,7 @@ function ScheduleDetail({ schedule, onClose }: { schedule: ClassScheduleDto; onC
         {schedule.virtualLink && (
           <div className="flex justify-between">
             <span className="text-gray-500">Virtual</span>
-            <a href={schedule.virtualLink} target="_blank" rel="noreferrer" className="text-indigo-600 hover:underline">
+            <a href={schedule.virtualLink} target="_blank" rel="noreferrer" className="text-brand-600 hover:underline">
               Join Link
             </a>
           </div>
@@ -556,7 +556,7 @@ function CreateCategoryModal({ onClose, onCreated }: { onClose: () => void; onCr
           <button
             onClick={() => mutation.mutate()}
             disabled={!name || mutation.isPending}
-            className="px-4 py-2 text-sm bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50"
+            className="px-4 py-2 text-sm bg-brand-600 text-white rounded-md hover:bg-brand-700 disabled:opacity-50"
           >
             {mutation.isPending ? 'Creating...' : 'Create'}
           </button>
@@ -718,7 +718,7 @@ function CreateClassModal({ onClose, onCreated }: { onClose: () => void; onCreat
           <button
             onClick={() => mutation.mutate()}
             disabled={!form.name || mutation.isPending}
-            className="px-4 py-2 text-sm bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50"
+            className="px-4 py-2 text-sm bg-brand-600 text-white rounded-md hover:bg-brand-700 disabled:opacity-50"
           >
             {mutation.isPending ? 'Creating...' : 'Create'}
           </button>
@@ -833,7 +833,7 @@ function CreateScheduleModal({ onClose, onCreated }: { onClose: () => void; onCr
           <button
             onClick={() => mutation.mutate()}
             disabled={!classId || !startDate || mutation.isPending}
-            className="px-4 py-2 text-sm bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50"
+            className="px-4 py-2 text-sm bg-brand-600 text-white rounded-md hover:bg-brand-700 disabled:opacity-50"
           >
             {mutation.isPending ? 'Scheduling...' : 'Schedule'}
           </button>

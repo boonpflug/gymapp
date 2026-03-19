@@ -103,7 +103,7 @@ export default function PortalContracts() {
                   <button
                     onClick={() => withdrawMutation.mutate(c.id)}
                     disabled={withdrawMutation.isPending}
-                    className="text-sm text-emerald-600 hover:text-emerald-800"
+                    className="text-sm text-brand-600 hover:text-brand-700"
                   >
                     Withdraw Cancellation
                   </button>

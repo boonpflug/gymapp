@@ -76,7 +76,7 @@ export default function PortalProfile() {
         {!editing && (
           <button
             onClick={() => setEditing(true)}
-            className="bg-emerald-600 text-white px-4 py-2 rounded text-sm hover:bg-emerald-700"
+            className="bg-brand-600 text-white px-4 py-2 rounded text-sm hover:bg-brand-700"
           >
             Edit Profile
           </button>
@@ -121,7 +121,7 @@ export default function PortalProfile() {
             <div className="flex justify-end gap-3 pt-2">
               <button type="button" onClick={() => setEditing(false)} className="px-4 py-2 text-sm text-gray-600">Cancel</button>
               <button type="submit" disabled={updateMutation.isPending}
-                className="bg-emerald-600 text-white px-4 py-2 rounded text-sm hover:bg-emerald-700 disabled:opacity-50">
+                className="bg-brand-600 text-white px-4 py-2 rounded text-sm hover:bg-brand-700 disabled:opacity-50">
                 {updateMutation.isPending ? 'Saving...' : 'Save Changes'}
               </button>
             </div>

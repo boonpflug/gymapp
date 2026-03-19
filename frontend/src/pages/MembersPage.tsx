@@ -83,7 +83,7 @@ export default function MembersPage() {
     <div>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-800">Members</h1>
-        <button onClick={openCreate} className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 text-sm">
+        <button onClick={openCreate} className="bg-brand-600 text-white px-4 py-2 rounded-md hover:bg-brand-700 text-sm">
           Add Member
         </button>
       </div>
@@ -91,7 +91,7 @@ export default function MembersPage() {
       <div className="mb-4">
         <input type="text" placeholder="Search by name..." value={search}
           onChange={(e) => { setSearch(e.target.value); setPage(0) }}
-          className="w-full max-w-md px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+          className="w-full max-w-md px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500" />
       </div>
 
       <div className="bg-white rounded-lg shadow overflow-hidden">
@@ -187,7 +187,7 @@ export default function MembersPage() {
               <div className="flex justify-end gap-3 pt-2">
                 <button type="button" onClick={closeModal} className="px-4 py-2 text-sm text-gray-600">Cancel</button>
                 <button type="submit" disabled={isPending}
-                  className="bg-indigo-600 text-white px-4 py-2 rounded text-sm hover:bg-indigo-700 disabled:opacity-50">
+                  className="bg-brand-600 text-white px-4 py-2 rounded text-sm hover:bg-brand-700 disabled:opacity-50">
                   {isPending ? 'Saving...' : editId ? 'Update' : 'Create'}
                 </button>
               </div>

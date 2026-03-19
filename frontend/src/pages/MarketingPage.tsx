@@ -35,7 +35,7 @@ export default function MarketingPage() {
               onClick={() => setActiveTab(t.key)}
               className={`py-3 px-1 border-b-2 text-sm font-medium ${
                 activeTab === t.key
-                  ? 'border-indigo-500 text-indigo-600'
+                  ? 'border-brand-500 text-brand-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
@@ -110,7 +110,7 @@ function CampaignsTab() {
         </select>
         <button
           onClick={() => setShowCreate(true)}
-          className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 text-sm"
+          className="bg-brand-600 text-white px-4 py-2 rounded-lg hover:bg-brand-700 text-sm"
         >
           + New Campaign
         </button>
@@ -139,7 +139,7 @@ function CampaignsTab() {
               {campaigns.map((c) => (
                 <tr key={c.id} className="hover:bg-gray-50">
                   <td className="px-4 py-3 text-sm font-medium text-gray-900">
-                    <button onClick={() => setSelectedCampaign(c)} className="hover:text-indigo-600">
+                    <button onClick={() => setSelectedCampaign(c)} className="hover:text-brand-600">
                       {c.name}
                     </button>
                   </td>
@@ -224,7 +224,7 @@ function CampaignActions({ campaign }: { campaign: CampaignDto }) {
         <button
           onClick={() => sendNow.mutate()}
           disabled={sendNow.isPending}
-          className="text-indigo-600 hover:text-indigo-800 text-xs font-medium"
+          className="text-brand-600 hover:text-brand-700 text-xs font-medium"
         >
           Send Now
         </button>
@@ -480,7 +480,7 @@ function CreateCampaignModal({ onClose }: { onClose: () => void }) {
               type="button"
               onClick={handlePreview}
               disabled={previewMutation.isPending}
-              className="mt-3 text-sm text-indigo-600 hover:text-indigo-800 font-medium"
+              className="mt-3 text-sm text-brand-600 hover:text-brand-700 font-medium"
             >
               {previewMutation.isPending ? 'Loading...' : 'Preview Audience'}
             </button>
@@ -488,7 +488,7 @@ function CreateCampaignModal({ onClose }: { onClose: () => void }) {
             {previewData && (
               <div className="mt-2 bg-gray-50 rounded-lg p-3">
                 <p className="text-sm font-medium text-gray-700 mb-1">
-                  Matching members: <span className="text-indigo-600">{previewData.totalCount}</span>
+                  Matching members: <span className="text-brand-600">{previewData.totalCount}</span>
                 </p>
                 {previewData.sample.length > 0 && (
                   <div className="text-xs text-gray-500 space-y-0.5">
@@ -511,7 +511,7 @@ function CreateCampaignModal({ onClose }: { onClose: () => void }) {
             <button
               type="submit"
               disabled={!form.name || createMutation.isPending}
-              className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-indigo-700 disabled:opacity-50"
+              className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-700 disabled:opacity-50"
             >
               {createMutation.isPending ? 'Creating...' : 'Create Campaign'}
             </button>
@@ -827,7 +827,7 @@ function AudienceBuilderTab() {
           <button
             onClick={() => previewMutation.mutate(criteria)}
             disabled={previewMutation.isPending}
-            className="w-full bg-indigo-600 text-white py-2 rounded-lg text-sm hover:bg-indigo-700 disabled:opacity-50"
+            className="w-full bg-brand-600 text-white py-2 rounded-lg text-sm hover:bg-brand-700 disabled:opacity-50"
           >
             {previewMutation.isPending ? 'Loading...' : 'Preview Audience'}
           </button>
@@ -841,8 +841,8 @@ function AudienceBuilderTab() {
           <p className="text-sm text-gray-400">Configure criteria and click Preview to see matching members.</p>
         ) : (
           <>
-            <div className="bg-indigo-50 rounded-lg p-4 mb-4">
-              <p className="text-2xl font-bold text-indigo-600">{preview.totalCount}</p>
+            <div className="bg-brand-50 rounded-lg p-4 mb-4">
+              <p className="text-2xl font-bold text-brand-600">{preview.totalCount}</p>
               <p className="text-sm text-gray-600">members match your criteria</p>
             </div>
             {preview.sample.length > 0 && (
@@ -1027,7 +1027,7 @@ function RateBar({ label, rate }: { label: string; rate?: number | null }) {
         <span className="font-medium">{val.toFixed(1)}%</span>
       </div>
       <div className="w-full bg-gray-200 rounded-full h-2">
-        <div className="bg-indigo-600 h-2 rounded-full" style={{ width: `${Math.min(val, 100)}%` }} />
+        <div className="bg-brand-600 h-2 rounded-full" style={{ width: `${Math.min(val, 100)}%` }} />
       </div>
     </div>
   )

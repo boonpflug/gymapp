@@ -25,7 +25,10 @@ export default function PortalClasses() {
         params: { weekStart: weekStart.toISOString() },
       }).then(r => r.data),
   })
-  const schedules = scheduleRes?.data ?? []
+  const rawSchedules = scheduleRes?.data
+  const schedules: ClassScheduleDto[] = Array.isArray(rawSchedules)
+    ? rawSchedules
+    : (rawSchedules as any)?.content ?? []
 
   // My bookings
   const { data: bookingsRes } = useQuery({
@@ -34,7 +37,10 @@ export default function PortalClasses() {
       api.get<ApiResponse<ClassBookingDto[]>>(`/booking/bookings/member/${memberId}`).then(r => r.data),
     enabled: !!memberId,
   })
-  const bookings = bookingsRes?.data ?? []
+  const rawBookings = bookingsRes?.data
+  const bookings: ClassBookingDto[] = Array.isArray(rawBookings)
+    ? rawBookings
+    : (rawBookings as any)?.content ?? []
 
   const bookMutation = useMutation({
     mutationFn: (scheduleId: string) =>
@@ -68,7 +74,7 @@ export default function PortalClasses() {
         <button
           onClick={() => setTab('schedule')}
           className={`pb-2 px-1 text-sm font-medium ${
-            tab === 'schedule' ? 'border-b-2 border-emerald-600 text-emerald-600' : 'text-gray-500'
+            tab === 'schedule' ? 'border-b-2 border-brand-600 text-brand-600' : 'text-gray-500'
           }`}
         >
           Weekly Schedule
@@ -76,7 +82,7 @@ export default function PortalClasses() {
         <button
           onClick={() => setTab('bookings')}
           className={`pb-2 px-1 text-sm font-medium ${
-            tab === 'bookings' ? 'border-b-2 border-emerald-600 text-emerald-600' : 'text-gray-500'
+            tab === 'bookings' ? 'border-b-2 border-brand-600 text-brand-600' : 'text-gray-500'
           }`}
         >
           My Bookings ({bookings.filter(b => b.status === 'CONFIRMED').length})
@@ -105,7 +111,7 @@ export default function PortalClasses() {
                       return (
                         <div key={s.id}
                           className={`p-2 rounded text-xs border ${
-                            isBooked ? 'border-emerald-300 bg-emerald-50' : 'border-gray-200'
+                            isBooked ? 'border-brand-300 bg-brand-50' : 'border-gray-200'
                           }`}
                         >
                           <p className="font-semibold" style={{ color: s.categoryColor || '#374151' }}>
@@ -120,13 +126,13 @@ export default function PortalClasses() {
                             {s.waitlistCount > 0 ? ` (+${s.waitlistCount} waitlist)` : ''}
                           </p>
                           {isBooked ? (
-                            <span className="text-emerald-600 font-medium">Booked</span>
+                            <span className="text-brand-600 font-medium">Booked</span>
                           ) : (
                             <button
                               onClick={() => bookMutation.mutate(s.id)}
                               disabled={bookMutation.isPending}
                               className={`mt-1 w-full py-1 rounded text-white text-xs ${
-                                isFull ? 'bg-orange-500 hover:bg-orange-600' : 'bg-emerald-600 hover:bg-emerald-700'
+                                isFull ? 'bg-orange-500 hover:bg-orange-600' : 'bg-brand-600 hover:bg-brand-700'
                               }`}
                             >
                               {isFull ? 'Join Waitlist' : 'Book'}

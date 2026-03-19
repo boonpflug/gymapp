@@ -4,6 +4,11 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { BrowserRouter } from 'react-router-dom'
 import App from './App'
 import './index.css'
+// Apply persisted theme on load
+const savedTheme = JSON.parse(localStorage.getItem('gym-theme') || '{}')?.state?.themeId
+if (savedTheme && savedTheme !== 'default') {
+  document.documentElement.classList.add(`theme-${savedTheme}`)
+}
 
 const queryClient = new QueryClient({
   defaultOptions: {

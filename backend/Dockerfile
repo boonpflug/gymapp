@@ -9,4 +9,5 @@ FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 EXPOSE ${PORT:-8080}
-ENTRYPOINT ["java", "-Xmx512m", "-jar", "app.jar"]
+ENV SPRING_PROFILES_ACTIVE=prod
+CMD java -Xmx512m -Dserver.port=${PORT:-8080} -jar app.jar

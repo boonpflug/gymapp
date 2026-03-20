@@ -1,5 +1,8 @@
 package com.gymplatform.modules.finance;
 
+import com.gymplatform.config.multitenancy.TenantContext;
+import com.gymplatform.modules.tenant.Tenant;
+import com.gymplatform.modules.tenant.TenantRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -21,12 +24,26 @@ public class DunningService {
     private final DunningLevelRepository dunningLevelRepository;
     private final InvoiceRepository invoiceRepository;
     private final RabbitTemplate rabbitTemplate;
+    private final TenantRepository tenantRepository;
 
     @Scheduled(cron = "0 0 8 * * *")
-    @Transactional
     public void processDunning() {
         log.info("Starting dunning process");
+        for (Tenant tenant : tenantRepository.findAll()) {
+            try {
+                TenantContext.setTenantId(tenant.getSchemaName());
+                processDunningForTenant();
+            } catch (Exception e) {
+                log.error("Dunning failed for tenant {}: {}", tenant.getSchemaName(), e.getMessage());
+            } finally {
+                TenantContext.clear();
+            }
+        }
+        log.info("Dunning process completed");
+    }
 
+    @Transactional
+    public void processDunningForTenant() {
         List<Invoice> overdueInvoices = invoiceRepository
                 .findByStatusIn(List.of(InvoiceStatus.ISSUED, InvoiceStatus.OVERDUE));
         List<DunningLevel> levels = dunningLevelRepository.findAllByOrderByLevelAsc();
@@ -75,6 +92,5 @@ public class DunningService {
             }
         }
 
-        log.info("Dunning process completed");
     }
 }

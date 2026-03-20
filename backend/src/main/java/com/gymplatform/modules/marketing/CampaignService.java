@@ -12,6 +12,8 @@ import com.gymplatform.modules.member.MemberRepository;
 import com.gymplatform.shared.AuditLogService;
 import com.gymplatform.shared.BusinessException;
 import com.gymplatform.config.multitenancy.TenantContext;
+import com.gymplatform.modules.tenant.Tenant;
+import com.gymplatform.modules.tenant.TenantRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -41,6 +43,7 @@ public class CampaignService {
     private final AuditLogService auditLogService;
     private final RabbitTemplate rabbitTemplate;
     private final ObjectMapper objectMapper;
+    private final TenantRepository tenantRepository;
 
     @Transactional
     public CampaignDto create(CreateCampaignRequest req, UUID userId) {
@@ -236,8 +239,23 @@ public class CampaignService {
     }
 
     @Scheduled(fixedRate = 60000)
-    @Transactional
     public void processScheduledCampaigns() {
+        List<Tenant> tenants = tenantRepository.findAll();
+        for (Tenant tenant : tenants) {
+            try {
+                TenantContext.setTenantId(tenant.getSchemaName());
+                processScheduledCampaignsForTenant();
+            } catch (Exception e) {
+                log.error("Failed to process scheduled campaigns for tenant {}: {}",
+                        tenant.getSchemaName(), e.getMessage());
+            } finally {
+                TenantContext.clear();
+            }
+        }
+    }
+
+    @Transactional
+    public void processScheduledCampaignsForTenant() {
         List<Campaign> due = campaignRepository.findByStatusAndScheduledAtLessThanEqual(
                 CampaignStatus.SCHEDULED, Instant.now());
         for (Campaign campaign : due) {

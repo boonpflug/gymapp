@@ -46,3 +46,27 @@ All clean. Here's what was added for Railway deployment:
     Make sure the frontend's VITE_API_URL env var is set to https://backend-production-63ee.up.railway.app in Railway, otherwise API calls from the frontend won't reach the backend. If you change that var, you'll need to redeploy the frontend
     since Vite bakes it in at build time.
 
+
+  Here's what you need to do:
+
+  1. Link and deploy the backend:
+  cd /Users/chef/work/gymapp/backend
+  railway link          # select your project, then pick the backend service
+  railway up
+
+  2. Link and deploy the frontend:
+  cd /Users/chef/work/gymapp/frontend
+  railway link          # select your project, then pick the frontend service
+  railway up
+
+  If it still uses Railpack instead of the Dockerfile, it's because Railway auto-detects the Dockerfile by name — it should just work. But if it doesn't, go to Railway Dashboard → Backend Service → Settings and:
+  - Set Root Directory to /backend
+  - Set Builder to Dockerfile
+
+  Then redeploy. Same for frontend with /frontend and Dockerfile.prod.
+
+  Sources:
+  - https://docs.railway.com/reference/config-as-code
+  - https://docs.railway.com/guides/monor
+
+

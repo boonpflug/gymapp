@@ -65,4 +65,20 @@ public class ContractController {
         return ResponseEntity.ok(ApiResponse.success(
                 contractService.withdrawCancellation(id)));
     }
+
+    @PutMapping("/{id}/auto-renew")
+    public ResponseEntity<ApiResponse<ContractDto>> toggleAutoRenew(
+            @PathVariable UUID id,
+            @RequestParam boolean enabled) {
+        return ResponseEntity.ok(ApiResponse.success(
+                contractService.toggleAutoRenew(id, enabled)));
+    }
+
+    @PutMapping("/{id}/renewal-settings")
+    public ResponseEntity<ApiResponse<ContractDto>> updateRenewalSettings(
+            @PathVariable UUID id,
+            @RequestBody RenewalSettingsRequest request) {
+        return ResponseEntity.ok(ApiResponse.success(
+                contractService.updateRenewalSettings(id, request.getRenewalTermMonths(), request.getRenewalNoticeDays())));
+    }
 }

@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -26,4 +27,8 @@ public class ContractDto {
     private LocalDate cancellationEffectiveDate;
     private String cancellationReason;
     private boolean autoRenew;
+    private Integer renewalTermMonths;
+    private Integer renewalNoticeDays;
+    private Instant renewedAt;
+    private int renewalCount;
 }

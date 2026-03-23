@@ -4648,3 +4648,24 @@ databaseChangeLog:
             columns:
               - column:
                   name: measured_at
+
+  - changeSet:
+      id: t-016-contract-renewal
+      author: gymplatform
+      changes:
+        - addColumn:
+            tableName: contracts
+            columns:
+              - column:
+                  name: renewal_term_months
+                  type: int
+              - column:
+                  name: renewal_notice_days
+                  type: int
+              - column:
+                  name: renewed_at
+                  type: timestamp with time zone
+              - column:
+                  name: renewal_count
+                  type: int
+                  defaultValueNumeric: 0

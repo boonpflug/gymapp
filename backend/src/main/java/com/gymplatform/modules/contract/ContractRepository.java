@@ -13,4 +13,8 @@ public interface ContractRepository extends JpaRepository<Contract, UUID> {
     List<Contract> findByStatus(ContractStatus status);
     List<Contract> findByNextBillingDateLessThanEqualAndStatus(LocalDate date, ContractStatus status);
     List<Contract> findByMemberIdAndStatus(UUID memberId, ContractStatus status);
+
+    List<Contract> findByStatusAndAutoRenewTrueAndEndDateBetween(ContractStatus status, LocalDate start, LocalDate end);
+
+    List<Contract> findByStatusAndAutoRenewTrueAndEndDateBefore(ContractStatus status, LocalDate date);
 }

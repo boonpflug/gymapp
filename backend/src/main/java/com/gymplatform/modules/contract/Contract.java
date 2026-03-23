@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -52,6 +53,18 @@ public class Contract extends BaseEntity {
 
     @Column(name = "auto_renew")
     private boolean autoRenew = true;
+
+    @Column(name = "renewal_term_months")
+    private Integer renewalTermMonths;
+
+    @Column(name = "renewal_notice_days")
+    private Integer renewalNoticeDays;
+
+    @Column(name = "renewed_at")
+    private Instant renewedAt;
+
+    @Column(name = "renewal_count")
+    private int renewalCount = 0;
 
     @Column(name = "tenant_id")
     private String tenantId;

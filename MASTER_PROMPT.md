@@ -571,9 +571,138 @@ This is the **meta-layer** of the platform — how new gyms sign up, self-onboar
 - Concrete implementations:
   - HTTP REST adapter (for IP-connected devices)
   - MQTT adapter (for IoT devices)
+  - **Gantner adapter** — concrete implementation for Gantner access control hardware (doors, turnstiles, RFID readers) used by Kieser Training
+- **seca BIA scale integration:**
+  - `BodyCompositionAdapter` interface for seca body composition analyzers
+  - Auto-push measurement results (weight, body fat %, muscle mass, BMI, etc.) to member profile
+  - Measurement history per member with trend charts
 - Device manager UI: register devices, assign to facility, configure QR/RFID mode
 - Supported device types: door/gate controller, turnstile, RFID reader, QR scanner, vending machine, body composition scale
 - Event monitor: real-time stream of all device events with error code display
+
+### 20. KIESER MACHINE SENSOR INTEGRATION (KTAG-specific)
+
+Kieser Training uses proprietary machines with computer-assisted biofeedback (LE Lumbar Extension, CE Cervical Extension, etc.). The platform must ingest and display sensor data from these machines.
+
+- **Machine Sensor Adapter:**
+  - `MachineSensorAdapter` interface: `getMachineStatus(machineId)`, `getSessionData(machineId, sessionId)`, `streamLiveData(machineId)`
+  - Concrete implementation for Kieser LE/CE sensor protocol
+  - Real-time data ingestion: force curves, range of motion, repetition counts, isometric hold times
+- **Strength measurement (Kraftmessung):**
+  - Isometric and dynamic force measurement recording
+  - Store measurement results linked to member + exercise + session
+  - Progress tracking: force output over time per exercise/muscle group
+  - Comparison view: initial assessment vs. current vs. target
+- **Machine-member session linking:**
+  - When a member starts a machine session, sensor data auto-links to their active TrainingSession
+  - TrainingLog extended with: `sensorData` (JSON), `peakForce`, `avgForce`, `rangeOfMotion`, `timeUnderTension`
+- **Machine inventory management:**
+  - Machine entity: serial number, model, facility, installation date, last maintenance, status, firmware version
+  - Machine maintenance scheduling and history
+  - Machine utilization analytics per facility
+- **Kieser machine data:** 44 proprietary machines defined in `/kieser.json` with full details
+
+### 21. APPOINTMENT & AGENDA SYSTEM
+
+1-on-1 appointment booking separate from group class scheduling. Required for personal training sessions, assessments, physiotherapy (KTAG).
+
+- **Appointment types:** personal training, initial assessment, anamnesis, follow-up, physiotherapy, consultation
+- **Appointment entity:** member, staff/trainer, facility, room (optional), type, start/end time, status (SCHEDULED/CONFIRMED/IN_PROGRESS/COMPLETED/CANCELLED/NO_SHOW), notes, recurring rule
+- **Staff agenda / day plan view:**
+  - Daily calendar view per staff member showing all appointments + classes
+  - Weekly overview with drag-and-drop rescheduling
+  - Availability management: staff set available time slots
+- **Member booking:**
+  - Members book available slots via portal/app
+  - Booking confirmation + reminder notifications
+  - Cancellation with configurable cut-off
+- **Anamnese (health assessment) form builder:**
+  - Configurable questionnaire forms (questions, types: text/number/choice/scale/date)
+  - Store completed assessments linked to member + appointment
+  - Assessment results feed into training plan recommendations
+
+### 22. INTERNATIONALIZATION (i18n)
+
+KTAG operates across DACH (Germany, Austria, Switzerland) + Luxembourg. Full internationalization required.
+
+- **Application languages:** German (de), French (fr), English (en)
+- **Backend:**
+  - `Accept-Language` header support on all API responses
+  - Localized error messages and validation messages
+  - Message bundles: `messages_de.properties`, `messages_fr.properties`, `messages_en.properties`
+- **Frontend:**
+  - react-i18next integration with language switcher
+  - All UI strings externalized to translation files
+  - Locale-aware formatting: dates (DD.MM.YYYY for DE), currencies (CHF/EUR), numbers (1.000,00 vs 1,000.00)
+- **Correspondence templates:** multi-language template variants (DE/FR/EN) per template, auto-select based on member locale preference
+- **Country-specific features:**
+  - Switzerland: QR-Rechnung, LSV, CHF currency, Tarif 595
+  - Germany: SEPA, EUR, TSE, DATEV, E-Rechnung (ZUGFeRD/XRechnung)
+  - Austria: SEPA, EUR
+  - Luxembourg: SEPA, EUR, FR/DE bilingual
+
+### 23. SWISS PAYMENT METHODS
+
+Swiss-specific payment integrations required for KTAG (headquartered in Switzerland).
+
+- **QR-Rechnung (QR-bill):**
+  - Generate Swiss QR invoices per ISO 20022 standard
+  - QR code with structured payment data (IBAN, amount, reference)
+  - PDF invoice with QR payment slip section
+  - Support for QR-IBAN + Creditor Reference (SCOR)
+- **LSV/LSV+ (Lastschriftverfahren — Swiss direct debit):**
+  - LSV mandate management: create, sign, activate, cancel
+  - Batch collection file generation (LSV+ format)
+  - Integration with Swiss clearing system (SIX SIC/euroSIC)
+  - Return debit handling
+- **EBICS (Electronic Banking Internet Communication Standard):**
+  - Bank communication for automated payment file upload/download
+  - pain.001 (credit transfer), pain.008 (direct debit), camt.053 (account statement)
+
+### 24. ENTERPRISE AUTH & COMPLIANCE
+
+- **Azure SSO (SAML/OIDC):**
+  - Spring Security SAML2 or OIDC integration alongside existing JWT auth
+  - Azure AD tenant configuration per gym tenant
+  - Auto-provision user on first SSO login, map Azure AD groups to platform roles
+  - Fallback to username/password for non-SSO users
+- **DATEV export:**
+  - Export invoices, payments, and journal entries in DATEV format (ASCII CSV)
+  - DATEV Unternehmen Online compatible
+  - Configurable account mapping (Kontenrahmen SKR03/SKR04)
+  - Scheduled or on-demand export with date range filter
+- **TSE (Technische Sicherheitseinrichtung):**
+  - German fiscal security device integration for cash register/POS transactions
+  - Transaction signing and audit-proof storage
+  - DSFinV-K export format
+- **E-Rechnung:**
+  - ZUGFeRD 2.x (PDF/A-3 with embedded XML)
+  - XRechnung (pure XML, Peppol BIS compliant)
+  - Auto-generate on invoice creation based on recipient country/preference
+- **IDW PS 880 / NIS2:** compliance documentation and security controls (phased)
+
+### 25. CONTRACT AUTO-RENEWAL & LIFECYCLE EXTENSIONS
+
+- **Auto-renewal logic:**
+  - Configurable per membership tier: auto-renew yes/no, renewal term, renewal notice period
+  - Scheduled job: detect contracts approaching end date, auto-extend if renewal conditions met
+  - Member notification before renewal (configurable days before)
+  - Opt-out window: member can cancel before renewal date
+- **Credit notes (Gutschriften):**
+  - Generate credit note documents linked to original invoice
+  - Credit balance per member, auto-apply to next invoice or manual refund
+- **Split invoices:**
+  - Split invoice across multiple payers (e.g., employer + employee, family members)
+  - Configurable split ratios per contract
+
+### 26. DATA MIGRATION & LEGACY IMPORT
+
+- **Import tooling for KTAG's existing system (Bestandsystem):**
+  - CSV/JSON import endpoints for: members, contracts, invoices, payment history, training data
+  - Validation + error reporting on import
+  - Dry-run mode: preview import results before committing
+  - Idempotent imports: re-runnable without duplicating data
+  - Field mapping configuration per source system
 
 ---
 
@@ -602,7 +731,13 @@ platform_plans, platform_plan_features, tenant_subscriptions,
 tenant_invoices, tenant_usage_snapshots, feature_flags,
 onboarding_progress, platform_announcements, support_audit_log,
 api_keys, webhook_registrations, webhook_events,
-audit_logs
+audit_logs,
+machines, machine_maintenance_logs, machine_sensor_sessions,
+strength_measurements, body_composition_measurements,
+appointments, appointment_types, staff_availability,
+anamnese_forms, anamnese_questions, anamnese_submissions, anamnese_answers,
+credit_notes, invoice_splits,
+import_jobs, import_mappings, import_errors
 ```
 
 Every table must have: `id` (UUID), `created_at`, `updated_at`, `tenant_id` (FK to tenants except on tenants table itself).
@@ -667,10 +802,20 @@ Build in this exact order:
 19. Staff & trainer floor app mode (React Native role-aware staff view)
 20. Public studio discovery & booking portal (public-facing, no login required)
 21. Marketing tools — campaigns, audience builder, activity reminders, at-risk detection
-22. Loyalty & rewards program — points, redemption, tiers, badges, streaks
-23. Open API + webhook system
-24. Analytics and reporting dashboards
-25. Mobile app (React Native + Expo) — member self-service + staff floor mode in one app, role-aware navigation, EAS build config
-26. Seed data script
+22. Loyalty & rewards program — points, redemption, tiers, badges, streaks, referral program (Kunden werben Kunden)
+23. Appointment & agenda system — 1-on-1 bookings, staff day plan, anamnese form builder
+24. Kieser machine sensor integration — LE/CE biofeedback, strength measurement, machine inventory
+25. Internationalization (i18n) — DE/FR/EN UI + correspondence, locale-aware formatting
+26. Swiss payment methods — QR-Rechnung, LSV/LSV+, EBICS
+27. Enterprise auth & compliance — Azure SSO, DATEV export, TSE, E-Rechnung
+28. Contract lifecycle extensions — auto-renewal, credit notes, split invoices
+29. Open API + webhook system
+30. Analytics & reporting dashboards with CSV/PDF export
+31. Data migration & legacy import tooling
+32. Mobile app (React Native + Expo) — member self-service + staff floor mode in one app, role-aware navigation, EAS build config
+33. Staff & trainer floor app mode (React Native role-aware staff view)
+34. Seed data script — full spec (500 exercises, Kieser machines, sample payment history)
+35. Platform SaaS onboarding — self-service signup, trial, Stripe Billing
+36. Super admin dashboard — /superadmin tenant management, feature flags
 
 Build each module completely before moving to the next. Do not leave TODOs. Do not use placeholder implementations. Every endpoint must work.

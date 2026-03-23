@@ -1,6 +1,9 @@
 # BUILD PROGRESS
 
-## Last updated: 2026-03-19
+## Last updated: 2026-03-23
+
+## TARGET CUSTOMER
+Kieser Training AG (KTAG) — Swiss/German fitness chain, ~2,000 staff, ~250,000 customers, ~44 proprietary machines with biofeedback sensors. Requirements documented in requirements.pdf (Feb 2026). See summary.md for full gap analysis.
 
 ## COMPLETED MODULES ✅
 - docker-compose.yml — PostgreSQL, Redis, RabbitMQ, backend, frontend all wired (infra/docker-compose.yml)
@@ -52,15 +55,55 @@
 - Frontend marketing page — tabbed UI (Campaigns / Audience Builder / At-Risk Members), campaigns tab with stats cards (total campaigns, sent, delivered, opened, avg open rate) + status filter dropdown + campaigns table (name, type badge, status badge, recipients, sent count, open rate, send/schedule/cancel actions) + pagination + create campaign modal (name, type, description, subject, body HTML with variable placeholder hint, schedule datetime, audience criteria: member status multi-select, no-check-in days, contract status, contract expiry days, gender + inline audience preview with matching count + sample members) + campaign detail modal (performance stats grid + delivery/open/click rate progress bars + recipients table with status badges + pagination), audience builder tab (split panel: criteria form with member status, inactivity days, check-in frequency range, contract status, contract expiry days, join date range, gender, age range + preview button; results panel with total count highlight + sample members table), at-risk members tab (risk summary cards HIGH/MEDIUM/LOW with color coding + configurable inactive threshold input + members table with name/email, risk level badge, last visit date, days inactive, avg weekly visits, visit trend % with color, risk reason), CampaignDto/CampaignRecipientDto/CampaignStatsDto/AudienceCriteria/AudiencePreviewDto/AtRiskMemberDto TypeScript types + CampaignStatus/CampaignType/CampaignEventType/RiskLevel enums
 
 ## NOT STARTED ⏳
+
+### Core Platform (original roadmap)
+- Loyalty & rewards — points, redemption, tiers, badges, streaks, referral program (step 22)
+- Open API + webhook system (step 23)
+- Analytics & reporting dashboards with CSV/PDF export (step 24)
+- Mobile app — React Native + Expo (step 25)
 - Staff & trainer floor app — React Native role-aware view (step 19)
   NOTE: Steps 19 and 25 (mobile apps) require React Native + Expo setup — skip if focusing on web-only modules first
-- Loyalty & rewards — points, redemption, tiers, badges, streaks (step 22)
-- Open API + webhook system (step 23)
-- Analytics and reporting dashboards (step 24)
-- Mobile app — React Native + Expo (step 25)
 - Seed data script (step 26) — PARTIAL: DataSeeder exists, full seed spec (500 exercises, sample payment history) not yet complete
 - Platform SaaS onboarding — self-service signup, trial, Stripe Billing (step 4/6)
 - Super admin dashboard — /superadmin tenant management, feature flags (step 4)
+
+### KTAG-Specific Requirements (from requirements.pdf, Feb 2026)
+
+**Must-Have (launch blockers for Kieser):**
+- Kieser machine sensor integration (LE/CE) — biofeedback data ingestion from proprietary machines, strength measurement (Kraftmessung), link sensor data to training sessions/logs
+- Swiss payment methods — QR-Rechnung (ISO 20022 QR-bill) + LSV/LSV+ (Swiss direct debit), replacing/supplementing GoCardless SEPA
+- Internationalization (i18n) — UI + correspondence in DE, FR, EN; locale-aware date/currency/number formatting for DACH + Luxembourg
+- Azure SSO — SAML/OIDC enterprise authentication alongside existing JWT auth
+- Contract auto-renewal — automatic renewal logic with configurable rules (currently missing from contract lifecycle)
+- DATEV export — German accounting standard export format for finance module
+- Appointment system — 1-on-1 booking (personal training, assessments, physio) separate from group class scheduling; day plan / agenda view for staff
+
+**Should-Have (important for KTAG operations):**
+- Gantner access control adapter — concrete AccessControlAdapter implementation for Gantner hardware (doors/turnstiles)
+- seca BIA scale integration — body composition measurement data import, link results to member profile
+- Machine inventory management — equipment/machine registry per facility, maintenance tracking, Kieser's ~44 proprietary machine types
+- Anamnese form builder — structured health assessment forms, store results per member, link to training plans
+- Physical mail (Post) — PDF letter generation from templates, postal dispatch integration (Serienbriefe)
+- Credit notes (Gutschriften) — refund document generation, credit balance management
+- Split invoices — invoice splitting across multiple payers/cost centers
+- TSE integration — German fiscal security device for cash register compliance
+- E-Rechnung — ZUGFeRD/XRechnung structured electronic invoice format
+- Legacy data migration tooling — import from KTAG's existing system (Bestandsystem)
+
+**Nice-to-Have (phased rollout):**
+- EBICS banking interface — direct bank communication for automated payment processing
+- ERP integration — connector/API for enterprise resource planning systems
+- GOAv billing — German medical fee schedule (Gebührenordnung für Ärzte) for physio billing
+- Revenue recognition (Abgrenzungsmodelle) — deferred revenue / accrual accounting models
+- Cooperation management (Kooperationsmanagement) — partner relationships, co-marketing
+- Service-Center integration — call center / support desk connectivity
+- Tarif 595 — Swiss health insurance billing for physiotherapy (scope TBD per KTAG)
+- IDW PS 880 — German software audit standard compliance documentation
+- NIS2 — EU cybersecurity directive compliance
+- Accessibility (Barrierefreiheit) — WCAG 2.1 AA compliance
+- Global product/contract catalog — cross-tenant shared catalog for franchise standardization
+- Franchise fee billing — automated franchise fee calculation and invoicing
+- Voucher sales — purchasable gift vouchers (online + POS), recipient redemption at signup
 
 ## KEY DECISIONS MADE
 - Tenant resolved from X-Tenant-ID header (not subdomain)
@@ -105,5 +148,5 @@ Do not re-build anything marked ✅ in PROGRESS.md.
 Do not change any decisions listed under KEY DECISIONS MADE.
 Do not alter the database schema for completed modules.
 
-Resume from: Next: implement Loyalty & rewards (step 22) — points, redemption, tiers, badges, streaks
+Resume from: Next: implement Loyalty & rewards (step 22) — points, redemption, tiers, badges, streaks, referral program. Then prioritize KTAG must-haves: Kieser machine sensors, Swiss payments, i18n, Azure SSO, appointments, contract auto-renewal, DATEV export.
 ```

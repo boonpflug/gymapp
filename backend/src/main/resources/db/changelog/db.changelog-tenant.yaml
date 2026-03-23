@@ -4291,3 +4291,360 @@ databaseChangeLog:
             columns:
               - column:
                   name: question_id
+
+  - changeSet:
+      id: t-015-machines
+      author: gymplatform
+      changes:
+        - createTable:
+            tableName: machines
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: code
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: full_name
+                  type: varchar(500)
+              - column:
+                  name: series
+                  type: varchar(20)
+              - column:
+                  name: category
+                  type: varchar(100)
+              - column:
+                  name: facility_id
+                  type: uuid
+              - column:
+                  name: serial_number
+                  type: varchar(100)
+              - column:
+                  name: model
+                  type: varchar(100)
+              - column:
+                  name: firmware_version
+                  type: varchar(50)
+              - column:
+                  name: installation_date
+                  type: date
+              - column:
+                  name: last_maintenance_date
+                  type: date
+              - column:
+                  name: next_maintenance_date
+                  type: date
+              - column:
+                  name: status
+                  type: varchar(20)
+                  defaultValue: ACTIVE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_computer_assisted
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: image_url
+                  type: varchar(500)
+              - column:
+                  name: notes
+                  type: text
+              - column:
+                  name: tenant_id
+                  type: varchar(100)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+        - createTable:
+            tableName: machine_maintenance_logs
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: machine_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: maintenance_type
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: text
+              - column:
+                  name: performed_by
+                  type: varchar(200)
+              - column:
+                  name: performed_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: next_due_date
+                  type: date
+              - column:
+                  name: cost
+                  type: decimal(10,2)
+              - column:
+                  name: notes
+                  type: text
+              - column:
+                  name: tenant_id
+                  type: varchar(100)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+        - createTable:
+            tableName: machine_sensor_sessions
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: machine_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: member_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: training_session_id
+                  type: uuid
+              - column:
+                  name: training_log_id
+                  type: uuid
+              - column:
+                  name: started_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ended_at
+                  type: timestamp with time zone
+              - column:
+                  name: duration_seconds
+                  type: int
+              - column:
+                  name: sensor_data
+                  type: text
+              - column:
+                  name: tenant_id
+                  type: varchar(100)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+        - createTable:
+            tableName: strength_measurements
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: machine_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: member_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: sensor_session_id
+                  type: uuid
+              - column:
+                  name: measurement_type
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: peak_force_newtons
+                  type: decimal(10,2)
+              - column:
+                  name: avg_force_newtons
+                  type: decimal(10,2)
+              - column:
+                  name: range_of_motion_degrees
+                  type: decimal(6,2)
+              - column:
+                  name: time_under_tension_seconds
+                  type: decimal(6,2)
+              - column:
+                  name: repetitions
+                  type: int
+              - column:
+                  name: set_number
+                  type: int
+              - column:
+                  name: notes
+                  type: text
+              - column:
+                  name: measured_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: tenant_id
+                  type: varchar(100)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+        - createIndex:
+            tableName: machines
+            indexName: idx_machines_code
+            columns:
+              - column:
+                  name: code
+        - createIndex:
+            tableName: machines
+            indexName: idx_machines_facility
+            columns:
+              - column:
+                  name: facility_id
+        - createIndex:
+            tableName: machines
+            indexName: idx_machines_status
+            columns:
+              - column:
+                  name: status
+        - createIndex:
+            tableName: machines
+            indexName: idx_machines_serial_number
+            columns:
+              - column:
+                  name: serial_number
+        - createIndex:
+            tableName: machines
+            indexName: idx_machines_tenant
+            columns:
+              - column:
+                  name: tenant_id
+        - createIndex:
+            tableName: machine_maintenance_logs
+            indexName: idx_maint_logs_machine
+            columns:
+              - column:
+                  name: machine_id
+        - createIndex:
+            tableName: machine_maintenance_logs
+            indexName: idx_maint_logs_type
+            columns:
+              - column:
+                  name: maintenance_type
+        - createIndex:
+            tableName: machine_maintenance_logs
+            indexName: idx_maint_logs_performed_at
+            columns:
+              - column:
+                  name: performed_at
+        - createIndex:
+            tableName: machine_sensor_sessions
+            indexName: idx_sensor_sessions_machine
+            columns:
+              - column:
+                  name: machine_id
+        - createIndex:
+            tableName: machine_sensor_sessions
+            indexName: idx_sensor_sessions_member
+            columns:
+              - column:
+                  name: member_id
+        - createIndex:
+            tableName: machine_sensor_sessions
+            indexName: idx_sensor_sessions_training
+            columns:
+              - column:
+                  name: training_session_id
+        - createIndex:
+            tableName: machine_sensor_sessions
+            indexName: idx_sensor_sessions_started_at
+            columns:
+              - column:
+                  name: started_at
+        - createIndex:
+            tableName: machine_sensor_sessions
+            indexName: idx_sensor_sessions_tenant
+            columns:
+              - column:
+                  name: tenant_id
+        - createIndex:
+            tableName: strength_measurements
+            indexName: idx_strength_meas_machine
+            columns:
+              - column:
+                  name: machine_id
+        - createIndex:
+            tableName: strength_measurements
+            indexName: idx_strength_meas_member
+            columns:
+              - column:
+                  name: member_id
+        - createIndex:
+            tableName: strength_measurements
+            indexName: idx_strength_meas_session
+            columns:
+              - column:
+                  name: sensor_session_id
+        - createIndex:
+            tableName: strength_measurements
+            indexName: idx_strength_meas_type
+            columns:
+              - column:
+                  name: measurement_type
+        - createIndex:
+            tableName: strength_measurements
+            indexName: idx_strength_meas_measured_at
+            columns:
+              - column:
+                  name: measured_at

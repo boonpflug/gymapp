@@ -884,3 +884,33 @@ export interface AnamneseAnswerDto {
 export interface DayAgendaDto {
   date: string; staffId: string; staffName: string; appointments: AppointmentDto[]; totalSlots: number; bookedSlots: number
 }
+
+// ── Machine & Sensor Integration ──────────────────────────────
+
+export type MachineStatus = 'ACTIVE' | 'MAINTENANCE' | 'OUT_OF_ORDER' | 'DECOMMISSIONED'
+export type MaintenanceType = 'ROUTINE' | 'REPAIR' | 'CALIBRATION' | 'FIRMWARE_UPDATE'
+export type MeasurementType = 'ISOMETRIC' | 'DYNAMIC' | 'RANGE_OF_MOTION'
+
+export interface MachineDto {
+  id: string; code: string; name: string; fullName?: string; series?: string; category?: string; facilityId?: string; serialNumber?: string; model?: string; firmwareVersion?: string; installationDate?: string; lastMaintenanceDate?: string; nextMaintenanceDate?: string; status: MachineStatus; isComputerAssisted: boolean; imageUrl?: string; notes?: string; createdAt: string
+}
+
+export interface MachineMaintenanceLogDto {
+  id: string; machineId: string; machineName?: string; maintenanceType: MaintenanceType; description?: string; performedBy?: string; performedAt: string; nextDueDate?: string; cost?: number; notes?: string; createdAt: string
+}
+
+export interface MachineSensorSessionDto {
+  id: string; machineId: string; machineCode?: string; machineName?: string; memberId: string; memberName?: string; trainingSessionId?: string; trainingLogId?: string; startedAt: string; endedAt?: string; durationSeconds?: number; sensorData?: string; createdAt: string
+}
+
+export interface StrengthMeasurementDto {
+  id: string; machineId: string; machineCode?: string; machineName?: string; memberId: string; memberName?: string; sensorSessionId?: string; measurementType: MeasurementType; peakForceNewtons?: number; avgForceNewtons?: number; rangeOfMotionDegrees?: number; timeUnderTensionSeconds?: number; repetitions?: number; setNumber?: number; notes?: string; measuredAt: string; createdAt: string
+}
+
+export interface MachineUtilizationDto {
+  machineId: string; machineCode: string; machineName: string; totalSessions: number; totalMembers: number; avgSessionDurationSeconds: number; lastUsedAt?: string
+}
+
+export interface MemberProgressDto {
+  memberId: string; memberName: string; machineId: string; machineCode: string; machineName: string; measurements: StrengthMeasurementDto[]; initialPeakForce?: number; latestPeakForce?: number; improvementPercent: number
+}

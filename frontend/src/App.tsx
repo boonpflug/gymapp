@@ -14,6 +14,7 @@ import SalesPage from './pages/SalesPage'
 import StaffPage from './pages/StaffPage'
 import FacilitiesPage from './pages/FacilitiesPage'
 import MarketingPage from './pages/MarketingPage'
+import LoyaltyPage from './pages/LoyaltyPage'
 import PortalDashboard from './pages/portal/PortalDashboard'
 import PortalProfile from './pages/portal/PortalProfile'
 import PortalContracts from './pages/portal/PortalContracts'
@@ -63,6 +64,7 @@ export default function App() {
         <Route path="staff" element={<StaffPage />} />
         <Route path="facilities" element={<FacilitiesPage />} />
         <Route path="marketing" element={<MarketingPage />} />
+        <Route path="loyalty" element={<LoyaltyPage />} />
       </Route>
       {/* Member self-service portal */}
       <Route

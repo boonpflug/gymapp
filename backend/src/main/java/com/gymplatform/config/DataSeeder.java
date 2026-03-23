@@ -17,6 +17,7 @@ import com.gymplatform.modules.staff.*;
 import com.gymplatform.modules.tenant.Tenant;
 import com.gymplatform.modules.tenant.TenantRepository;
 import com.gymplatform.modules.training.*;
+import com.gymplatform.modules.loyalty.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
@@ -67,6 +68,14 @@ public class DataSeeder implements ApplicationRunner {
     private final EmployeeRepository employeeRepository;
     private final EmployeeFacilityRepository empFacilityRepository;
     private final InvoiceRepository invoiceRepository;
+    private final LoyaltyTierRepository loyaltyTierRepository;
+    private final LoyaltyConfigRepository loyaltyConfigRepository;
+    private final LoyaltyTransactionRepository loyaltyTransactionRepository;
+    private final LoyaltyRewardRepository loyaltyRewardRepository;
+    private final LoyaltyBadgeRepository loyaltyBadgeRepository;
+    private final MemberBadgeRepository memberBadgeRepository;
+    private final MemberStreakRepository memberStreakRepository;
+    private final ReferralRepository referralRepository;
 
     private static final String TENANT_SUBDOMAIN = "demo-gym";
     private static final String TENANT_SCHEMA = "tenant_demo_gym";
@@ -137,6 +146,7 @@ public class DataSeeder implements ApplicationRunner {
             seedCommunicationTemplates();
             seedEmployees(facilityIds);
             seedInvoices(members, tiers);
+            seedLoyaltyProgram(members);
 
             log.info("=== DEMO DATA SEEDED SUCCESSFULLY ===");
             log.info("Login credentials:");
@@ -880,5 +890,193 @@ public class DataSeeder implements ApplicationRunner {
             }
         }
         log.info("Seeded {} invoices", count);
+    }
+
+    // ---- LOYALTY PROGRAM ----
+
+    private void seedLoyaltyProgram(List<Member> members) {
+        // 1. Points configuration
+        Map<String, Integer> pointsConfig = Map.of(
+                "points.CHECK_IN", 10,
+                "points.CLASS_BOOKING", 15,
+                "points.SESSION_COMPLETE", 20,
+                "points.REFERRAL", 50,
+                "points.BIRTHDAY", 100,
+                "points.ANNIVERSARY", 200,
+                "points.GOAL_ACHIEVED", 30
+        );
+        for (var entry : pointsConfig.entrySet()) {
+            loyaltyConfigRepository.save(LoyaltyConfig.builder()
+                    .configKey(entry.getKey())
+                    .configValue(String.valueOf(entry.getValue()))
+                    .description("Points for " + entry.getKey().replace("points.", ""))
+                    .tenantId(TENANT_ID).build());
+        }
+
+        // 2. Loyalty tiers
+        LoyaltyTier bronze = loyaltyTierRepository.save(LoyaltyTier.builder()
+                .name("Bronze").minPoints(0).color("#CD7F32").icon("shield")
+                .perks("Basic member benefits").sortOrder(0).active(true).tenantId(TENANT_ID).build());
+        LoyaltyTier silver = loyaltyTierRepository.save(LoyaltyTier.builder()
+                .name("Silver").minPoints(500).color("#C0C0C0").icon("star")
+                .perks("Priority class booking, 5% shop discount").sortOrder(1).active(true).tenantId(TENANT_ID).build());
+        LoyaltyTier gold = loyaltyTierRepository.save(LoyaltyTier.builder()
+                .name("Gold").minPoints(1500).color("#FFD700").icon("trophy")
+                .perks("Priority booking, 10% discount, 1 free guest pass/month").sortOrder(2).active(true).tenantId(TENANT_ID).build());
+        LoyaltyTier platinum = loyaltyTierRepository.save(LoyaltyTier.builder()
+                .name("Platinum").minPoints(5000).color("#E5E4E2").icon("crown")
+                .perks("All Gold perks, 20% discount, unlimited guest passes, exclusive classes").sortOrder(3).active(true).tenantId(TENANT_ID).build());
+
+        // 3. Rewards catalog
+        loyaltyRewardRepository.save(LoyaltyReward.builder()
+                .name("Free Month").description("One month membership extension at no cost")
+                .rewardType(RewardType.FREE_MONTH).pointsCost(2000).value(BigDecimal.valueOf(49))
+                .active(true).totalAvailable(50).totalRedeemed(0).tenantId(TENANT_ID).build());
+        loyaltyRewardRepository.save(LoyaltyReward.builder()
+                .name("10% Discount").description("10% off next month's membership fee")
+                .rewardType(RewardType.DISCOUNT).pointsCost(500).value(BigDecimal.valueOf(4.90))
+                .active(true).totalRedeemed(0).tenantId(TENANT_ID).build());
+        loyaltyRewardRepository.save(LoyaltyReward.builder()
+                .name("Free Class Credit").description("One free class booking of your choice")
+                .rewardType(RewardType.CLASS_CREDIT).pointsCost(300).value(BigDecimal.valueOf(15))
+                .active(true).totalRedeemed(0).tenantId(TENANT_ID).build());
+        loyaltyRewardRepository.save(LoyaltyReward.builder()
+                .name("Branded Water Bottle").description("Premium stainless steel FitLife water bottle")
+                .rewardType(RewardType.MERCH).pointsCost(750).value(BigDecimal.valueOf(25))
+                .active(true).totalAvailable(100).totalRedeemed(3).tenantId(TENANT_ID).build());
+        loyaltyRewardRepository.save(LoyaltyReward.builder()
+                .name("Personal Training Session").description("One 60-minute session with a trainer")
+                .rewardType(RewardType.CUSTOM).pointsCost(1500).value(BigDecimal.valueOf(80))
+                .active(true).totalRedeemed(0).tenantId(TENANT_ID).build());
+
+        // 4. Badges
+        LoyaltyBadge firstCheckin = loyaltyBadgeRepository.save(LoyaltyBadge.builder()
+                .name("First Steps").description("Complete your first check-in").icon("footprints")
+                .category(BadgeCategory.CHECKIN).criteriaType(BadgeCriteriaType.CHECKIN_COUNT).criteriaValue(1)
+                .active(true).tenantId(TENANT_ID).build());
+        LoyaltyBadge regularBadge = loyaltyBadgeRepository.save(LoyaltyBadge.builder()
+                .name("Regular").description("Check in 50 times").icon("repeat")
+                .category(BadgeCategory.CHECKIN).criteriaType(BadgeCriteriaType.CHECKIN_COUNT).criteriaValue(50)
+                .active(true).tenantId(TENANT_ID).build());
+        loyaltyBadgeRepository.save(LoyaltyBadge.builder()
+                .name("Century Club").description("Check in 100 times").icon("100")
+                .category(BadgeCategory.CHECKIN).criteriaType(BadgeCriteriaType.CHECKIN_COUNT).criteriaValue(100)
+                .active(true).tenantId(TENANT_ID).build());
+        loyaltyBadgeRepository.save(LoyaltyBadge.builder()
+                .name("Training Rookie").description("Complete 10 training sessions").icon("dumbbell")
+                .category(BadgeCategory.TRAINING).criteriaType(BadgeCriteriaType.SESSION_COUNT).criteriaValue(10)
+                .active(true).tenantId(TENANT_ID).build());
+        loyaltyBadgeRepository.save(LoyaltyBadge.builder()
+                .name("Iron Will").description("Complete 50 training sessions").icon("fire")
+                .category(BadgeCategory.TRAINING).criteriaType(BadgeCriteriaType.SESSION_COUNT).criteriaValue(50)
+                .active(true).tenantId(TENANT_ID).build());
+        loyaltyBadgeRepository.save(LoyaltyBadge.builder()
+                .name("Social Butterfly").description("Refer 3 friends").icon("users")
+                .category(BadgeCategory.SOCIAL).criteriaType(BadgeCriteriaType.REFERRAL_COUNT).criteriaValue(3)
+                .active(true).tenantId(TENANT_ID).build());
+        loyaltyBadgeRepository.save(LoyaltyBadge.builder()
+                .name("Streak Master").description("Maintain a 30-day check-in streak").icon("flame")
+                .category(BadgeCategory.CHECKIN).criteriaType(BadgeCriteriaType.STREAK_DAYS).criteriaValue(30)
+                .active(true).tenantId(TENANT_ID).build());
+        loyaltyBadgeRepository.save(LoyaltyBadge.builder()
+                .name("One Year Strong").description("Be a member for 12 months").icon("calendar")
+                .category(BadgeCategory.MEMBERSHIP).criteriaType(BadgeCriteriaType.MEMBER_DURATION_MONTHS).criteriaValue(12)
+                .active(true).tenantId(TENANT_ID).build());
+
+        // 5. Award points and streaks to first 20 members (simulating activity)
+        Random rng = new Random(42);
+        int txCount = 0;
+        for (int i = 0; i < Math.min(20, members.size()); i++) {
+            Member m = members.get(i);
+            int balance = 0;
+
+            // Simulate check-in points (5-25 check-ins per member)
+            int checkins = 5 + rng.nextInt(21);
+            for (int c = 0; c < checkins; c++) {
+                balance += 10;
+                loyaltyTransactionRepository.save(LoyaltyTransaction.builder()
+                        .memberId(m.getId()).points(10).balanceAfter(balance)
+                        .transactionType(TransactionType.EARN).action(LoyaltyAction.CHECK_IN)
+                        .description("Check-in points").tenantId(TENANT_ID).build());
+                txCount++;
+            }
+
+            // Simulate some class bookings (0-5)
+            int bookings = rng.nextInt(6);
+            for (int b = 0; b < bookings; b++) {
+                balance += 15;
+                loyaltyTransactionRepository.save(LoyaltyTransaction.builder()
+                        .memberId(m.getId()).points(15).balanceAfter(balance)
+                        .transactionType(TransactionType.EARN).action(LoyaltyAction.CLASS_BOOKING)
+                        .description("Class booking points").tenantId(TENANT_ID).build());
+                txCount++;
+            }
+
+            // Simulate training sessions (0-8)
+            int sessions = rng.nextInt(9);
+            for (int s = 0; s < sessions; s++) {
+                balance += 20;
+                loyaltyTransactionRepository.save(LoyaltyTransaction.builder()
+                        .memberId(m.getId()).points(20).balanceAfter(balance)
+                        .transactionType(TransactionType.EARN).action(LoyaltyAction.SESSION_COMPLETE)
+                        .description("Training session points").tenantId(TENANT_ID).build());
+                txCount++;
+            }
+
+            // Award "First Steps" badge to all 20 members
+            memberBadgeRepository.save(MemberBadge.builder()
+                    .memberId(m.getId()).badgeId(firstCheckin.getId())
+                    .earnedAt(Instant.now().minus(rng.nextInt(30), ChronoUnit.DAYS))
+                    .tenantId(TENANT_ID).build());
+
+            // Award "Regular" badge to top active members
+            if (checkins >= 15) {
+                memberBadgeRepository.save(MemberBadge.builder()
+                        .memberId(m.getId()).badgeId(regularBadge.getId())
+                        .earnedAt(Instant.now().minus(rng.nextInt(10), ChronoUnit.DAYS))
+                        .tenantId(TENANT_ID).build());
+            }
+
+            // Create streaks for first 10 members
+            if (i < 10) {
+                int streak = 3 + rng.nextInt(25);
+                int longest = streak + rng.nextInt(10);
+                memberStreakRepository.save(MemberStreak.builder()
+                        .memberId(m.getId()).streakType(StreakType.DAILY_CHECKIN)
+                        .currentStreak(streak).longestStreak(longest)
+                        .lastActivityDate(LocalDate.now().minusDays(rng.nextInt(3)))
+                        .streakStartDate(LocalDate.now().minusDays(streak))
+                        .tenantId(TENANT_ID).build());
+            }
+        }
+
+        // 6. Create a few referrals
+        if (members.size() >= 5) {
+            referralRepository.save(Referral.builder()
+                    .referrerMemberId(members.get(0).getId())
+                    .referredMemberId(members.get(3).getId())
+                    .referredEmail("referred1@example.com")
+                    .referralCode("FITLIFE01")
+                    .status(ReferralStatus.CONVERTED)
+                    .referrerPointsAwarded(50).referredPointsAwarded(50)
+                    .convertedAt(Instant.now().minus(15, ChronoUnit.DAYS))
+                    .tenantId(TENANT_ID).build());
+            referralRepository.save(Referral.builder()
+                    .referrerMemberId(members.get(1).getId())
+                    .referredEmail("prospect@example.com")
+                    .referralCode("FITLIFE02")
+                    .status(ReferralStatus.PENDING)
+                    .referrerPointsAwarded(0).referredPointsAwarded(0)
+                    .tenantId(TENANT_ID).build());
+            referralRepository.save(Referral.builder()
+                    .referrerMemberId(members.get(0).getId())
+                    .referredEmail("friend@example.com")
+                    .referralCode("FITLIFE03")
+                    .status(ReferralStatus.SIGNED_UP)
+                    .referrerPointsAwarded(0).referredPointsAwarded(0)
+                    .tenantId(TENANT_ID).build());
+        }
+
+        log.info("Seeded loyalty program: 4 tiers, 5 rewards, 8 badges, {} transactions, streaks, 3 referrals", txCount);
     }
 }

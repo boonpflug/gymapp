@@ -792,3 +792,58 @@ export interface AtRiskMemberDto {
   riskLevel: RiskLevel
   riskReason: string
 }
+
+// ── Loyalty & Rewards ──────────────────────────────────
+
+export type TransactionType = 'EARN' | 'REDEEM'
+export type LoyaltyAction = 'CHECK_IN' | 'CLASS_BOOKING' | 'SESSION_COMPLETE' | 'REFERRAL' | 'BIRTHDAY' | 'ANNIVERSARY' | 'GOAL_ACHIEVED' | 'REDEMPTION' | 'MANUAL_ADJUST'
+export type RewardType = 'FREE_MONTH' | 'DISCOUNT' | 'CLASS_CREDIT' | 'MERCH' | 'CREDIT_TOPUP' | 'CUSTOM'
+export type RedemptionStatus = 'PENDING' | 'FULFILLED' | 'CANCELLED'
+export type BadgeCategory = 'CHECKIN' | 'TRAINING' | 'MEMBERSHIP' | 'SOCIAL' | 'SPECIAL'
+export type BadgeCriteriaType = 'CHECKIN_COUNT' | 'SESSION_COUNT' | 'MEMBER_DURATION_MONTHS' | 'REFERRAL_COUNT' | 'STREAK_DAYS' | 'CUSTOM'
+export type StreakType = 'DAILY_CHECKIN' | 'WEEKLY_CHECKIN'
+export type ReferralStatus = 'PENDING' | 'SIGNED_UP' | 'CONVERTED' | 'EXPIRED'
+
+export interface LoyaltyTierDto {
+  id: string; name: string; minPoints: number; color: string; icon: string; perks: string; sortOrder: number; active: boolean; createdAt: string
+}
+
+export interface LoyaltyTransactionDto {
+  id: string; memberId: string; memberName: string; points: number; balanceAfter: number; transactionType: TransactionType; action: LoyaltyAction; referenceId?: string; description: string; createdAt: string
+}
+
+export interface LoyaltyRewardDto {
+  id: string; name: string; description?: string; rewardType: RewardType; pointsCost: number; value?: number; active: boolean; imageUrl?: string; maxRedemptionsPerMember?: number; totalAvailable?: number; totalRedeemed: number; createdAt: string
+}
+
+export interface LoyaltyRedemptionDto {
+  id: string; memberId: string; memberName: string; rewardId: string; rewardName: string; transactionId?: string; pointsSpent: number; status: RedemptionStatus; fulfilledAt?: string; notes?: string; createdAt: string
+}
+
+export interface LoyaltyBadgeDto {
+  id: string; name: string; description?: string; icon: string; category: BadgeCategory; criteriaType: BadgeCriteriaType; criteriaValue: number; active: boolean; createdAt: string
+}
+
+export interface MemberBadgeDto {
+  id: string; memberId: string; badgeId: string; badgeName: string; badgeDescription?: string; badgeIcon: string; badgeCategory: BadgeCategory; earnedAt: string
+}
+
+export interface MemberStreakDto {
+  id: string; memberId: string; streakType: StreakType; currentStreak: number; longestStreak: number; lastActivityDate?: string; streakStartDate?: string
+}
+
+export interface MemberLoyaltySummaryDto {
+  memberId: string; currentPoints: number; totalEarned: number; currentTier?: LoyaltyTierDto; nextTier?: LoyaltyTierDto; pointsToNextTier: number; streaks: MemberStreakDto[]; badges: MemberBadgeDto[]; totalBadges: number; totalRedemptions: number
+}
+
+export interface ReferralDto {
+  id: string; referrerMemberId: string; referrerName: string; referredMemberId?: string; referredName?: string; referredEmail: string; referralCode: string; status: ReferralStatus; referrerPointsAwarded: number; referredPointsAwarded: number; convertedAt?: string; createdAt: string
+}
+
+export interface LoyaltyDashboardDto {
+  pointsIssuedThisMonth: number; pointsRedeemedThisMonth: number; redemptionsThisMonth: number; totalParticipants: number; topMembers: TopMemberDto[]
+}
+
+export interface TopMemberDto {
+  memberId: string; memberName: string; totalPoints: number; tierName?: string
+}

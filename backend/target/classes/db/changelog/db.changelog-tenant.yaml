@@ -3270,3 +3270,550 @@ databaseChangeLog:
             columns:
               - column:
                   name: event_type
+
+  - changeSet:
+      id: t-013-loyalty
+      author: gymplatform
+      changes:
+        - createTable:
+            tableName: loyalty_configs
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: config_key
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: config_value
+                  type: varchar(500)
+              - column:
+                  name: description
+                  type: text
+              - column:
+                  name: tenant_id
+                  type: varchar(100)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: loyalty_tiers
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: min_points
+                  type: int
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: color
+                  type: varchar(20)
+              - column:
+                  name: icon
+                  type: varchar(50)
+              - column:
+                  name: perks
+                  type: text
+              - column:
+                  name: sort_order
+                  type: int
+                  defaultValueNumeric: 0
+              - column:
+                  name: active
+                  type: boolean
+                  defaultValueBoolean: true
+              - column:
+                  name: tenant_id
+                  type: varchar(100)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: loyalty_transactions
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: member_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: points
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: balance_after
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: transaction_type
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: action
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: reference_id
+                  type: uuid
+              - column:
+                  name: description
+                  type: varchar(500)
+              - column:
+                  name: tenant_id
+                  type: varchar(100)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: loyalty_rewards
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: text
+              - column:
+                  name: reward_type
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: points_cost
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: value
+                  type: decimal(10,2)
+              - column:
+                  name: active
+                  type: boolean
+                  defaultValueBoolean: true
+              - column:
+                  name: image_url
+                  type: varchar(500)
+              - column:
+                  name: max_redemptions_per_member
+                  type: int
+              - column:
+                  name: total_available
+                  type: int
+              - column:
+                  name: total_redeemed
+                  type: int
+                  defaultValueNumeric: 0
+              - column:
+                  name: tenant_id
+                  type: varchar(100)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: loyalty_redemptions
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: member_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: reward_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: transaction_id
+                  type: uuid
+              - column:
+                  name: points_spent
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: fulfilled_at
+                  type: timestamp with time zone
+              - column:
+                  name: notes
+                  type: text
+              - column:
+                  name: tenant_id
+                  type: varchar(100)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: loyalty_badges
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: text
+              - column:
+                  name: icon
+                  type: varchar(100)
+              - column:
+                  name: category
+                  type: varchar(50)
+              - column:
+                  name: criteria_type
+                  type: varchar(50)
+              - column:
+                  name: criteria_value
+                  type: int
+              - column:
+                  name: active
+                  type: boolean
+                  defaultValueBoolean: true
+              - column:
+                  name: tenant_id
+                  type: varchar(100)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: member_badges
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: member_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: badge_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: earned_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: tenant_id
+                  type: varchar(100)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: member_streaks
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: member_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: streak_type
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: current_streak
+                  type: int
+                  defaultValueNumeric: 0
+              - column:
+                  name: longest_streak
+                  type: int
+                  defaultValueNumeric: 0
+              - column:
+                  name: last_activity_date
+                  type: date
+              - column:
+                  name: streak_start_date
+                  type: date
+              - column:
+                  name: tenant_id
+                  type: varchar(100)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: referrals
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: referrer_member_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: referred_member_id
+                  type: uuid
+              - column:
+                  name: referred_email
+                  type: varchar(300)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: referral_code
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(20)
+              - column:
+                  name: referrer_points_awarded
+                  type: int
+                  defaultValueNumeric: 0
+              - column:
+                  name: referred_points_awarded
+                  type: int
+                  defaultValueNumeric: 0
+              - column:
+                  name: converted_at
+                  type: timestamp with time zone
+              - column:
+                  name: tenant_id
+                  type: varchar(100)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+        - createIndex:
+            tableName: loyalty_transactions
+            indexName: idx_loyalty_transactions_member
+            columns:
+              - column:
+                  name: member_id
+        - createIndex:
+            tableName: loyalty_transactions
+            indexName: idx_loyalty_transactions_type
+            columns:
+              - column:
+                  name: transaction_type
+        - createIndex:
+            tableName: loyalty_transactions
+            indexName: idx_loyalty_transactions_action
+            columns:
+              - column:
+                  name: action
+        - createIndex:
+            tableName: loyalty_transactions
+            indexName: idx_loyalty_transactions_tenant
+            columns:
+              - column:
+                  name: tenant_id
+        - createIndex:
+            tableName: loyalty_redemptions
+            indexName: idx_loyalty_redemptions_member
+            columns:
+              - column:
+                  name: member_id
+        - createIndex:
+            tableName: loyalty_redemptions
+            indexName: idx_loyalty_redemptions_reward
+            columns:
+              - column:
+                  name: reward_id
+        - createIndex:
+            tableName: loyalty_redemptions
+            indexName: idx_loyalty_redemptions_status
+            columns:
+              - column:
+                  name: status
+        - createIndex:
+            tableName: member_badges
+            indexName: idx_member_badges_member_badge
+            unique: true
+            columns:
+              - column:
+                  name: member_id
+              - column:
+                  name: badge_id
+        - createIndex:
+            tableName: member_streaks
+            indexName: idx_member_streaks_member_type
+            unique: true
+            columns:
+              - column:
+                  name: member_id
+              - column:
+                  name: streak_type
+        - createIndex:
+            tableName: referrals
+            indexName: idx_referrals_referrer
+            columns:
+              - column:
+                  name: referrer_member_id
+        - createIndex:
+            tableName: referrals
+            indexName: idx_referrals_code
+            unique: true
+            columns:
+              - column:
+                  name: referral_code
+        - createIndex:
+            tableName: referrals
+            indexName: idx_referrals_email
+            columns:
+              - column:
+                  name: referred_email
+        - createIndex:
+            tableName: referrals
+            indexName: idx_referrals_tenant
+            columns:
+              - column:
+                  name: tenant_id

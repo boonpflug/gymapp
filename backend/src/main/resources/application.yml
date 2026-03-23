@@ -55,6 +55,17 @@ gocardless:
   environment: sandbox
   webhook-secret: ${GOCARDLESS_WEBHOOK_SECRET:placeholder}
 
+swiss:
+  qr-bill:
+    creditor-iban: ${SWISS_CREDITOR_IBAN:CH9300762011623852957}
+    creditor-name: ${SWISS_CREDITOR_NAME:Kieser Training AG}
+    creditor-street: ${SWISS_CREDITOR_STREET:Hardstrasse 223}
+    creditor-city: ${SWISS_CREDITOR_CITY:Zürich}
+    creditor-postal-code: ${SWISS_CREDITOR_POSTAL_CODE:8005}
+  lsv:
+    subscriber-id: ${LSV_SUBSCRIBER_ID:}
+    bank-clearing: ${LSV_BANK_CLEARING:}
+
 sso:
   azure:
     enabled: ${AZURE_SSO_ENABLED:false}

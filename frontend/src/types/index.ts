@@ -914,3 +914,56 @@ export interface MachineUtilizationDto {
 export interface MemberProgressDto {
   memberId: string; memberName: string; machineId: string; machineCode: string; machineName: string; measurements: StrengthMeasurementDto[]; initialPeakForce?: number; latestPeakForce?: number; improvementPercent: number
 }
+
+// ── Analytics & Reporting ──────────────────────────────────
+
+export interface MonthlyRevenueDto {
+  month: string
+  revenue: number
+  invoiceCount: number
+  paidCount: number
+}
+
+export interface RevenueReportDto {
+  monthlyRevenue: MonthlyRevenueDto[]
+  totalRevenue: number
+  mrr: number
+  outstandingReceivables: number
+  paymentSuccessRate: number
+}
+
+export interface MemberReportDto {
+  totalActive: number
+  totalInactive: number
+  newThisMonth: number
+  churnRate: number
+  cancellationReasons: Record<string, number>
+}
+
+export interface TopCheckinMemberDto {
+  memberId: string
+  memberName: string
+  checkInCount: number
+}
+
+export interface CheckInReportDto {
+  totalCheckIns: number
+  avgDaily: number
+  peakHours: Record<string, number>
+  peakDays: Record<string, number>
+  topMembers: TopCheckinMemberDto[]
+}
+
+export interface ClassPopularityDto {
+  className: string
+  totalBookings: number
+  avgAttendance: number
+  capacityUtilization: number
+}
+
+export interface ClassReportDto {
+  totalClasses: number
+  avgAttendanceRate: number
+  mostPopular: ClassPopularityDto[]
+  leastPopular: ClassPopularityDto[]
+}

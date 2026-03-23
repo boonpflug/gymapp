@@ -18,6 +18,7 @@ import MarketingPage from './pages/MarketingPage'
 import LoyaltyPage from './pages/LoyaltyPage'
 import AppointmentsPage from './pages/AppointmentsPage'
 import MachinesPage from './pages/MachinesPage'
+import ReportsPage from './pages/ReportsPage'
 import PortalDashboard from './pages/portal/PortalDashboard'
 import PortalProfile from './pages/portal/PortalProfile'
 import PortalContracts from './pages/portal/PortalContracts'
@@ -70,6 +71,7 @@ export default function App() {
         <Route path="marketing" element={<MarketingPage />} />
         <Route path="loyalty" element={<LoyaltyPage />} />
         <Route path="machines" element={<MachinesPage />} />
+        <Route path="reports" element={<ReportsPage />} />
       </Route>
       {/* Member self-service portal */}
       <Route

@@ -15,6 +15,7 @@ import StaffPage from './pages/StaffPage'
 import FacilitiesPage from './pages/FacilitiesPage'
 import MarketingPage from './pages/MarketingPage'
 import LoyaltyPage from './pages/LoyaltyPage'
+import AppointmentsPage from './pages/AppointmentsPage'
 import PortalDashboard from './pages/portal/PortalDashboard'
 import PortalProfile from './pages/portal/PortalProfile'
 import PortalContracts from './pages/portal/PortalContracts'
@@ -58,6 +59,7 @@ export default function App() {
         <Route path="contracts" element={<ContractsPage />} />
         <Route path="checkin" element={<CheckInPage />} />
         <Route path="classes" element={<ClassesPage />} />
+        <Route path="appointments" element={<AppointmentsPage />} />
         <Route path="training" element={<TrainingPage />} />
         <Route path="communication" element={<CommunicationPage />} />
         <Route path="sales" element={<SalesPage />} />

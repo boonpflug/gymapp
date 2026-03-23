@@ -3817,3 +3817,477 @@ databaseChangeLog:
             columns:
               - column:
                   name: tenant_id
+
+  - changeSet:
+      id: t-014-appointments
+      author: gymplatform
+      changes:
+        - createTable:
+            tableName: appointment_types
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: text
+              - column:
+                  name: duration_minutes
+                  type: int
+                  defaultValueNumeric: 60
+                  constraints:
+                    nullable: false
+              - column:
+                  name: color
+                  type: varchar(20)
+              - column:
+                  name: requires_trainer
+                  type: boolean
+                  defaultValueBoolean: true
+              - column:
+                  name: active
+                  type: boolean
+                  defaultValueBoolean: true
+              - column:
+                  name: tenant_id
+                  type: varchar(100)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: staff_availability
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: staff_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: facility_id
+                  type: uuid
+              - column:
+                  name: day_of_week
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: start_time
+                  type: time
+                  constraints:
+                    nullable: false
+              - column:
+                  name: end_time
+                  type: time
+                  constraints:
+                    nullable: false
+              - column:
+                  name: recurring
+                  type: boolean
+                  defaultValueBoolean: true
+              - column:
+                  name: specific_date
+                  type: date
+              - column:
+                  name: available
+                  type: boolean
+                  defaultValueBoolean: true
+              - column:
+                  name: tenant_id
+                  type: varchar(100)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: appointments
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: member_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: staff_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: facility_id
+                  type: uuid
+              - column:
+                  name: appointment_type_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: start_time
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: end_time
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: notes
+                  type: text
+              - column:
+                  name: cancellation_reason
+                  type: text
+              - column:
+                  name: cancelled_at
+                  type: timestamp with time zone
+              - column:
+                  name: recurring_rule
+                  type: varchar(50)
+              - column:
+                  name: tenant_id
+                  type: varchar(100)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: anamnese_forms
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: text
+              - column:
+                  name: version
+                  type: int
+                  defaultValueNumeric: 1
+              - column:
+                  name: active
+                  type: boolean
+                  defaultValueBoolean: true
+              - column:
+                  name: tenant_id
+                  type: varchar(100)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: anamnese_questions
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: form_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: question_text
+                  type: text
+                  constraints:
+                    nullable: false
+              - column:
+                  name: question_type
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: options
+                  type: text
+              - column:
+                  name: required
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: sort_order
+                  type: int
+                  defaultValueNumeric: 0
+              - column:
+                  name: section
+                  type: varchar(100)
+              - column:
+                  name: tenant_id
+                  type: varchar(100)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: anamnese_submissions
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: form_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: member_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: appointment_id
+                  type: uuid
+              - column:
+                  name: submitted_by
+                  type: uuid
+              - column:
+                  name: submitted_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: notes
+                  type: text
+              - column:
+                  name: tenant_id
+                  type: varchar(100)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: anamnese_answers
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: submission_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: question_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: answer_text
+                  type: text
+              - column:
+                  name: answer_number
+                  type: decimal(10,2)
+              - column:
+                  name: answer_boolean
+                  type: boolean
+              - column:
+                  name: tenant_id
+                  type: varchar(100)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+        - createIndex:
+            tableName: appointments
+            indexName: idx_appointments_member
+            columns:
+              - column:
+                  name: member_id
+        - createIndex:
+            tableName: appointments
+            indexName: idx_appointments_staff
+            columns:
+              - column:
+                  name: staff_id
+        - createIndex:
+            tableName: appointments
+            indexName: idx_appointments_start_time
+            columns:
+              - column:
+                  name: start_time
+        - createIndex:
+            tableName: appointments
+            indexName: idx_appointments_status
+            columns:
+              - column:
+                  name: status
+        - createIndex:
+            tableName: appointments
+            indexName: idx_appointments_facility
+            columns:
+              - column:
+                  name: facility_id
+        - createIndex:
+            tableName: appointments
+            indexName: idx_appointments_type
+            columns:
+              - column:
+                  name: appointment_type_id
+        - createIndex:
+            tableName: appointments
+            indexName: idx_appointments_tenant
+            columns:
+              - column:
+                  name: tenant_id
+        - createIndex:
+            tableName: staff_availability
+            indexName: idx_staff_availability_staff
+            columns:
+              - column:
+                  name: staff_id
+        - createIndex:
+            tableName: staff_availability
+            indexName: idx_staff_availability_day
+            columns:
+              - column:
+                  name: day_of_week
+        - createIndex:
+            tableName: staff_availability
+            indexName: idx_staff_availability_date
+            columns:
+              - column:
+                  name: specific_date
+        - createIndex:
+            tableName: anamnese_questions
+            indexName: idx_anamnese_questions_form
+            columns:
+              - column:
+                  name: form_id
+        - createIndex:
+            tableName: anamnese_questions
+            indexName: idx_anamnese_questions_sort
+            columns:
+              - column:
+                  name: sort_order
+        - createIndex:
+            tableName: anamnese_submissions
+            indexName: idx_anamnese_submissions_member
+            columns:
+              - column:
+                  name: member_id
+        - createIndex:
+            tableName: anamnese_submissions
+            indexName: idx_anamnese_submissions_form
+            columns:
+              - column:
+                  name: form_id
+        - createIndex:
+            tableName: anamnese_submissions
+            indexName: idx_anamnese_submissions_appointment
+            columns:
+              - column:
+                  name: appointment_id
+        - createIndex:
+            tableName: anamnese_answers
+            indexName: idx_anamnese_answers_submission
+            columns:
+              - column:
+                  name: submission_id
+        - createIndex:
+            tableName: anamnese_answers
+            indexName: idx_anamnese_answers_question
+            columns:
+              - column:
+                  name: question_id

@@ -847,3 +847,40 @@ export interface LoyaltyDashboardDto {
 export interface TopMemberDto {
   memberId: string; memberName: string; totalPoints: number; tierName?: string
 }
+
+// ── Appointments & Agenda ──────────────────────────────────
+
+export type AppointmentStatus = 'SCHEDULED' | 'CONFIRMED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED' | 'NO_SHOW'
+export type QuestionType = 'TEXT' | 'NUMBER' | 'SINGLE_CHOICE' | 'MULTI_CHOICE' | 'SCALE' | 'DATE' | 'BOOLEAN'
+
+export interface AppointmentTypeDto {
+  id: string; name: string; description?: string; durationMinutes: number; color?: string; requiresTrainer: boolean; active: boolean; createdAt: string
+}
+
+export interface StaffAvailabilityDto {
+  id: string; staffId: string; staffName?: string; facilityId?: string; dayOfWeek: number; startTime: string; endTime: string; recurring: boolean; specificDate?: string; available: boolean
+}
+
+export interface AppointmentDto {
+  id: string; memberId: string; memberName: string; staffId: string; staffName: string; facilityId?: string; facilityName?: string; appointmentTypeId: string; appointmentTypeName: string; startTime: string; endTime: string; status: AppointmentStatus; notes?: string; cancellationReason?: string; cancelledAt?: string; recurringRule?: string; createdAt: string
+}
+
+export interface AnamneseFormDto {
+  id: string; name: string; description?: string; version: number; active: boolean; questions: AnamneseQuestionDto[]; createdAt: string
+}
+
+export interface AnamneseQuestionDto {
+  id: string; formId: string; questionText: string; questionType: QuestionType; options?: string; required: boolean; sortOrder: number; section?: string
+}
+
+export interface AnamneseSubmissionDto {
+  id: string; formId: string; formName?: string; memberId: string; memberName?: string; appointmentId?: string; submittedBy?: string; submittedByName?: string; submittedAt: string; notes?: string; answers: AnamneseAnswerDto[]; createdAt: string
+}
+
+export interface AnamneseAnswerDto {
+  id: string; submissionId: string; questionId: string; questionText?: string; answerText?: string; answerNumber?: number; answerBoolean?: boolean
+}
+
+export interface DayAgendaDto {
+  date: string; staffId: string; staffName: string; appointments: AppointmentDto[]; totalSlots: number; bookedSlots: number
+}

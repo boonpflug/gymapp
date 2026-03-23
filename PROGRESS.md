@@ -59,6 +59,9 @@ Kieser Training AG (KTAG) — Swiss/German fitness chain, ~2,000 staff, ~250,000
 - Appointment & agenda module (step 23) — appointment types, staff availability (recurring + one-off), full lifecycle (schedule/confirm/start/complete/cancel/no-show), overlap detection, anamnese form builder (7 question types), submission system, staff day agenda view, frontend 4-tab page
 - Kieser machine sensor integration (step 24) — machine registry with inventory management, maintenance logging, sensor session recording linked to training sessions, strength measurements (isometric/dynamic/ROM), member progress tracking with improvement %, machine utilization analytics, frontend 4-tab page
 - Contract auto-renewal (step 28) — autoRenew flag, renewalTermMonths, renewalNoticeDays fields on Contract, daily scheduled job iterating all tenants to auto-extend expiring contracts, renewal notification events via RabbitMQ, controller endpoints for toggle and settings
+- Internationalization i18n (step 25) — backend: MessageSource with DE/FR/EN message bundles, AcceptHeaderLocaleResolver; frontend: react-i18next with translation files, language switcher in sidebar, nav labels translated
+- DATEV export (step 27) — DatevExportService generating Buchungsstapel CSV format, SKR03/SKR04 Kontenrahmen support, invoice and payment export by date range, file download endpoints
+- Azure SSO (step 27) — SsoService for OIDC token validation, auto-provision users on first SSO login, link SSO to existing accounts, configurable via env vars, POST /api/auth/sso/azure endpoint
 
 ## NOT STARTED ⏳
 

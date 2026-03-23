@@ -4669,3 +4669,28 @@ databaseChangeLog:
                   name: renewal_count
                   type: int
                   defaultValueNumeric: 0
+
+  - changeSet:
+      id: t-017-sso
+      author: gymplatform
+      comment: Add SSO provider fields to users table for Azure AD OIDC support
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: sso_provider
+                  type: varchar(50)
+              - column:
+                  name: sso_subject_id
+                  type: varchar(255)
+        - dropNotNullConstraint:
+            tableName: users
+            columnName: password_hash
+            columnDataType: varchar(255)
+        - createIndex:
+            tableName: users
+            indexName: idx_users_sso_subject_id
+            columns:
+              - column:
+                  name: sso_subject_id

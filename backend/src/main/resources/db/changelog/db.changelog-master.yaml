@@ -3,3 +3,5 @@ databaseChangeLog:
       file: db/changelog/001-create-tenants.yaml
   - include:
       file: db/changelog/002-create-public-users.yaml
+  - include:
+      file: db/changelog/003-add-sso-columns.yaml

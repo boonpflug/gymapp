@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthService authService;
+    private final SsoService ssoService;
 
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<AuthResponse>> register(
@@ -40,5 +41,13 @@ public class AuthController {
     public ResponseEntity<ApiResponse<Void>> logout(@RequestBody RefreshTokenRequest request) {
         authService.logout(request.getRefreshToken());
         return ResponseEntity.ok(ApiResponse.success(null));
+    }
+
+    @PostMapping("/sso/azure")
+    public ResponseEntity<ApiResponse<AuthResponse>> ssoAzure(
+            @Valid @RequestBody SsoLoginRequest request) {
+        AuthResponse response = ssoService.authenticateWithAzure(
+                request.getIdToken(), request.getTenantId());
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 }

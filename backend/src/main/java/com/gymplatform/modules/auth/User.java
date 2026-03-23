@@ -14,7 +14,7 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String email;
 
-    @Column(name = "password_hash", nullable = false)
+    @Column(name = "password_hash")
     private String passwordHash;
 
     @Column(name = "first_name", nullable = false)
@@ -38,4 +38,10 @@ public class User extends BaseEntity {
 
     @Column(name = "last_login_at")
     private Instant lastLoginAt;
+
+    @Column(name = "sso_provider")
+    private String ssoProvider;
+
+    @Column(name = "sso_subject_id")
+    private String ssoSubjectId;
 }

@@ -53,6 +53,12 @@ public class AuthService {
                 .orElseThrow(() -> new BusinessException("INVALID_CREDENTIALS",
                         "Invalid email or password", HttpStatus.UNAUTHORIZED));
 
+        if (user.getPasswordHash() == null || user.getPasswordHash().isBlank()) {
+            throw new BusinessException("SSO_ONLY_ACCOUNT",
+                    "This account uses SSO login. Please sign in with your SSO provider.",
+                    HttpStatus.BAD_REQUEST);
+        }
+
         if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
             throw new BusinessException("INVALID_CREDENTIALS",
                     "Invalid email or password", HttpStatus.UNAUTHORIZED);

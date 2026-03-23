@@ -62,6 +62,8 @@ Kieser Training AG (KTAG) — Swiss/German fitness chain, ~2,000 staff, ~250,000
 - Internationalization i18n (step 25) — backend: MessageSource with DE/FR/EN message bundles, AcceptHeaderLocaleResolver; frontend: react-i18next with translation files, language switcher in sidebar, nav labels translated
 - DATEV export (step 27) — DatevExportService generating Buchungsstapel CSV format, SKR03/SKR04 Kontenrahmen support, invoice and payment export by date range, file download endpoints
 - Azure SSO (step 27) — SsoService for OIDC token validation, auto-provision users on first SSO login, link SSO to existing accounts, configurable via env vars, POST /api/auth/sso/azure endpoint
+- Swiss payments (step 26) — QR-Rechnung (ISO 20022 QR-bill with mod 10 recursive reference), LSV+ direct debit (TA 875 batch files, mandate management), configurable creditor/subscriber settings
+- Analytics & Reporting (step 30) — ReportingService with revenue (MRR, monthly, payment success rate), members (active/churn/cancellation reasons), check-ins (peak hours, daily avg, top members), classes (attendance, popularity), CSV export for all report types, frontend 4-tab page with date pickers and KPI cards
 
 ## NOT STARTED ⏳
 

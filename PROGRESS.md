@@ -58,6 +58,7 @@ Kieser Training AG (KTAG) — Swiss/German fitness chain, ~2,000 staff, ~250,000
 - Loyalty & rewards module (step 22) — points system (configurable per action), 4 tiers (Bronze/Silver/Gold/Platinum), rewards catalog (5 rewards), badge system (8 badges with auto-award), streak tracking (daily/weekly), referral program (unique codes, point awards), staff dashboard, seed data (431 transactions across 20 members), frontend 5-tab page
 - Appointment & agenda module (step 23) — appointment types, staff availability (recurring + one-off), full lifecycle (schedule/confirm/start/complete/cancel/no-show), overlap detection, anamnese form builder (7 question types), submission system, staff day agenda view, frontend 4-tab page
 - Kieser machine sensor integration (step 24) — machine registry with inventory management, maintenance logging, sensor session recording linked to training sessions, strength measurements (isometric/dynamic/ROM), member progress tracking with improvement %, machine utilization analytics, frontend 4-tab page
+- Contract auto-renewal (step 28) — autoRenew flag, renewalTermMonths, renewalNoticeDays fields on Contract, daily scheduled job iterating all tenants to auto-extend expiring contracts, renewal notification events via RabbitMQ, controller endpoints for toggle and settings
 
 ## NOT STARTED ⏳
 

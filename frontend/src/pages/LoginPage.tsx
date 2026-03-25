@@ -6,7 +6,7 @@ import { useAuthStore } from '../store/authStore'
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [tenantId, setTenantId] = useState('demo_gym')
+  const [tenantId] = useState('demo_gym')
   const login = useLogin()
   const navigate = useNavigate()
   const location = useLocation()

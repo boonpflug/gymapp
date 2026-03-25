@@ -48,6 +48,13 @@ gocardless:
   environment: sandbox
   webhook-secret: ${GOCARDLESS_WEBHOOK_SECRET:placeholder}
 
+sso:
+  azure:
+    enabled: ${AZURE_SSO_ENABLED:false}
+    client-id: ${AZURE_CLIENT_ID:}
+    tenant-id: ${AZURE_TENANT_ID:}
+    default-role: MEMBER
+
 springdoc:
   api-docs:
     path: /api-docs

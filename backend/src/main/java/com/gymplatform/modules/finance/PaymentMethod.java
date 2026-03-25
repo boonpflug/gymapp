@@ -24,6 +24,12 @@ public class PaymentMethod extends BaseEntity {
     @Column(name = "gocardless_mandate_id")
     private String goCardlessMandateId;
 
+    @Column(name = "lsv_iban")
+    private String lsvIban;
+
+    @Column(name = "lsv_bank_clearing")
+    private String lsvBankClearing;
+
     @Column(name = "last4")
     private String last4;
 

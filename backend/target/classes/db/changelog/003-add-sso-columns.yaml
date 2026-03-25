@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-add-sso-columns
+      author: gymplatform
+      comment: Add SSO provider fields to public users table for Azure AD OIDC support
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: sso_provider
+                  type: varchar(50)
+              - column:
+                  name: sso_subject_id
+                  type: varchar(255)
+        - dropNotNullConstraint:
+            tableName: users
+            columnName: password_hash
+            columnDataType: varchar(255)
+        - createIndex:
+            tableName: users
+            indexName: idx_public_users_sso_subject_id
+            columns:
+              - column:
+                  name: sso_subject_id

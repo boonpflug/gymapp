@@ -1,15 +1,16 @@
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useAuthStore } from '../store/authStore'
 
 const portalNavItems = [
-  { path: '/portal', label: 'Dashboard', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4' },
-  { path: '/portal/profile', label: 'My Profile', icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' },
-  { path: '/portal/contracts', label: 'Contracts', icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
-  { path: '/portal/invoices', label: 'Invoices', icon: 'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2z' },
-  { path: '/portal/classes', label: 'Classes', icon: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z' },
-  { path: '/portal/training', label: 'Training', icon: 'M13 10V3L4 14h7v7l9-11h-7z' },
-  { path: '/portal/checkins', label: 'Check-in History', icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' },
-  { path: '/portal/phone', label: 'Mobile App', icon: 'M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3' },
+  { path: '/portal', labelKey: 'portal.nav.dashboard', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4' },
+  { path: '/portal/profile', labelKey: 'portal.nav.myProfile', icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' },
+  { path: '/portal/contracts', labelKey: 'portal.nav.contracts', icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
+  { path: '/portal/invoices', labelKey: 'portal.nav.invoices', icon: 'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2z' },
+  { path: '/portal/classes', labelKey: 'portal.nav.classes', icon: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z' },
+  { path: '/portal/training', labelKey: 'portal.nav.training', icon: 'M13 10V3L4 14h7v7l9-11h-7z' },
+  { path: '/portal/checkins', labelKey: 'portal.nav.checkinHistory', icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' },
+  { path: '/portal/phone', labelKey: 'portal.nav.mobileApp', icon: 'M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3' },
 ]
 
 function NavIcon({ d }: { d: string }) {
@@ -21,6 +22,7 @@ function NavIcon({ d }: { d: string }) {
 }
 
 export default function PortalLayout() {
+  const { t } = useTranslation()
   const location = useLocation()
   const navigate = useNavigate()
   const user = useAuthStore((s) => s.user)
@@ -42,7 +44,7 @@ export default function PortalLayout() {
             </div>
             <div>
               <h1 className="text-lg font-semibold text-white tracking-tight">Fitagend</h1>
-              <p className="text-xs text-brand-400">Member Portal</p>
+              <p className="text-xs text-brand-400">{t('portal.memberPortal')}</p>
             </div>
           </div>
         </div>
@@ -59,7 +61,7 @@ export default function PortalLayout() {
               <p className="text-sm font-medium text-white truncate">
                 {user?.firstName} {user?.lastName}
               </p>
-              <span className="text-xs text-brand-400">Member</span>
+              <span className="text-xs text-brand-400">{t('portal.member')}</span>
             </div>
           </div>
         </div>
@@ -81,7 +83,7 @@ export default function PortalLayout() {
                 }`}
               >
                 <NavIcon d={item.icon} />
-                {item.label}
+                {t(item.labelKey)}
               </Link>
             )
           })}
@@ -96,7 +98,7 @@ export default function PortalLayout() {
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
             </svg>
-            Logout
+            {t('portal.logout')}
           </button>
         </div>
       </aside>

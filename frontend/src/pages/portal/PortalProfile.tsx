@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import api from '../../api/client'
 import type { ApiResponse, MemberDto } from '../../types'
 
@@ -20,6 +21,7 @@ interface ProfileForm {
 }
 
 export default function PortalProfile() {
+  const { t } = useTranslation()
   const qc = useQueryClient()
   const [editing, setEditing] = useState(false)
   const [form, setForm] = useState<ProfileForm>({
@@ -67,18 +69,18 @@ export default function PortalProfile() {
     updateMutation.mutate(form)
   }
 
-  if (!profile) return <p className="text-gray-400">Loading profile...</p>
+  if (!profile) return <p className="text-gray-400">{t('portal.loadingProfile')}</p>
 
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">My Profile</h1>
+        <h1 className="text-2xl font-bold">{t('portal.profile.title')}</h1>
         {!editing && (
           <button
             onClick={() => setEditing(true)}
             className="bg-brand-600 text-white px-4 py-2 rounded text-sm hover:bg-brand-700"
           >
-            Edit Profile
+            {t('portal.profile.editProfile')}
           </button>
         )}
       </div>
@@ -87,66 +89,66 @@ export default function PortalProfile() {
         {editing ? (
           <form onSubmit={handleSave} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
-              <Field label="First Name" value={form.firstName} onChange={v => setForm({ ...form, firstName: v })} />
-              <Field label="Last Name" value={form.lastName} onChange={v => setForm({ ...form, lastName: v })} />
-              <Field label="Email" value={form.email} onChange={v => setForm({ ...form, email: v })} type="email" />
-              <Field label="Phone" value={form.phone} onChange={v => setForm({ ...form, phone: v })} />
-              <Field label="Date of Birth" value={form.dateOfBirth} onChange={v => setForm({ ...form, dateOfBirth: v })} type="date" />
+              <Field label={t('portal.profile.firstName')} value={form.firstName} onChange={v => setForm({ ...form, firstName: v })} />
+              <Field label={t('portal.profile.lastName')} value={form.lastName} onChange={v => setForm({ ...form, lastName: v })} />
+              <Field label={t('portal.profile.email')} value={form.email} onChange={v => setForm({ ...form, email: v })} type="email" />
+              <Field label={t('portal.profile.phone')} value={form.phone} onChange={v => setForm({ ...form, phone: v })} />
+              <Field label={t('portal.profile.dateOfBirth')} value={form.dateOfBirth} onChange={v => setForm({ ...form, dateOfBirth: v })} type="date" />
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('portal.profile.gender')}</label>
                 <select
                   value={form.gender}
                   onChange={e => setForm({ ...form, gender: e.target.value })}
                   className="w-full border rounded px-3 py-2 text-sm"
                 >
-                  <option value="">Select</option>
-                  <option value="MALE">Male</option>
-                  <option value="FEMALE">Female</option>
-                  <option value="OTHER">Other</option>
+                  <option value="">{t('portal.profile.genderSelect')}</option>
+                  <option value="MALE">{t('portal.profile.genderMale')}</option>
+                  <option value="FEMALE">{t('portal.profile.genderFemale')}</option>
+                  <option value="OTHER">{t('portal.profile.genderOther')}</option>
                 </select>
               </div>
-              <Field label="Street" value={form.street} onChange={v => setForm({ ...form, street: v })} />
-              <Field label="City" value={form.city} onChange={v => setForm({ ...form, city: v })} />
-              <Field label="State" value={form.state} onChange={v => setForm({ ...form, state: v })} />
-              <Field label="Postal Code" value={form.postalCode} onChange={v => setForm({ ...form, postalCode: v })} />
-              <Field label="Country" value={form.country} onChange={v => setForm({ ...form, country: v })} />
+              <Field label={t('portal.profile.street')} value={form.street} onChange={v => setForm({ ...form, street: v })} />
+              <Field label={t('portal.profile.city')} value={form.city} onChange={v => setForm({ ...form, city: v })} />
+              <Field label={t('portal.profile.state')} value={form.state} onChange={v => setForm({ ...form, state: v })} />
+              <Field label={t('portal.profile.postalCode')} value={form.postalCode} onChange={v => setForm({ ...form, postalCode: v })} />
+              <Field label={t('portal.profile.country')} value={form.country} onChange={v => setForm({ ...form, country: v })} />
               <div className="col-span-2 border-t pt-4 mt-2">
-                <h3 className="text-sm font-semibold text-gray-700 mb-3">Emergency Contact</h3>
+                <h3 className="text-sm font-semibold text-gray-700 mb-3">{t('portal.profile.emergencyContact')}</h3>
                 <div className="grid grid-cols-2 gap-4">
-                  <Field label="Name" value={form.emergencyContactName} onChange={v => setForm({ ...form, emergencyContactName: v })} />
-                  <Field label="Phone" value={form.emergencyContactPhone} onChange={v => setForm({ ...form, emergencyContactPhone: v })} />
+                  <Field label={t('portal.profile.name')} value={form.emergencyContactName} onChange={v => setForm({ ...form, emergencyContactName: v })} />
+                  <Field label={t('portal.profile.phone')} value={form.emergencyContactPhone} onChange={v => setForm({ ...form, emergencyContactPhone: v })} />
                 </div>
               </div>
             </div>
             <div className="flex justify-end gap-3 pt-2">
-              <button type="button" onClick={() => setEditing(false)} className="px-4 py-2 text-sm text-gray-600">Cancel</button>
+              <button type="button" onClick={() => setEditing(false)} className="px-4 py-2 text-sm text-gray-600">{t('portal.cancel')}</button>
               <button type="submit" disabled={updateMutation.isPending}
                 className="bg-brand-600 text-white px-4 py-2 rounded text-sm hover:bg-brand-700 disabled:opacity-50">
-                {updateMutation.isPending ? 'Saving...' : 'Save Changes'}
+                {updateMutation.isPending ? t('portal.profile.saving') : t('portal.profile.saveChanges')}
               </button>
             </div>
           </form>
         ) : (
           <div className="grid grid-cols-2 gap-y-4 gap-x-8">
-            <ReadField label="Member Number" value={profile.memberNumber} />
-            <ReadField label="Status" value={profile.status} />
-            <ReadField label="First Name" value={profile.firstName} />
-            <ReadField label="Last Name" value={profile.lastName} />
-            <ReadField label="Email" value={profile.email} />
-            <ReadField label="Phone" value={profile.phone} />
-            <ReadField label="Date of Birth" value={profile.dateOfBirth} />
-            <ReadField label="Gender" value={profile.gender} />
-            <ReadField label="Street" value={profile.street} />
-            <ReadField label="City" value={profile.city} />
-            <ReadField label="State" value={profile.state} />
-            <ReadField label="Postal Code" value={profile.postalCode} />
-            <ReadField label="Country" value={profile.country} />
-            <ReadField label="Join Date" value={profile.joinDate} />
+            <ReadField label={t('portal.profile.memberNumber')} value={profile.memberNumber} />
+            <ReadField label={t('portal.profile.status')} value={profile.status} />
+            <ReadField label={t('portal.profile.firstName')} value={profile.firstName} />
+            <ReadField label={t('portal.profile.lastName')} value={profile.lastName} />
+            <ReadField label={t('portal.profile.email')} value={profile.email} />
+            <ReadField label={t('portal.profile.phone')} value={profile.phone} />
+            <ReadField label={t('portal.profile.dateOfBirth')} value={profile.dateOfBirth} />
+            <ReadField label={t('portal.profile.gender')} value={profile.gender} />
+            <ReadField label={t('portal.profile.street')} value={profile.street} />
+            <ReadField label={t('portal.profile.city')} value={profile.city} />
+            <ReadField label={t('portal.profile.state')} value={profile.state} />
+            <ReadField label={t('portal.profile.postalCode')} value={profile.postalCode} />
+            <ReadField label={t('portal.profile.country')} value={profile.country} />
+            <ReadField label={t('portal.profile.joinDate')} value={profile.joinDate} />
             <div className="col-span-2 border-t pt-4 mt-2">
-              <h3 className="text-sm font-semibold text-gray-700 mb-3">Emergency Contact</h3>
+              <h3 className="text-sm font-semibold text-gray-700 mb-3">{t('portal.profile.emergencyContact')}</h3>
               <div className="grid grid-cols-2 gap-4">
-                <ReadField label="Name" value={profile.emergencyContactName} />
-                <ReadField label="Phone" value={profile.emergencyContactPhone} />
+                <ReadField label={t('portal.profile.name')} value={profile.emergencyContactName} />
+                <ReadField label={t('portal.profile.phone')} value={profile.emergencyContactPhone} />
               </div>
             </div>
           </div>

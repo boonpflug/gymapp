@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import api from '../api/client'
 import type {
   ApiResponse,
@@ -16,33 +17,35 @@ import type {
 } from '../types'
 
 type Tab = 'dashboard' | 'rewards' | 'badges' | 'referrals' | 'configuration'
-const tabs: { key: Tab; label: string }[] = [
-  { key: 'dashboard', label: 'Dashboard' },
-  { key: 'rewards', label: 'Rewards' },
-  { key: 'badges', label: 'Badges' },
-  { key: 'referrals', label: 'Referrals' },
-  { key: 'configuration', label: 'Configuration' },
-]
 
 export default function LoyaltyPage() {
+  const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState<Tab>('dashboard')
+
+  const tabs: { key: Tab; label: string }[] = [
+    { key: 'dashboard', label: t('loyalty.dashboard') },
+    { key: 'rewards', label: t('loyalty.rewards') },
+    { key: 'badges', label: t('loyalty.badges') },
+    { key: 'referrals', label: t('loyalty.referrals') },
+    { key: 'configuration', label: t('loyalty.configuration') },
+  ]
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Loyalty &amp; Rewards</h1>
+      <h1 className="text-2xl font-bold text-gray-900 mb-6">{t('loyalty.title')}</h1>
       <div className="border-b border-gray-200 mb-6">
         <nav className="flex space-x-8">
-          {tabs.map((t) => (
+          {tabs.map((tab) => (
             <button
-              key={t.key}
-              onClick={() => setActiveTab(t.key)}
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
               className={`py-3 px-1 border-b-2 text-sm font-medium ${
-                activeTab === t.key
+                activeTab === tab.key
                   ? 'border-amber-500 text-amber-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
-              {t.label}
+              {tab.label}
             </button>
           ))}
         </nav>
@@ -59,6 +62,7 @@ export default function LoyaltyPage() {
 // ── Dashboard Tab ──────────────────────────────────────
 
 function DashboardTab() {
+  const { t } = useTranslation()
   const { data, isLoading } = useQuery({
     queryKey: ['loyalty-dashboard'],
     queryFn: () => api.get<ApiResponse<LoyaltyDashboardDto>>('/loyalty/dashboard').then((r) => r.data),
@@ -66,31 +70,31 @@ function DashboardTab() {
 
   const dashboard = data?.data
 
-  if (isLoading) return <p className="text-gray-500 text-sm">Loading...</p>
-  if (!dashboard) return <p className="text-gray-500 text-sm">No dashboard data available.</p>
+  if (isLoading) return <p className="text-gray-500 text-sm">{t('common.loading')}</p>
+  if (!dashboard) return <p className="text-gray-500 text-sm">{t('common.noDataAvailable')}</p>
 
   return (
     <div>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <StatCard label="Points Issued This Month" value={dashboard.pointsIssuedThisMonth.toLocaleString()} />
-        <StatCard label="Points Redeemed" value={dashboard.pointsRedeemedThisMonth.toLocaleString()} />
-        <StatCard label="Redemptions" value={dashboard.redemptionsThisMonth} />
-        <StatCard label="Total Participants" value={dashboard.totalParticipants.toLocaleString()} />
+        <StatCard label={t('loyalty.pointsIssuedThisMonth')} value={dashboard.pointsIssuedThisMonth.toLocaleString()} />
+        <StatCard label={t('loyalty.pointsRedeemed')} value={dashboard.pointsRedeemedThisMonth.toLocaleString()} />
+        <StatCard label={t('loyalty.redemptions')} value={dashboard.redemptionsThisMonth} />
+        <StatCard label={t('loyalty.totalParticipants')} value={dashboard.totalParticipants.toLocaleString()} />
       </div>
 
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <div className="px-4 py-3 border-b">
-          <h3 className="text-sm font-semibold text-gray-900">Top Members</h3>
+          <h3 className="text-sm font-semibold text-gray-900">{t('loyalty.topMembers')}</h3>
         </div>
         {dashboard.topMembers.length === 0 ? (
-          <p className="text-gray-500 text-sm p-4">No members yet.</p>
+          <p className="text-gray-500 text-sm p-4">{t('loyalty.noMembersYet')}</p>
         ) : (
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Points</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tier</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('common.name')}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('loyalty.points')}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('loyalty.tier')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
@@ -105,7 +109,7 @@ function DashboardTab() {
                     {m.tierName ? (
                       <span className="bg-amber-100 text-amber-700 px-2 py-0.5 rounded text-xs">{m.tierName}</span>
                     ) : (
-                      <span className="text-gray-400 text-xs">No tier</span>
+                      <span className="text-gray-400 text-xs">{t('loyalty.noTier')}</span>
                     )}
                   </td>
                 </tr>
@@ -121,6 +125,7 @@ function DashboardTab() {
 // ── Rewards Tab ────────────────────────────────────────
 
 function RewardsTab() {
+  const { t } = useTranslation()
   const [page, setPage] = useState(0)
   const [showCreate, setShowCreate] = useState(false)
   const qc = useQueryClient()
@@ -144,22 +149,22 @@ function RewardsTab() {
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <p className="text-sm text-gray-500">{meta ? `${meta.totalElements} rewards` : ''}</p>
+        <p className="text-sm text-gray-500">{meta ? t('loyalty.rewardsCount', { count: meta.totalElements }) : ''}</p>
         <button
           onClick={() => setShowCreate(true)}
           className="bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700 text-sm"
         >
-          + New Reward
+          {t('loyalty.newReward')}
         </button>
       </div>
 
       {isLoading ? (
-        <p className="text-gray-500 text-sm">Loading...</p>
+        <p className="text-gray-500 text-sm">{t('common.loading')}</p>
       ) : rewards.length === 0 ? (
         <div className="bg-white rounded-lg shadow p-8 text-center">
-          <p className="text-gray-400 text-sm">No rewards configured yet.</p>
+          <p className="text-gray-400 text-sm">{t('loyalty.noRewardsYet')}</p>
           <button onClick={() => setShowCreate(true)} className="mt-2 text-amber-600 text-sm font-medium hover:text-amber-700">
-            Create your first reward
+            {t('loyalty.createFirstReward')}
           </button>
         </div>
       ) : (
@@ -170,7 +175,7 @@ function RewardsTab() {
                 <div className="flex items-start justify-between mb-2">
                   <h4 className="text-sm font-semibold text-gray-900">{r.name}</h4>
                   <span className={`text-xs px-2 py-0.5 rounded ${r.active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
-                    {r.active ? 'Active' : 'Inactive'}
+                    {r.active ? t('common.active') : t('common.inactive')}
                   </span>
                 </div>
                 {r.description && <p className="text-xs text-gray-500 mb-2">{r.description}</p>}
@@ -181,14 +186,14 @@ function RewardsTab() {
                   </span>
                   {r.value != null && (
                     <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded text-xs">
-                      Value: {r.value}
+                      {t('loyalty.value')}: {r.value}
                     </span>
                   )}
                 </div>
                 <div className="flex items-center justify-between text-xs text-gray-500 mt-auto pt-2 border-t">
                   <span>
-                    {r.totalRedeemed} redeemed
-                    {r.totalAvailable != null && ` / ${r.totalAvailable} available`}
+                    {r.totalRedeemed} {t('loyalty.redeemed')}
+                    {r.totalAvailable != null && ` / ${r.totalAvailable} ${t('loyalty.available')}`}
                   </span>
                   {r.active && (
                     <button
@@ -196,7 +201,7 @@ function RewardsTab() {
                       disabled={deactivateMutation.isPending}
                       className="text-red-600 hover:text-red-800 font-medium"
                     >
-                      Deactivate
+                      {t('common.deactivate')}
                     </button>
                   )}
                 </div>
@@ -206,7 +211,7 @@ function RewardsTab() {
           {meta && meta.totalPages > 1 && (
             <div className="flex items-center justify-between mt-4">
               <p className="text-sm text-gray-500">
-                Page {meta.page + 1} of {meta.totalPages} ({meta.totalElements} total)
+                {t('loyalty.pageInfo', { current: meta.page + 1, total: meta.totalPages, count: meta.totalElements })}
               </p>
               <div className="flex gap-2">
                 <button
@@ -214,14 +219,14 @@ function RewardsTab() {
                   disabled={page === 0}
                   className="px-3 py-1 border rounded text-sm disabled:opacity-50"
                 >
-                  Previous
+                  {t('common.previous')}
                 </button>
                 <button
                   onClick={() => setPage((p) => p + 1)}
                   disabled={page >= (meta.totalPages ?? 1) - 1}
                   className="px-3 py-1 border rounded text-sm disabled:opacity-50"
                 >
-                  Next
+                  {t('common.next')}
                 </button>
               </div>
             </div>
@@ -243,13 +248,14 @@ function RewardTypeBadge({ type }: { type: RewardType }) {
     CREDIT_TOPUP: 'bg-green-100 text-green-700',
     CUSTOM: 'bg-gray-100 text-gray-700',
   }
+  const { t } = useTranslation()
   const labels: Record<RewardType, string> = {
-    FREE_MONTH: 'Free Month',
-    DISCOUNT: 'Discount',
-    CLASS_CREDIT: 'Class Credit',
-    MERCH: 'Merchandise',
-    CREDIT_TOPUP: 'Credit Top-up',
-    CUSTOM: 'Custom',
+    FREE_MONTH: t('loyalty.freeMonth'),
+    DISCOUNT: t('loyalty.discount'),
+    CLASS_CREDIT: t('loyalty.classCredit'),
+    MERCH: t('loyalty.merchandise'),
+    CREDIT_TOPUP: t('loyalty.creditTopup'),
+    CUSTOM: t('loyalty.custom'),
   }
   return <span className={`px-2 py-0.5 rounded text-xs ${colors[type]}`}>{labels[type]}</span>
 }
@@ -257,6 +263,7 @@ function RewardTypeBadge({ type }: { type: RewardType }) {
 // ── Create Reward Modal ────────────────────────────────
 
 function CreateRewardModal({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation()
   const qc = useQueryClient()
   const [form, setForm] = useState({
     name: '',
@@ -288,7 +295,7 @@ function CreateRewardModal({ onClose }: { onClose: () => void }) {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-auto">
       <div className="bg-white rounded-xl shadow-xl w-full max-w-lg p-6 m-4 max-h-[90vh] overflow-y-auto">
-        <h2 className="text-lg font-semibold mb-4">Create Reward</h2>
+        <h2 className="text-lg font-semibold mb-4">{t('loyalty.createReward')}</h2>
         <form
           onSubmit={(e) => {
             e.preventDefault()
@@ -298,7 +305,7 @@ function CreateRewardModal({ onClose }: { onClose: () => void }) {
         >
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Name *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('loyalty.nameRequired')}</label>
               <input
                 className="w-full border rounded-lg px-3 py-2 text-sm"
                 value={form.name}
@@ -307,24 +314,24 @@ function CreateRewardModal({ onClose }: { onClose: () => void }) {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Type *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('loyalty.typeRequired')}</label>
               <select
                 className="w-full border rounded-lg px-3 py-2 text-sm"
                 value={form.rewardType}
                 onChange={(e) => setForm({ ...form, rewardType: e.target.value as RewardType })}
               >
-                <option value="FREE_MONTH">Free Month</option>
-                <option value="DISCOUNT">Discount</option>
-                <option value="CLASS_CREDIT">Class Credit</option>
-                <option value="MERCH">Merchandise</option>
-                <option value="CREDIT_TOPUP">Credit Top-up</option>
-                <option value="CUSTOM">Custom</option>
+                <option value="FREE_MONTH">{t('loyalty.freeMonth')}</option>
+                <option value="DISCOUNT">{t('loyalty.discount')}</option>
+                <option value="CLASS_CREDIT">{t('loyalty.classCredit')}</option>
+                <option value="MERCH">{t('loyalty.merchandise')}</option>
+                <option value="CREDIT_TOPUP">{t('loyalty.creditTopup')}</option>
+                <option value="CUSTOM">{t('loyalty.custom')}</option>
               </select>
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('common.description')}</label>
             <input
               className="w-full border rounded-lg px-3 py-2 text-sm"
               value={form.description}
@@ -334,7 +341,7 @@ function CreateRewardModal({ onClose }: { onClose: () => void }) {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Points Cost *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('loyalty.pointsCostRequired')}</label>
               <input
                 type="number"
                 className="w-full border rounded-lg px-3 py-2 text-sm"
@@ -345,19 +352,19 @@ function CreateRewardModal({ onClose }: { onClose: () => void }) {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Value</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('loyalty.value')}</label>
               <input
                 type="number"
                 className="w-full border rounded-lg px-3 py-2 text-sm"
                 value={form.value}
                 onChange={(e) => setForm({ ...form, value: e.target.value })}
-                placeholder="e.g. 10 for 10% off"
+                placeholder={t('loyalty.valuePlaceholder')}
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Image URL</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('loyalty.imageUrl')}</label>
             <input
               className="w-full border rounded-lg px-3 py-2 text-sm"
               value={form.imageUrl}
@@ -368,41 +375,41 @@ function CreateRewardModal({ onClose }: { onClose: () => void }) {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Max Per Member</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('loyalty.maxPerMember')}</label>
               <input
                 type="number"
                 className="w-full border rounded-lg px-3 py-2 text-sm"
                 value={form.maxRedemptionsPerMember}
                 onChange={(e) => setForm({ ...form, maxRedemptionsPerMember: e.target.value })}
-                placeholder="Unlimited"
+                placeholder={t('loyalty.unlimitedPlaceholder')}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Total Available</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('loyalty.totalAvailable')}</label>
               <input
                 type="number"
                 className="w-full border rounded-lg px-3 py-2 text-sm"
                 value={form.totalAvailable}
                 onChange={(e) => setForm({ ...form, totalAvailable: e.target.value })}
-                placeholder="Unlimited"
+                placeholder={t('loyalty.unlimitedPlaceholder')}
               />
             </div>
           </div>
 
           {createMutation.isError && (
-            <p className="text-red-600 text-sm">Failed to create reward. Please try again.</p>
+            <p className="text-red-600 text-sm">{t('loyalty.failedCreateReward')}</p>
           )}
 
           <div className="flex justify-end gap-3 pt-2">
             <button type="button" onClick={onClose} className="px-4 py-2 border rounded-lg text-sm">
-              Cancel
+              {t('common.cancel')}
             </button>
             <button
               type="submit"
               disabled={createMutation.isPending}
               className="bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700 text-sm disabled:opacity-50"
             >
-              {createMutation.isPending ? 'Creating...' : 'Create Reward'}
+              {createMutation.isPending ? t('common.creating') : t('loyalty.createReward')}
             </button>
           </div>
         </form>
@@ -414,6 +421,7 @@ function CreateRewardModal({ onClose }: { onClose: () => void }) {
 // ── Badges Tab ─────────────────────────────────────────
 
 function BadgesTab() {
+  const { t } = useTranslation()
   const [showCreate, setShowCreate] = useState(false)
   const qc = useQueryClient()
 
@@ -432,22 +440,22 @@ function BadgesTab() {
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <p className="text-sm text-gray-500">{badges.length} badges</p>
+        <p className="text-sm text-gray-500">{t('loyalty.badgesCount', { count: badges.length })}</p>
         <button
           onClick={() => setShowCreate(true)}
           className="bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700 text-sm"
         >
-          + New Badge
+          {t('loyalty.newBadge')}
         </button>
       </div>
 
       {isLoading ? (
-        <p className="text-gray-500 text-sm">Loading...</p>
+        <p className="text-gray-500 text-sm">{t('common.loading')}</p>
       ) : badges.length === 0 ? (
         <div className="bg-white rounded-lg shadow p-8 text-center">
-          <p className="text-gray-400 text-sm">No badges configured yet.</p>
+          <p className="text-gray-400 text-sm">{t('loyalty.noBadgesYet')}</p>
           <button onClick={() => setShowCreate(true)} className="mt-2 text-amber-600 text-sm font-medium hover:text-amber-700">
-            Create your first badge
+            {t('loyalty.createFirstBadge')}
           </button>
         </div>
       ) : (
@@ -460,7 +468,7 @@ function BadgesTab() {
                   <h4 className="text-sm font-semibold text-gray-900">{b.name}</h4>
                 </div>
                 <span className={`text-xs px-2 py-0.5 rounded ${b.active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
-                  {b.active ? 'Active' : 'Inactive'}
+                  {b.active ? t('common.active') : t('common.inactive')}
                 </span>
               </div>
               {b.description && <p className="text-xs text-gray-500 mb-2">{b.description}</p>}
@@ -477,7 +485,7 @@ function BadgesTab() {
                     disabled={deactivateMutation.isPending}
                     className="text-red-600 hover:text-red-800 font-medium"
                   >
-                    Deactivate
+                    {t('common.deactivate')}
                   </button>
                 )}
               </div>
@@ -517,6 +525,7 @@ function criteriaLabel(type: BadgeCriteriaType, value: number): string {
 // ── Create Badge Modal ─────────────────────────────────
 
 function CreateBadgeModal({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation()
   const qc = useQueryClient()
   const [form, setForm] = useState({
     name: '',
@@ -542,7 +551,7 @@ function CreateBadgeModal({ onClose }: { onClose: () => void }) {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-auto">
       <div className="bg-white rounded-xl shadow-xl w-full max-w-lg p-6 m-4 max-h-[90vh] overflow-y-auto">
-        <h2 className="text-lg font-semibold mb-4">Create Badge</h2>
+        <h2 className="text-lg font-semibold mb-4">{t('loyalty.createBadge')}</h2>
         <form
           onSubmit={(e) => {
             e.preventDefault()
@@ -552,7 +561,7 @@ function CreateBadgeModal({ onClose }: { onClose: () => void }) {
         >
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Name *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('loyalty.nameRequired')}</label>
               <input
                 className="w-full border rounded-lg px-3 py-2 text-sm"
                 value={form.name}
@@ -561,19 +570,19 @@ function CreateBadgeModal({ onClose }: { onClose: () => void }) {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Icon *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('loyalty.iconRequired')}</label>
               <input
                 className="w-full border rounded-lg px-3 py-2 text-sm"
                 value={form.icon}
                 onChange={(e) => setForm({ ...form, icon: e.target.value })}
-                placeholder="e.g. emoji or icon name"
+                placeholder={t('loyalty.iconPlaceholder')}
                 required
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('common.description')}</label>
             <input
               className="w-full border rounded-lg px-3 py-2 text-sm"
               value={form.description}
@@ -583,38 +592,38 @@ function CreateBadgeModal({ onClose }: { onClose: () => void }) {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Category *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('loyalty.categoryRequired')}</label>
               <select
                 className="w-full border rounded-lg px-3 py-2 text-sm"
                 value={form.category}
                 onChange={(e) => setForm({ ...form, category: e.target.value as BadgeCategory })}
               >
-                <option value="CHECKIN">Check-in</option>
-                <option value="TRAINING">Training</option>
-                <option value="MEMBERSHIP">Membership</option>
-                <option value="SOCIAL">Social</option>
-                <option value="SPECIAL">Special</option>
+                <option value="CHECKIN">{t('loyalty.checkin')}</option>
+                <option value="TRAINING">{t('loyalty.training')}</option>
+                <option value="MEMBERSHIP">{t('loyalty.membership')}</option>
+                <option value="SOCIAL">{t('loyalty.social')}</option>
+                <option value="SPECIAL">{t('loyalty.special')}</option>
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Criteria Type *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('loyalty.criteriaTypeRequired')}</label>
               <select
                 className="w-full border rounded-lg px-3 py-2 text-sm"
                 value={form.criteriaType}
                 onChange={(e) => setForm({ ...form, criteriaType: e.target.value as BadgeCriteriaType })}
               >
-                <option value="CHECKIN_COUNT">Check-in Count</option>
-                <option value="SESSION_COUNT">Session Count</option>
-                <option value="MEMBER_DURATION_MONTHS">Member Duration (Months)</option>
-                <option value="REFERRAL_COUNT">Referral Count</option>
-                <option value="STREAK_DAYS">Streak Days</option>
-                <option value="CUSTOM">Custom</option>
+                <option value="CHECKIN_COUNT">{t('loyalty.checkinCount')}</option>
+                <option value="SESSION_COUNT">{t('loyalty.sessionCount')}</option>
+                <option value="MEMBER_DURATION_MONTHS">{t('loyalty.memberDurationMonths')}</option>
+                <option value="REFERRAL_COUNT">{t('loyalty.referralCount')}</option>
+                <option value="STREAK_DAYS">{t('loyalty.streakDays')}</option>
+                <option value="CUSTOM">{t('loyalty.custom')}</option>
               </select>
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Criteria Value *</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('loyalty.criteriaValueRequired')}</label>
             <input
               type="number"
               className="w-full border rounded-lg px-3 py-2 text-sm"
@@ -626,19 +635,19 @@ function CreateBadgeModal({ onClose }: { onClose: () => void }) {
           </div>
 
           {createMutation.isError && (
-            <p className="text-red-600 text-sm">Failed to create badge. Please try again.</p>
+            <p className="text-red-600 text-sm">{t('loyalty.failedCreateBadge')}</p>
           )}
 
           <div className="flex justify-end gap-3 pt-2">
             <button type="button" onClick={onClose} className="px-4 py-2 border rounded-lg text-sm">
-              Cancel
+              {t('common.cancel')}
             </button>
             <button
               type="submit"
               disabled={createMutation.isPending}
               className="bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700 text-sm disabled:opacity-50"
             >
-              {createMutation.isPending ? 'Creating...' : 'Create Badge'}
+              {createMutation.isPending ? t('common.creating') : t('loyalty.createBadge')}
             </button>
           </div>
         </form>
@@ -650,6 +659,7 @@ function CreateBadgeModal({ onClose }: { onClose: () => void }) {
 // ── Referrals Tab ──────────────────────────────────────
 
 function ReferralsTab() {
+  const { t } = useTranslation()
   const [memberFilter, setMemberFilter] = useState('')
   const [page, setPage] = useState(0)
 
@@ -672,7 +682,7 @@ function ReferralsTab() {
         <div className="flex-1 max-w-xs">
           <input
             className="w-full border rounded-lg px-3 py-2 text-sm"
-            placeholder="Filter by Member ID..."
+            placeholder={t('loyalty.filterByMemberId')}
             value={memberFilter}
             onChange={(e) => {
               setMemberFilter(e.target.value)
@@ -683,22 +693,22 @@ function ReferralsTab() {
       </div>
 
       {isLoading ? (
-        <p className="text-gray-500 text-sm">Loading...</p>
+        <p className="text-gray-500 text-sm">{t('common.loading')}</p>
       ) : referrals.length === 0 ? (
         <div className="bg-white rounded-lg shadow p-8 text-center">
-          <p className="text-gray-400 text-sm">No referrals found.</p>
+          <p className="text-gray-400 text-sm">{t('loyalty.noReferralsFound')}</p>
         </div>
       ) : (
         <div className="bg-white rounded-lg shadow overflow-hidden">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Referrer</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Referred Email</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Code</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Points Awarded</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('loyalty.referrer')}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('loyalty.referredEmail')}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('loyalty.code')}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('common.status')}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('loyalty.pointsAwarded')}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('common.date')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
@@ -728,7 +738,7 @@ function ReferralsTab() {
           {meta && meta.totalPages > 1 && (
             <div className="flex items-center justify-between px-4 py-3 border-t">
               <p className="text-sm text-gray-500">
-                Page {meta.page + 1} of {meta.totalPages} ({meta.totalElements} total)
+                {t('loyalty.pageInfo', { current: meta.page + 1, total: meta.totalPages, count: meta.totalElements })}
               </p>
               <div className="flex gap-2">
                 <button
@@ -736,14 +746,14 @@ function ReferralsTab() {
                   disabled={page === 0}
                   className="px-3 py-1 border rounded text-sm disabled:opacity-50"
                 >
-                  Previous
+                  {t('common.previous')}
                 </button>
                 <button
                   onClick={() => setPage((p) => p + 1)}
                   disabled={page >= (meta.totalPages ?? 1) - 1}
                   className="px-3 py-1 border rounded text-sm disabled:opacity-50"
                 >
-                  Next
+                  {t('common.next')}
                 </button>
               </div>
             </div>
@@ -772,6 +782,7 @@ interface ConfigEntry {
 }
 
 function ConfigurationTab() {
+  const { t } = useTranslation()
   const [showCreateTier, setShowCreateTier] = useState(false)
 
   // Points configuration
@@ -794,21 +805,21 @@ function ConfigurationTab() {
     <div className="space-y-8">
       {/* Points Configuration */}
       <div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Points Configuration</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('loyalty.pointsConfiguration')}</h3>
         {configLoading ? (
-          <p className="text-gray-500 text-sm">Loading...</p>
+          <p className="text-gray-500 text-sm">{t('common.loading')}</p>
         ) : configEntries.length === 0 ? (
           <div className="bg-white rounded-lg shadow p-8 text-center">
-            <p className="text-gray-400 text-sm">No point rules configured yet.</p>
+            <p className="text-gray-400 text-sm">{t('loyalty.noPointRulesYet')}</p>
           </div>
         ) : (
           <div className="bg-white rounded-lg shadow overflow-hidden">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Action</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Points</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('loyalty.action')}</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('loyalty.points')}</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('common.actions')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
@@ -824,22 +835,22 @@ function ConfigurationTab() {
       {/* Tier Management */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-gray-900">Loyalty Tiers</h3>
+          <h3 className="text-lg font-semibold text-gray-900">{t('loyalty.loyaltyTiers')}</h3>
           <button
             onClick={() => setShowCreateTier(true)}
             className="bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700 text-sm"
           >
-            + New Tier
+            {t('loyalty.newTier')}
           </button>
         </div>
 
         {tiersLoading ? (
-          <p className="text-gray-500 text-sm">Loading...</p>
+          <p className="text-gray-500 text-sm">{t('common.loading')}</p>
         ) : tiers.length === 0 ? (
           <div className="bg-white rounded-lg shadow p-8 text-center">
-            <p className="text-gray-400 text-sm">No tiers configured yet.</p>
+            <p className="text-gray-400 text-sm">{t('loyalty.noTiersYet')}</p>
             <button onClick={() => setShowCreateTier(true)} className="mt-2 text-amber-600 text-sm font-medium hover:text-amber-700">
-              Create your first tier
+              {t('loyalty.createFirstTier')}
             </button>
           </div>
         ) : (
@@ -854,20 +865,20 @@ function ConfigurationTab() {
                       <h4 className="text-sm font-semibold text-gray-900">{tier.name}</h4>
                     </div>
                     <span className={`text-xs px-2 py-0.5 rounded ${tier.active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
-                      {tier.active ? 'Active' : 'Inactive'}
+                      {tier.active ? t('common.active') : t('common.inactive')}
                     </span>
                   </div>
                   <div className="space-y-1 text-xs text-gray-600">
                     <p>
-                      <span className="font-medium text-gray-700">Min Points:</span> {tier.minPoints.toLocaleString()}
+                      <span className="font-medium text-gray-700">{t('loyalty.minPoints')}:</span> {tier.minPoints.toLocaleString()}
                     </p>
                     {tier.perks && (
                       <p>
-                        <span className="font-medium text-gray-700">Perks:</span> {tier.perks}
+                        <span className="font-medium text-gray-700">{t('loyalty.perks')}:</span> {tier.perks}
                       </p>
                     )}
                     <p>
-                      <span className="font-medium text-gray-700">Order:</span> {tier.sortOrder}
+                      <span className="font-medium text-gray-700">{t('loyalty.order')}:</span> {tier.sortOrder}
                     </p>
                   </div>
                 </div>
@@ -882,6 +893,7 @@ function ConfigurationTab() {
 }
 
 function ConfigRow({ entry }: { entry: ConfigEntry }) {
+  const { t } = useTranslation()
   const qc = useQueryClient()
   const [points, setPoints] = useState(entry.points)
   const [dirty, setDirty] = useState(false)
@@ -922,11 +934,11 @@ function ConfigRow({ entry }: { entry: ConfigEntry }) {
             disabled={updateMutation.isPending}
             className="bg-amber-600 text-white px-3 py-1 rounded text-xs hover:bg-amber-700 disabled:opacity-50"
           >
-            {updateMutation.isPending ? 'Saving...' : 'Save'}
+            {updateMutation.isPending ? t('common.saving') : t('common.save')}
           </button>
         )}
         {updateMutation.isError && (
-          <span className="text-red-600 text-xs ml-2">Failed</span>
+          <span className="text-red-600 text-xs ml-2">{t('common.failed')}</span>
         )}
       </td>
     </tr>
@@ -936,6 +948,7 @@ function ConfigRow({ entry }: { entry: ConfigEntry }) {
 // ── Create Tier Modal ──────────────────────────────────
 
 function CreateTierModal({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation()
   const qc = useQueryClient()
   const [form, setForm] = useState({
     name: '',
@@ -958,7 +971,7 @@ function CreateTierModal({ onClose }: { onClose: () => void }) {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-auto">
       <div className="bg-white rounded-xl shadow-xl w-full max-w-lg p-6 m-4 max-h-[90vh] overflow-y-auto">
-        <h2 className="text-lg font-semibold mb-4">Create Tier</h2>
+        <h2 className="text-lg font-semibold mb-4">{t('loyalty.createTier')}</h2>
         <form
           onSubmit={(e) => {
             e.preventDefault()
@@ -968,7 +981,7 @@ function CreateTierModal({ onClose }: { onClose: () => void }) {
         >
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Name *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('loyalty.nameRequired')}</label>
               <input
                 className="w-full border rounded-lg px-3 py-2 text-sm"
                 value={form.name}
@@ -977,12 +990,12 @@ function CreateTierModal({ onClose }: { onClose: () => void }) {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Icon *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('loyalty.iconRequired')}</label>
               <input
                 className="w-full border rounded-lg px-3 py-2 text-sm"
                 value={form.icon}
                 onChange={(e) => setForm({ ...form, icon: e.target.value })}
-                placeholder="e.g. emoji"
+                placeholder={t('loyalty.emojiPlaceholder')}
                 required
               />
             </div>
@@ -990,7 +1003,7 @@ function CreateTierModal({ onClose }: { onClose: () => void }) {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Min Points *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('loyalty.minPointsRequired')}</label>
               <input
                 type="number"
                 className="w-full border rounded-lg px-3 py-2 text-sm"
@@ -1001,7 +1014,7 @@ function CreateTierModal({ onClose }: { onClose: () => void }) {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Sort Order *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('loyalty.sortOrderRequired')}</label>
               <input
                 type="number"
                 className="w-full border rounded-lg px-3 py-2 text-sm"
@@ -1014,7 +1027,7 @@ function CreateTierModal({ onClose }: { onClose: () => void }) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Color</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('loyalty.color')}</label>
             <div className="flex items-center gap-2">
               <input
                 type="color"
@@ -1031,30 +1044,30 @@ function CreateTierModal({ onClose }: { onClose: () => void }) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Perks</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('loyalty.perks')}</label>
             <textarea
               className="w-full border rounded-lg px-3 py-2 text-sm"
               rows={3}
               value={form.perks}
               onChange={(e) => setForm({ ...form, perks: e.target.value })}
-              placeholder="Describe tier perks..."
+              placeholder={t('loyalty.perksPlaceholder')}
             />
           </div>
 
           {createMutation.isError && (
-            <p className="text-red-600 text-sm">Failed to create tier. Please try again.</p>
+            <p className="text-red-600 text-sm">{t('loyalty.failedCreateTier')}</p>
           )}
 
           <div className="flex justify-end gap-3 pt-2">
             <button type="button" onClick={onClose} className="px-4 py-2 border rounded-lg text-sm">
-              Cancel
+              {t('common.cancel')}
             </button>
             <button
               type="submit"
               disabled={createMutation.isPending}
               className="bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700 text-sm disabled:opacity-50"
             >
-              {createMutation.isPending ? 'Creating...' : 'Create Tier'}
+              {createMutation.isPending ? t('common.creating') : t('loyalty.createTier')}
             </button>
           </div>
         </form>

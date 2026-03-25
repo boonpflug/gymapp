@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import api from '../../api/client'
 import type { ApiResponse, MemberDto, TrainingPlanDto, TrainingPlanExerciseDto, TrainingSessionDto, TrainingGoalDto } from '../../types'
 
@@ -12,12 +13,13 @@ const muscleColor: Record<string, string> = {
 }
 
 const muscleEmoji: Record<string, string> = {
-  CHEST: '🫁', BACK: '🔙', SHOULDERS: '💪', BICEPS: '💪', TRICEPS: '💪',
-  QUADRICEPS: '🦵', HAMSTRINGS: '🦵', GLUTES: '🍑', ABS: '🎯', CALVES: '🦶',
-  LATS: '🔙', TRAPS: '🔺', FULL_BODY: '🏋️', CARDIO: '❤️', OBLIQUES: '🎯',
+  CHEST: '\u{1FAC1}', BACK: '\u{1F519}', SHOULDERS: '\u{1F4AA}', BICEPS: '\u{1F4AA}', TRICEPS: '\u{1F4AA}',
+  QUADRICEPS: '\u{1F9B5}', HAMSTRINGS: '\u{1F9B5}', GLUTES: '\u{1F351}', ABS: '\u{1F3AF}', CALVES: '\u{1F9B6}',
+  LATS: '\u{1F519}', TRAPS: '\u{1F53A}', FULL_BODY: '\u{1F3CB}\u{FE0F}', CARDIO: '\u{2764}\u{FE0F}', OBLIQUES: '\u{1F3AF}',
 }
 
 export default function PortalTraining() {
+  const { t } = useTranslation()
   const [tab, setTab] = useState<'plans' | 'sessions' | 'goals'>('plans')
 
   const { data: profileRes } = useQuery({
@@ -27,19 +29,19 @@ export default function PortalTraining() {
   const memberId = profileRes?.data?.id
 
   const tabs = [
-    { key: 'plans' as const, label: 'My Plans' },
-    { key: 'sessions' as const, label: 'Sessions' },
-    { key: 'goals' as const, label: 'Goals' },
+    { key: 'plans' as const, label: t('portal.training.myPlans') },
+    { key: 'sessions' as const, label: t('portal.training.sessions') },
+    { key: 'goals' as const, label: t('portal.training.goals') },
   ]
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">Training</h1>
+      <h1 className="text-2xl font-bold mb-6">{t('portal.training.title')}</h1>
       <div className="flex space-x-4 mb-6 border-b">
-        {tabs.map(t => (
-          <button key={t.key} onClick={() => setTab(t.key)}
-            className={`pb-2 px-1 text-sm font-medium ${tab === t.key ? 'border-b-2 border-brand-600 text-brand-600' : 'text-gray-500'}`}>
-            {t.label}
+        {tabs.map(tb => (
+          <button key={tb.key} onClick={() => setTab(tb.key)}
+            className={`pb-2 px-1 text-sm font-medium ${tab === tb.key ? 'border-b-2 border-brand-600 text-brand-600' : 'text-gray-500'}`}>
+            {tb.label}
           </button>
         ))}
       </div>
@@ -53,6 +55,7 @@ export default function PortalTraining() {
 // ===================== PLANS TAB =====================
 
 function PlansTab({ memberId }: { memberId?: string }) {
+  const { t } = useTranslation()
   const [expandedPlanId, setExpandedPlanId] = useState<string | null>(null)
   const [exerciseDetail, setExerciseDetail] = useState<TrainingPlanExerciseDto | null>(null)
 
@@ -71,15 +74,15 @@ function PlansTab({ memberId }: { memberId?: string }) {
   })
   const planDetail = planDetailRes?.data
 
-  if (!memberId) return <p className="text-gray-400">Loading...</p>
+  if (!memberId) return <p className="text-gray-400">{t('portal.loading')}</p>
 
   return (
     <div>
       {plans.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-4xl mb-3">🏋️</p>
-          <p className="text-gray-500">No training plans assigned yet.</p>
-          <p className="text-gray-400 text-sm mt-1">Ask your trainer to create a plan for you.</p>
+          <p className="text-4xl mb-3">{muscleEmoji['FULL_BODY']}</p>
+          <p className="text-gray-500">{t('portal.training.noPlans')}</p>
+          <p className="text-gray-400 text-sm mt-1">{t('portal.training.askTrainerPlan')}</p>
         </div>
       ) : (
         <div className="space-y-4">
@@ -99,12 +102,12 @@ function PlansTab({ memberId }: { memberId?: string }) {
                         {p.category && <span className="bg-gray-100 px-2 py-0.5 rounded">{p.category}</span>}
                         {p.difficultyLevel && <span>{p.difficultyLevel}</span>}
                         {p.estimatedDurationMinutes && <span>~{p.estimatedDurationMinutes} min</span>}
-                        <span>{p.exerciseCount} exercises</span>
+                        <span>{p.exerciseCount} {t('portal.training.exercises')}</span>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
-                      {p.trainerName && <span className="text-xs text-gray-400">Trainer: {p.trainerName}</span>}
-                      <span className={`text-lg transition-transform ${isExpanded ? 'rotate-180' : ''}`}>▾</span>
+                      {p.trainerName && <span className="text-xs text-gray-400">{t('portal.training.trainer', { name: p.trainerName })}</span>}
+                      <span className={`text-lg transition-transform ${isExpanded ? 'rotate-180' : ''}`}>{'\u25BE'}</span>
                     </div>
                   </div>
                   {p.description && <p className="text-sm text-gray-600 mt-2">{p.description}</p>}
@@ -114,7 +117,7 @@ function PlansTab({ memberId }: { memberId?: string }) {
                 {isExpanded && (
                   <div className="border-t bg-gray-50">
                     {exercises.length === 0 ? (
-                      <p className="p-5 text-gray-400 text-sm text-center">Loading exercises...</p>
+                      <p className="p-5 text-gray-400 text-sm text-center">{t('portal.loadingExercises')}</p>
                     ) : (
                       <div className="divide-y divide-gray-200">
                         {exercises.map((ex, i) => (
@@ -134,7 +137,7 @@ function PlansTab({ memberId }: { memberId?: string }) {
                                   ) : (
                                     <div className="w-24 h-16 rounded-lg border bg-gray-100 flex items-center justify-center text-2xl"
                                       style={{ backgroundColor: (muscleColor[ex.primaryMuscleGroup || ''] || '#6b7280') + '15' }}>
-                                      {muscleEmoji[ex.primaryMuscleGroup || ''] || '🏋️'}
+                                      {muscleEmoji[ex.primaryMuscleGroup || ''] || muscleEmoji['FULL_BODY']}
                                     </div>
                                   )}
                                 </div>
@@ -153,22 +156,22 @@ function PlansTab({ memberId }: { memberId?: string }) {
                                 {/* Compact set/rep display */}
                                 <div className="flex items-center gap-4 mt-2 text-sm">
                                   <div className="flex items-center gap-1.5">
-                                    <span className="text-gray-500">Sets</span>
+                                    <span className="text-gray-500">{t('portal.training.sets')}</span>
                                     <span className="font-bold text-gray-900 bg-gray-100 px-2 py-0.5 rounded">{ex.sets}</span>
                                   </div>
                                   <div className="flex items-center gap-1.5">
-                                    <span className="text-gray-500">Reps</span>
+                                    <span className="text-gray-500">{t('portal.training.reps')}</span>
                                     <span className="font-bold text-gray-900 bg-gray-100 px-2 py-0.5 rounded">{ex.reps}</span>
                                   </div>
                                   {ex.weight && (
                                     <div className="flex items-center gap-1.5">
-                                      <span className="text-gray-500">Weight</span>
+                                      <span className="text-gray-500">{t('portal.training.weight')}</span>
                                       <span className="font-bold text-gray-900 bg-gray-100 px-2 py-0.5 rounded">{ex.weight} kg</span>
                                     </div>
                                   )}
                                   {ex.restSeconds && (
                                     <div className="flex items-center gap-1.5">
-                                      <span className="text-gray-500">Rest</span>
+                                      <span className="text-gray-500">{t('portal.training.rest')}</span>
                                       <span className="font-bold text-gray-900 bg-gray-100 px-2 py-0.5 rounded">{ex.restSeconds}s</span>
                                     </div>
                                   )}
@@ -180,7 +183,7 @@ function PlansTab({ memberId }: { memberId?: string }) {
                               </div>
 
                               {/* Tap hint */}
-                              <div className="flex-shrink-0 text-gray-300 self-center text-sm">›</div>
+                              <div className="flex-shrink-0 text-gray-300 self-center text-sm">{'\u203A'}</div>
                             </div>
                           </div>
                         ))}
@@ -201,6 +204,7 @@ function PlansTab({ memberId }: { memberId?: string }) {
 }
 
 function ExerciseDetailModal({ exercise, onClose }: { exercise: TrainingPlanExerciseDto; onClose: () => void }) {
+  const { t } = useTranslation()
   const { data: exRes } = useQuery({
     queryKey: ['exercise-detail', exercise.exerciseId],
     queryFn: () => api.get(`/training/exercises/${exercise.exerciseId}`).then(r => r.data),
@@ -230,7 +234,7 @@ function ExerciseDetailModal({ exercise, onClose }: { exercise: TrainingPlanExer
           ) : (
             <div className="h-32 flex items-center justify-center text-6xl"
               style={{ backgroundColor: (muscleColor[ex?.primaryMuscleGroup] || '#6b7280') + '20' }}>
-              {muscleEmoji[ex?.primaryMuscleGroup] || '🏋️'}
+              {muscleEmoji[ex?.primaryMuscleGroup] || muscleEmoji['FULL_BODY']}
             </div>
           )}
           <button onClick={onClose} className="absolute top-3 right-3 w-8 h-8 bg-black/50 rounded-full flex items-center justify-center text-white hover:bg-black/70 text-lg">&times;</button>
@@ -244,12 +248,12 @@ function ExerciseDetailModal({ exercise, onClose }: { exercise: TrainingPlanExer
             {ex?.primaryMuscleGroup && (
               <span className="text-xs px-3 py-1 rounded-full text-white font-medium"
                 style={{ backgroundColor: muscleColor[ex.primaryMuscleGroup] || '#6b7280' }}>
-                Primary: {ex.primaryMuscleGroup.replace(/_/g, ' ')}
+                {t('portal.training.primary', { muscle: ex.primaryMuscleGroup.replace(/_/g, ' ') })}
               </span>
             )}
             {ex?.secondaryMuscleGroup && (
               <span className="text-xs px-3 py-1 rounded-full bg-gray-200 text-gray-700">
-                Secondary: {ex.secondaryMuscleGroup.replace(/_/g, ' ')}
+                {t('portal.training.secondary', { muscle: ex.secondaryMuscleGroup.replace(/_/g, ' ') })}
               </span>
             )}
             {ex?.exerciseType && (
@@ -269,8 +273,8 @@ function ExerciseDetailModal({ exercise, onClose }: { exercise: TrainingPlanExer
           {/* Equipment */}
           {ex?.equipment && (
             <div className="mt-4 bg-gray-50 rounded-lg px-4 py-3 flex items-center gap-2 text-sm">
-              <span className="text-lg">🔧</span>
-              <span><span className="font-medium text-gray-700">Equipment:</span> {ex.equipment}</span>
+              <span className="text-lg">{'\u{1F527}'}</span>
+              <span><span className="font-medium text-gray-700">{t('portal.training.equipment')}:</span> {ex.equipment}</span>
             </div>
           )}
 
@@ -278,7 +282,7 @@ function ExerciseDetailModal({ exercise, onClose }: { exercise: TrainingPlanExer
           {ex?.description && (
             <div className="mt-5">
               <h3 className="text-sm font-semibold text-gray-800 uppercase tracking-wide mb-2 flex items-center gap-2">
-                <span className="w-1 h-4 rounded-full bg-blue-500"></span> Execution
+                <span className="w-1 h-4 rounded-full bg-blue-500"></span> {t('portal.training.execution')}
               </h3>
               <p className="text-sm text-gray-700 leading-relaxed pl-3">{ex.description}</p>
             </div>
@@ -288,7 +292,7 @@ function ExerciseDetailModal({ exercise, onClose }: { exercise: TrainingPlanExer
           {ex?.postureNotes && (
             <div className="mt-4">
               <h3 className="text-sm font-semibold text-gray-800 uppercase tracking-wide mb-2 flex items-center gap-2">
-                <span className="w-1 h-4 rounded-full bg-amber-500"></span> Tips & Form
+                <span className="w-1 h-4 rounded-full bg-amber-500"></span> {t('portal.training.tipsAndForm')}
               </h3>
               <p className="text-sm text-gray-700 leading-relaxed pl-3">{ex.postureNotes}</p>
             </div>
@@ -297,16 +301,16 @@ function ExerciseDetailModal({ exercise, onClose }: { exercise: TrainingPlanExer
           {/* Your prescription */}
           <div className="mt-6 bg-gray-50 rounded-xl p-4">
             <h3 className="text-sm font-semibold text-gray-800 uppercase tracking-wide mb-3 flex items-center gap-2">
-              <span className="w-1 h-4 rounded-full bg-brand-500"></span> Your Prescription
+              <span className="w-1 h-4 rounded-full bg-brand-500"></span> {t('portal.training.yourPrescription')}
             </h3>
             <div className="grid grid-cols-4 gap-3 text-center">
               <div className="bg-white rounded-lg p-3 shadow-sm border">
                 <p className="text-2xl font-bold text-gray-900">{exercise.sets}</p>
-                <p className="text-xs text-gray-500 uppercase">Sets</p>
+                <p className="text-xs text-gray-500 uppercase">{t('portal.training.sets')}</p>
               </div>
               <div className="bg-white rounded-lg p-3 shadow-sm border">
                 <p className="text-2xl font-bold text-gray-900">{exercise.reps}</p>
-                <p className="text-xs text-gray-500 uppercase">Reps</p>
+                <p className="text-xs text-gray-500 uppercase">{t('portal.training.reps')}</p>
               </div>
               <div className="bg-white rounded-lg p-3 shadow-sm border">
                 <p className="text-2xl font-bold text-gray-900">{exercise.weight ?? '—'}</p>
@@ -314,7 +318,7 @@ function ExerciseDetailModal({ exercise, onClose }: { exercise: TrainingPlanExer
               </div>
               <div className="bg-white rounded-lg p-3 shadow-sm border">
                 <p className="text-2xl font-bold text-gray-900">{exercise.restSeconds ?? '—'}</p>
-                <p className="text-xs text-gray-500 uppercase">Rest (s)</p>
+                <p className="text-xs text-gray-500 uppercase">{t('portal.training.rest')} (s)</p>
               </div>
             </div>
           </div>
@@ -322,7 +326,7 @@ function ExerciseDetailModal({ exercise, onClose }: { exercise: TrainingPlanExer
           {exercise.trainerComment && (
             <div className="mt-4 bg-brand-50 border border-brand-200 rounded-xl p-4">
               <h3 className="text-sm font-semibold text-brand-800 mb-1 flex items-center gap-2">
-                <span className="text-base">💬</span> Trainer Note
+                <span className="text-base">{'\u{1F4AC}'}</span> {t('portal.training.trainerNote')}
               </h3>
               <p className="text-sm text-brand-700 italic">"{exercise.trainerComment}"</p>
             </div>
@@ -336,6 +340,7 @@ function ExerciseDetailModal({ exercise, onClose }: { exercise: TrainingPlanExer
 // ===================== SESSIONS TAB =====================
 
 function SessionsTab({ memberId }: { memberId?: string }) {
+  const { t } = useTranslation()
   const { data: sessionsRes } = useQuery({
     queryKey: ['portal-sessions', memberId],
     queryFn: () => api.get<ApiResponse<TrainingSessionDto[]>>(`/training/sessions/member/${memberId}`).then(r => r.data),
@@ -347,20 +352,20 @@ function SessionsTab({ memberId }: { memberId?: string }) {
     <div className="space-y-3">
       {sessions.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-4xl mb-3">📋</p>
-          <p className="text-gray-500">No training sessions recorded.</p>
+          <p className="text-4xl mb-3">{'\u{1F4CB}'}</p>
+          <p className="text-gray-500">{t('portal.training.noSessions')}</p>
         </div>
       ) : sessions.map(s => (
         <div key={s.id} className="bg-white rounded-lg shadow-sm border p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="font-medium">{s.planName ?? 'Free Session'}</p>
+              <p className="font-medium">{s.planName ?? t('portal.training.freeSession')}</p>
               <p className="text-sm text-gray-500">{new Date(s.startedAt).toLocaleString()}{s.durationMinutes ? ` (${s.durationMinutes} min)` : ''}</p>
             </div>
             <div className="flex items-center gap-2">
-              {s.rating && <span className="text-sm text-yellow-500">{'★'.repeat(s.rating)}{'☆'.repeat(5 - s.rating)}</span>}
+              {s.rating && <span className="text-sm text-yellow-500">{'\u2605'.repeat(s.rating)}{'\u2606'.repeat(5 - s.rating)}</span>}
               <span className={`text-xs px-2 py-1 rounded ${s.finishedAt ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
-                {s.finishedAt ? 'Completed' : 'In Progress'}
+                {s.finishedAt ? t('portal.training.completed') : t('portal.training.inProgress')}
               </span>
             </div>
           </div>
@@ -374,6 +379,7 @@ function SessionsTab({ memberId }: { memberId?: string }) {
 // ===================== GOALS TAB =====================
 
 function GoalsTab({ memberId }: { memberId?: string }) {
+  const { t } = useTranslation()
   const { data: goalsRes } = useQuery({
     queryKey: ['portal-goals', memberId],
     queryFn: () => api.get<ApiResponse<TrainingGoalDto[]>>(`/training/goals/member/${memberId}`).then(r => r.data),
@@ -385,9 +391,9 @@ function GoalsTab({ memberId }: { memberId?: string }) {
     <div className="space-y-4">
       {goals.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-4xl mb-3">🎯</p>
-          <p className="text-gray-500">No training goals set.</p>
-          <p className="text-gray-400 text-sm mt-1">Ask your trainer to set goals for you.</p>
+          <p className="text-4xl mb-3">{'\u{1F3AF}'}</p>
+          <p className="text-gray-500">{t('portal.training.noGoals')}</p>
+          <p className="text-gray-400 text-sm mt-1">{t('portal.training.askTrainerGoals')}</p>
         </div>
       ) : goals.map(g => (
         <div key={g.id} className="bg-white rounded-lg shadow-sm border p-4">
@@ -408,10 +414,10 @@ function GoalsTab({ memberId }: { memberId?: string }) {
               <div className="w-full bg-gray-200 rounded-full h-2.5">
                 <div className="bg-brand-500 h-2.5 rounded-full transition-all" style={{ width: `${Math.min((g.progressPercent ?? 0), 100)}%` }} />
               </div>
-              <p className="text-xs text-gray-400 mt-1">{(g.progressPercent ?? 0).toFixed(0)}% complete</p>
+              <p className="text-xs text-gray-400 mt-1">{t('portal.training.complete', { percent: (g.progressPercent ?? 0).toFixed(0) })}</p>
             </div>
           )}
-          {g.targetDate && <p className="text-xs text-gray-400 mt-2">Target: {g.targetDate}</p>}
+          {g.targetDate && <p className="text-xs text-gray-400 mt-2">{t('portal.training.target', { date: g.targetDate })}</p>}
         </div>
       ))}
     </div>

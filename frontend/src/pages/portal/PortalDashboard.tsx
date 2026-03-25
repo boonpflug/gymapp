@@ -1,8 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import api from '../../api/client'
 import type { ApiResponse, MemberDto, ContractDto, OccupancyDto } from '../../types'
 
 export default function PortalDashboard() {
+  const { t } = useTranslation()
+
   const { data: profileRes } = useQuery({
     queryKey: ['portal-profile'],
     queryFn: () => api.get<ApiResponse<MemberDto>>('/portal/profile').then(r => r.data),
@@ -27,13 +30,13 @@ export default function PortalDashboard() {
   return (
     <div>
       <h1 className="text-2xl font-bold mb-6">
-        Welcome back{profile ? `, ${profile.firstName}` : ''}!
+        {t('portal.dashboard.welcomeBack')}{profile ? `, ${profile.firstName}` : ''}!
       </h1>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         {/* Membership status */}
         <div className="bg-white rounded-lg shadow p-5">
-          <h3 className="text-sm text-gray-500 mb-2">Membership Status</h3>
+          <h3 className="text-sm text-gray-500 mb-2">{t('portal.dashboard.membershipStatus')}</h3>
           {profile && (
             <span className={`text-lg font-semibold ${
               profile.status === 'ACTIVE' ? 'text-green-600' :
@@ -42,23 +45,23 @@ export default function PortalDashboard() {
               {profile.status}
             </span>
           )}
-          <p className="text-sm text-gray-500 mt-1">Member #{profile?.memberNumber}</p>
+          <p className="text-sm text-gray-500 mt-1">{t('portal.dashboard.memberNumber', { number: profile?.memberNumber })}</p>
         </div>
 
         {/* Active contracts */}
         <div className="bg-white rounded-lg shadow p-5">
-          <h3 className="text-sm text-gray-500 mb-2">Active Contracts</h3>
+          <h3 className="text-sm text-gray-500 mb-2">{t('portal.dashboard.activeContracts')}</h3>
           <p className="text-lg font-semibold">{activeContracts.length}</p>
           {activeContracts[0] && (
             <p className="text-sm text-gray-500 mt-1">
-              Next billing: {activeContracts[0].nextBillingDate}
+              {t('portal.dashboard.nextBilling', { date: activeContracts[0].nextBillingDate })}
             </p>
           )}
         </div>
 
         {/* Live Occupancy */}
         <div className="bg-white rounded-lg shadow p-5">
-          <h3 className="text-sm text-gray-500 mb-2">Studio Occupancy</h3>
+          <h3 className="text-sm text-gray-500 mb-2">{t('portal.dashboard.studioOccupancy')}</h3>
           {occupancy ? (
             <>
               <p className={`text-lg font-semibold ${occupancy.atCapacity ? 'text-red-600' : 'text-green-600'}`}>
@@ -66,20 +69,20 @@ export default function PortalDashboard() {
                 {occupancy.maxCapacity ? ` / ${occupancy.maxCapacity}` : ''}
               </p>
               <p className="text-sm text-gray-500 mt-1">
-                {occupancy.atCapacity ? 'At capacity' : 'Open'}
+                {occupancy.atCapacity ? t('portal.dashboard.atCapacity') : t('portal.dashboard.open')}
               </p>
             </>
           ) : (
-            <p className="text-gray-400">Loading...</p>
+            <p className="text-gray-400">{t('portal.loading')}</p>
           )}
         </div>
       </div>
 
       {/* Contracts overview */}
       <div className="bg-white rounded-lg shadow p-5">
-        <h2 className="text-lg font-semibold mb-4">Your Contracts</h2>
+        <h2 className="text-lg font-semibold mb-4">{t('portal.dashboard.yourContracts')}</h2>
         {contracts.length === 0 ? (
-          <p className="text-gray-500">No contracts found.</p>
+          <p className="text-gray-500">{t('portal.dashboard.noContracts')}</p>
         ) : (
           <div className="space-y-3">
             {contracts.map(c => (
@@ -87,7 +90,7 @@ export default function PortalDashboard() {
                 <div>
                   <p className="font-medium">{c.membershipTierName}</p>
                   <p className="text-sm text-gray-500">
-                    {c.startDate} &mdash; {c.endDate ?? 'Ongoing'}
+                    {c.startDate} &mdash; {c.endDate ?? t('portal.ongoing')}
                   </p>
                 </div>
                 <div className="text-right">
@@ -101,7 +104,7 @@ export default function PortalDashboard() {
                     {c.status?.replace('_', ' ')}
                   </span>
                   <p className="text-sm font-semibold mt-1">
-                    &euro;{c.monthlyAmount}/mo
+                    &euro;{c.monthlyAmount}{t('portal.dashboard.perMonth')}
                   </p>
                 </div>
               </div>

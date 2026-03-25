@@ -1,26 +1,29 @@
 import { useState, useMemo, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import api from '../../api/client'
 import type { ApiResponse, MemberDto, ContractDto, ClassScheduleDto, TrainingPlanDto, CheckInDto } from '../../types'
 
 type AppTab = 'home' | 'checkin' | 'classes' | 'training' | 'profile'
 
 export default function PortalPhone() {
+  const { t } = useTranslation()
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center py-8 px-4">
       <div className="text-center mb-6">
-        <h1 className="text-xl font-semibold text-gray-900">Mobile App Preview</h1>
-        <p className="text-sm text-gray-500 mt-1">Interactive prototype — showcasing the member mobile experience</p>
+        <h1 className="text-xl font-semibold text-gray-900">{t('portal.phone.title')}</h1>
+        <p className="text-sm text-gray-500 mt-1">{t('portal.phone.subtitle')}</p>
       </div>
       <PhoneFrame />
-      <p className="text-xs text-gray-400 mt-6">This is a simulation of the native iOS / Android app</p>
+      <p className="text-xs text-gray-400 mt-6">{t('portal.phone.simulation')}</p>
     </div>
   )
 }
 
-/* ── Phone Hardware Frame ── */
+/* -- Phone Hardware Frame -- */
 
 function PhoneFrame() {
+  const { t } = useTranslation()
   const [tab, setTab] = useState<AppTab>('home')
 
   return (
@@ -54,23 +57,23 @@ function PhoneFrame() {
           {/* Bottom tab bar */}
           <div className="h-[82px] bg-white border-t border-gray-200 flex items-start pt-2 px-2 pb-6">
             {([
-              { id: 'home' as AppTab, label: 'Home', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4' },
-              { id: 'checkin' as AppTab, label: 'Check-In', icon: 'M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z' },
-              { id: 'classes' as AppTab, label: 'Classes', icon: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z' },
-              { id: 'training' as AppTab, label: 'Training', icon: 'M13 10V3L4 14h7v7l9-11h-7z' },
-              { id: 'profile' as AppTab, label: 'Profile', icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' },
-            ]).map(t => (
+              { id: 'home' as AppTab, label: t('portal.phone.home'), icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4' },
+              { id: 'checkin' as AppTab, label: t('portal.phone.checkIn'), icon: 'M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z' },
+              { id: 'classes' as AppTab, label: t('portal.classes.title'), icon: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z' },
+              { id: 'training' as AppTab, label: t('portal.training.title'), icon: 'M13 10V3L4 14h7v7l9-11h-7z' },
+              { id: 'profile' as AppTab, label: t('portal.phone.profile'), icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' },
+            ]).map(tb => (
               <button
-                key={t.id}
-                onClick={() => setTab(t.id)}
+                key={tb.id}
+                onClick={() => setTab(tb.id)}
                 className={`flex-1 flex flex-col items-center gap-0.5 py-1 rounded-lg transition-colors ${
-                  tab === t.id ? 'text-brand-600' : 'text-gray-400'
+                  tab === tb.id ? 'text-brand-600' : 'text-gray-400'
                 }`}
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={tab === t.id ? 2 : 1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d={t.icon} />
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={tab === tb.id ? 2 : 1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d={tb.icon} />
                 </svg>
-                <span className="text-[10px] font-medium">{t.label}</span>
+                <span className="text-[10px] font-medium">{tb.label}</span>
               </button>
             ))}
           </div>
@@ -80,9 +83,10 @@ function PhoneFrame() {
   )
 }
 
-/* ── Home Screen ── */
+/* -- Home Screen -- */
 
 function HomeScreen() {
+  const { t } = useTranslation()
   const { data: profileRes } = useQuery({
     queryKey: ['portal-profile'],
     queryFn: () => api.get<ApiResponse<MemberDto>>('/portal/profile').then(r => r.data),
@@ -115,9 +119,9 @@ function HomeScreen() {
         </div>
         <div>
           <p className="text-[15px] font-semibold text-gray-900">
-            Hi, {member?.firstName ?? '...'}!
+            {t('portal.phone.hi', { name: member?.firstName ?? '...' })}
           </p>
-          <p className="text-[12px] text-gray-500">Welcome back to your studio</p>
+          <p className="text-[12px] text-gray-500">{t('portal.phone.welcomeBackStudio')}</p>
         </div>
       </div>
 
@@ -127,15 +131,15 @@ function HomeScreen() {
           <svg className="w-6 h-6 mb-2 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
           </svg>
-          <p className="text-[13px] font-semibold">Quick Check-In</p>
-          <p className="text-[10px] opacity-75 mt-0.5">Scan to enter</p>
+          <p className="text-[13px] font-semibold">{t('portal.phone.quickCheckIn')}</p>
+          <p className="text-[10px] opacity-75 mt-0.5">{t('portal.phone.scanToEnter')}</p>
         </div>
         <div className="bg-white rounded-2xl p-4 border border-gray-200">
           <svg className="w-6 h-6 mb-2 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
-          <p className="text-[13px] font-semibold text-gray-900">Book Class</p>
-          <p className="text-[10px] text-gray-500 mt-0.5">View schedule</p>
+          <p className="text-[13px] font-semibold text-gray-900">{t('portal.phone.bookClass')}</p>
+          <p className="text-[10px] text-gray-500 mt-0.5">{t('portal.phone.viewSchedule')}</p>
         </div>
       </div>
 
@@ -143,8 +147,8 @@ function HomeScreen() {
       <div className="bg-gradient-to-br from-brand-800 to-brand-950 rounded-2xl p-5 text-white mb-5">
         <div className="flex justify-between items-start mb-4">
           <div>
-            <p className="text-[10px] uppercase tracking-wider opacity-60">Membership</p>
-            <p className="text-[15px] font-semibold mt-0.5">{activeContract?.membershipTierName ?? 'No active plan'}</p>
+            <p className="text-[10px] uppercase tracking-wider opacity-60">{t('portal.phone.membership')}</p>
+            <p className="text-[15px] font-semibold mt-0.5">{activeContract?.membershipTierName ?? t('portal.phone.noActivePlan')}</p>
           </div>
           <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
             <span className="text-white font-bold text-sm">F</span>
@@ -152,7 +156,7 @@ function HomeScreen() {
         </div>
         <div className="flex justify-between text-[11px]">
           <div>
-            <p className="opacity-60">Member</p>
+            <p className="opacity-60">{t('portal.member')}</p>
             <p className="font-medium">{member?.firstName} {member?.lastName}</p>
           </div>
           <div className="text-right">
@@ -165,15 +169,15 @@ function HomeScreen() {
       {/* Occupancy */}
       <div className="bg-white rounded-2xl p-4 border border-gray-200 mb-5">
         <div className="flex items-center justify-between mb-2">
-          <p className="text-[13px] font-semibold text-gray-900">Studio Occupancy</p>
+          <p className="text-[13px] font-semibold text-gray-900">{t('portal.phone.studioOccupancy')}</p>
           <div className="flex items-center gap-1">
             <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-            <span className="text-[11px] text-green-600 font-medium">Live</span>
+            <span className="text-[11px] text-green-600 font-medium">{t('portal.phone.live')}</span>
           </div>
         </div>
         <div className="flex items-end gap-3">
           <span className="text-3xl font-bold text-gray-900">{occupancy?.current ?? '—'}</span>
-          <span className="text-[12px] text-gray-500 mb-1">/ {occupancy?.max ?? '—'} capacity</span>
+          <span className="text-[12px] text-gray-500 mb-1">{t('portal.phone.capacity', { max: occupancy?.max ?? '—' })}</span>
         </div>
         <div className="w-full bg-gray-100 rounded-full h-2 mt-2">
           <div
@@ -184,12 +188,12 @@ function HomeScreen() {
       </div>
 
       {/* Recent Activity */}
-      <p className="text-[13px] font-semibold text-gray-900 mb-3">Recent Activity</p>
+      <p className="text-[13px] font-semibold text-gray-900 mb-3">{t('portal.phone.recentActivity')}</p>
       <div className="space-y-2">
         {[
-          { icon: '9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z', label: 'Checked in', time: 'Today, 07:15', color: 'text-green-600' },
-          { icon: '8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z', label: 'Booked Morning Yoga', time: 'Yesterday', color: 'text-brand-600' },
-          { icon: '13 10V3L4 14h7v7l9-11h-7z', label: 'Completed workout', time: '2 days ago', color: 'text-orange-500' },
+          { icon: '9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z', label: t('portal.phone.checkedIn'), time: t('portal.phone.today'), color: 'text-green-600' },
+          { icon: '8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z', label: t('portal.phone.bookedMorningYoga'), time: t('portal.phone.yesterday'), color: 'text-brand-600' },
+          { icon: '13 10V3L4 14h7v7l9-11h-7z', label: t('portal.phone.completedWorkout'), time: t('portal.phone.twoDaysAgo'), color: 'text-orange-500' },
         ].map((a, i) => (
           <div key={i} className="flex items-center gap-3 bg-white rounded-xl px-3 py-2.5 border border-gray-100">
             <svg className={`w-4 h-4 ${a.color} flex-shrink-0`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
@@ -206,9 +210,10 @@ function HomeScreen() {
   )
 }
 
-/* ── Check-In Screen (QR Code + Real Check-In) ── */
+/* -- Check-In Screen (QR Code + Real Check-In) -- */
 
 function CheckInScreen() {
+  const { t } = useTranslation()
   const qc = useQueryClient()
 
   const { data: profileRes } = useQuery({
@@ -236,15 +241,15 @@ function CheckInScreen() {
     onSuccess: (res) => {
       const data = res.data?.data
       if (data?.status === 'SUCCESS') {
-        setCheckInResult({ status: 'success', message: 'Check-in successful!', time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) })
+        setCheckInResult({ status: 'success', message: t('portal.phone.checkInSuccessful'), time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) })
       } else {
-        setCheckInResult({ status: 'denied', message: data?.denialReason ?? 'Check-in denied' })
+        setCheckInResult({ status: 'denied', message: data?.denialReason ?? t('portal.phone.checkInDenied') })
       }
       qc.invalidateQueries({ queryKey: ['portal-checkins-recent'] })
       qc.invalidateQueries({ queryKey: ['portal-occupancy'] })
     },
     onError: (err: any) => {
-      const msg = err?.response?.data?.errors?.[0]?.message ?? 'Check-in failed'
+      const msg = err?.response?.data?.errors?.[0]?.message ?? t('portal.phone.checkInFailed')
       setCheckInResult({ status: 'error', message: msg })
     },
   })
@@ -252,12 +257,12 @@ function CheckInScreen() {
   const checkOutMutation = useMutation({
     mutationFn: () => api.post('/portal/checkout'),
     onSuccess: () => {
-      setCheckInResult({ status: 'checkout', message: 'Checked out successfully!', time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) })
+      setCheckInResult({ status: 'checkout', message: t('portal.phone.checkedOutSuccessfully'), time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) })
       qc.invalidateQueries({ queryKey: ['portal-checkins-recent'] })
       qc.invalidateQueries({ queryKey: ['portal-occupancy'] })
     },
     onError: (err: any) => {
-      const msg = err?.response?.data?.errors?.[0]?.message ?? 'Check-out failed'
+      const msg = err?.response?.data?.errors?.[0]?.message ?? t('portal.phone.checkOutFailed')
       setCheckInResult({ status: 'error', message: msg })
     },
   })
@@ -281,8 +286,8 @@ function CheckInScreen() {
   // Auto-clear result after 5s
   useEffect(() => {
     if (checkInResult) {
-      const t = setTimeout(() => setCheckInResult(null), 5000)
-      return () => clearTimeout(t)
+      const timer = setTimeout(() => setCheckInResult(null), 5000)
+      return () => clearTimeout(timer)
     }
   }, [checkInResult])
 
@@ -316,16 +321,16 @@ function CheckInScreen() {
       {/* Header */}
       <div className="w-full flex items-center justify-between mb-4">
         <div>
-          <p className="text-[16px] font-bold text-gray-900">Check-In</p>
+          <p className="text-[16px] font-bold text-gray-900">{t('portal.phone.checkInTitle')}</p>
           <p className="text-[11px] text-gray-500">
-            {isCheckedIn ? 'You are currently checked in' : 'Tap or scan to enter'}
+            {isCheckedIn ? t('portal.phone.currentlyCheckedIn') : t('portal.phone.tapOrScan')}
           </p>
         </div>
         <button
           onClick={() => { setScanMode(!scanMode); setCheckInResult(null) }}
           className="px-3 py-1.5 bg-brand-50 text-brand-700 rounded-lg text-[11px] font-medium"
         >
-          {scanMode ? 'Show QR' : 'RFID Mode'}
+          {scanMode ? t('portal.phone.showQR') : t('portal.phone.rfidMode')}
         </button>
       </div>
 
@@ -372,7 +377,7 @@ function CheckInScreen() {
 
       {!scanMode ? (
         <>
-          {/* QR Code — tappable for check-in */}
+          {/* QR Code -- tappable for check-in */}
           <button
             onClick={handleQrCheckIn}
             disabled={checkInMutation.isPending}
@@ -393,7 +398,7 @@ function CheckInScreen() {
           </button>
 
           <p className="text-[12px] text-brand-600 font-medium mb-4">
-            {checkInMutation.isPending ? 'Checking in...' : 'Tap QR code to check in'}
+            {checkInMutation.isPending ? t('portal.phone.checkingIn') : t('portal.phone.tapQrToCheckIn')}
           </p>
 
           {/* Check-out button if already checked in */}
@@ -403,7 +408,7 @@ function CheckInScreen() {
               disabled={checkOutMutation.isPending}
               className="w-full py-3 rounded-2xl border-2 border-red-200 text-red-600 text-[13px] font-semibold mb-4 active:bg-red-50 disabled:opacity-50"
             >
-              {checkOutMutation.isPending ? 'Checking out...' : 'Check Out'}
+              {checkOutMutation.isPending ? t('portal.phone.checkingOut') : t('portal.phone.checkOut')}
             </button>
           )}
 
@@ -418,7 +423,7 @@ function CheckInScreen() {
               <div>
                 <p className="text-[13px] font-semibold text-gray-900">{member?.firstName} {member?.lastName}</p>
                 <p className="text-[11px] text-gray-500">
-                  {isCheckedIn ? 'Currently in studio' : 'Active Membership'}
+                  {isCheckedIn ? t('portal.phone.currentlyInStudio') : t('portal.phone.activeMembership')}
                 </p>
               </div>
               <div className="ml-auto">
@@ -441,18 +446,18 @@ function CheckInScreen() {
             </svg>
           </button>
           <p className="text-[15px] font-semibold text-gray-900 mb-1">
-            {scanning ? 'Scanning...' : 'Tap to simulate RFID scan'}
+            {scanning ? t('portal.phone.scanning') : t('portal.phone.tapToSimulateRfid')}
           </p>
           <p className="text-[12px] text-gray-500 text-center px-8">
             {scanning
-              ? 'Reading your card...'
-              : 'In a real setup, hold your RFID card near the reader'
+              ? t('portal.phone.readingCard')
+              : t('portal.phone.rfidHint')
             }
           </p>
           {scanning && (
             <div className="mt-6 flex items-center gap-2 text-brand-600">
               <span className="w-2 h-2 rounded-full bg-brand-500 animate-ping" />
-              <span className="text-[12px] font-medium">Processing...</span>
+              <span className="text-[12px] font-medium">{t('portal.phone.processing')}</span>
             </div>
           )}
 
@@ -463,7 +468,7 @@ function CheckInScreen() {
               disabled={checkOutMutation.isPending}
               className="mt-6 px-6 py-2.5 rounded-2xl border-2 border-red-200 text-red-600 text-[13px] font-semibold active:bg-red-50 disabled:opacity-50"
             >
-              {checkOutMutation.isPending ? 'Checking out...' : 'Check Out'}
+              {checkOutMutation.isPending ? t('portal.phone.checkingOut') : t('portal.phone.checkOut')}
             </button>
           )}
         </div>
@@ -472,9 +477,10 @@ function CheckInScreen() {
   )
 }
 
-/* ── Classes Screen ── */
+/* -- Classes Screen -- */
 
 function ClassesScreen() {
+  const { t } = useTranslation()
   const weekStart = useMemo(() => {
     const d = new Date()
     d.setHours(12, 0, 0, 0)
@@ -501,12 +507,12 @@ function ClassesScreen() {
 
   return (
     <div className="px-5 pt-3 pb-6">
-      <p className="text-[16px] font-bold text-gray-900 mb-1">Classes</p>
-      <p className="text-[11px] text-gray-500 mb-5">Upcoming this week</p>
+      <p className="text-[16px] font-bold text-gray-900 mb-1">{t('portal.classes.title')}</p>
+      <p className="text-[11px] text-gray-500 mb-5">{t('portal.classes.upcomingThisWeek')}</p>
 
       {upcoming.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-[13px] text-gray-400">No upcoming classes this week</p>
+          <p className="text-[13px] text-gray-400">{t('portal.classes.noUpcomingClasses')}</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -540,7 +546,7 @@ function ClassesScreen() {
                         ? 'bg-orange-100 text-orange-700'
                         : 'bg-brand-600 text-white'
                     }`}>
-                      {isFull ? 'Waitlist' : 'Book'}
+                      {isFull ? t('portal.classes.joinWaitlist') : t('portal.classes.book')}
                     </button>
                   </div>
                 </div>
@@ -553,9 +559,10 @@ function ClassesScreen() {
   )
 }
 
-/* ── Training Screen ── */
+/* -- Training Screen -- */
 
 function TrainingScreen() {
+  const { t } = useTranslation()
   const { data: profileRes } = useQuery({
     queryKey: ['portal-profile'],
     queryFn: () => api.get<ApiResponse<MemberDto>>('/portal/profile').then(r => r.data),
@@ -573,40 +580,40 @@ function TrainingScreen() {
 
   return (
     <div className="px-5 pt-3 pb-6">
-      <p className="text-[16px] font-bold text-gray-900 mb-1">Training</p>
-      <p className="text-[11px] text-gray-500 mb-5">Your active training plan</p>
+      <p className="text-[16px] font-bold text-gray-900 mb-1">{t('portal.training.title')}</p>
+      <p className="text-[11px] text-gray-500 mb-5">{t('portal.training.yourActiveTrainingPlan')}</p>
 
       {!activePlan ? (
         <div className="text-center py-12">
           <svg className="w-12 h-12 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
-          <p className="text-[13px] text-gray-400">No training plan assigned yet</p>
-          <p className="text-[11px] text-gray-400 mt-1">Ask your trainer to set one up</p>
+          <p className="text-[13px] text-gray-400">{t('portal.training.noTrainingPlan')}</p>
+          <p className="text-[11px] text-gray-400 mt-1">{t('portal.training.askTrainerSetup')}</p>
         </div>
       ) : (
         <>
           {/* Plan card */}
           <div className="bg-gradient-to-br from-brand-600 to-brand-800 rounded-2xl p-5 text-white mb-5">
-            <p className="text-[10px] uppercase tracking-wider opacity-60">Active Plan</p>
+            <p className="text-[10px] uppercase tracking-wider opacity-60">{t('portal.training.activePlan')}</p>
             <p className="text-[16px] font-bold mt-1">{activePlan.name}</p>
             {activePlan.description && (
               <p className="text-[11px] opacity-75 mt-1">{activePlan.description}</p>
             )}
             <div className="flex gap-4 mt-3 text-[11px]">
               <div>
-                <p className="opacity-60">Exercises</p>
+                <p className="opacity-60">{t('portal.training.exercises')}</p>
                 <p className="font-semibold">{activePlan.exercises?.length ?? 0}</p>
               </div>
               <div>
-                <p className="opacity-60">Category</p>
-                <p className="font-semibold">{activePlan.category ?? 'General'}</p>
+                <p className="opacity-60">{t('portal.training.category')}</p>
+                <p className="font-semibold">{activePlan.category ?? t('portal.training.general')}</p>
               </div>
             </div>
           </div>
 
           {/* Exercise list */}
-          <p className="text-[12px] font-semibold text-gray-700 mb-3">Exercises</p>
+          <p className="text-[12px] font-semibold text-gray-700 mb-3">{t('portal.training.exercises')}</p>
           <div className="space-y-2">
             {(activePlan.exercises ?? []).slice(0, 6).map((ex, i) => (
               <div key={ex.exerciseId ?? i} className="bg-white rounded-xl px-4 py-3 border border-gray-100 flex items-center gap-3">
@@ -616,7 +623,7 @@ function TrainingScreen() {
                 <div className="flex-1 min-w-0">
                   <p className="text-[12px] font-medium text-gray-900 truncate">{ex.exerciseName}</p>
                   <p className="text-[10px] text-gray-500">
-                    {ex.sets}×{ex.reps} {ex.weight ? `@ ${ex.weight}kg` : ''}
+                    {ex.sets}x{ex.reps} {ex.weight ? `@ ${ex.weight}kg` : ''}
                   </p>
                 </div>
                 <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
@@ -628,7 +635,7 @@ function TrainingScreen() {
 
           {/* Start workout button */}
           <button className="w-full mt-5 bg-brand-600 text-white py-3 rounded-2xl text-[14px] font-semibold shadow-lg shadow-brand-500/30">
-            Start Workout
+            {t('portal.training.startWorkout')}
           </button>
         </>
       )}
@@ -636,9 +643,10 @@ function TrainingScreen() {
   )
 }
 
-/* ── Profile Screen ── */
+/* -- Profile Screen -- */
 
 function ProfileScreen() {
+  const { t } = useTranslation()
   const { data: profileRes } = useQuery({
     queryKey: ['portal-profile'],
     queryFn: () => api.get<ApiResponse<MemberDto>>('/portal/profile').then(r => r.data),
@@ -646,12 +654,12 @@ function ProfileScreen() {
   const member = profileRes?.data
 
   const menuItems = [
-    { icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z', label: 'Personal Information' },
-    { icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', label: 'My Contracts' },
-    { icon: '17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2z', label: 'Invoices & Payments' },
-    { icon: '12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', label: 'Check-In History' },
-    { icon: '10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z', label: 'Settings' },
-    { icon: '8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z', label: 'Help & Support' },
+    { icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z', label: t('portal.phone.personalInformation') },
+    { icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', label: t('portal.phone.myContracts') },
+    { icon: '17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2z', label: t('portal.phone.invoicesAndPayments') },
+    { icon: '12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', label: t('portal.phone.checkInHistory') },
+    { icon: '10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z', label: t('portal.phone.settings') },
+    { icon: '8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z', label: t('portal.phone.helpAndSupport') },
   ]
 
   return (
@@ -687,7 +695,7 @@ function ProfileScreen() {
 
       {/* Sign out */}
       <button className="w-full mt-5 py-3 text-red-500 text-[13px] font-medium">
-        Sign Out
+        {t('portal.phone.signOut')}
       </button>
 
       <p className="text-center text-[10px] text-gray-400 mt-3">Fitagend v1.0.0</p>
@@ -695,7 +703,7 @@ function ProfileScreen() {
   )
 }
 
-/* ── Status bar icons ── */
+/* -- Status bar icons -- */
 
 function SignalIcon() {
   return (

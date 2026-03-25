@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import api from '../api/client'
 import type {
@@ -26,17 +27,18 @@ const ACTIVITY_TYPES: LeadActivityType[] = [
 type Tab = 'pipeline' | 'leads' | 'promo'
 
 export default function SalesPage() {
+  const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState<Tab>('pipeline')
 
   const tabs: { key: Tab; label: string }[] = [
-    { key: 'pipeline', label: 'Pipeline' },
-    { key: 'leads', label: 'All Leads' },
-    { key: 'promo', label: 'Promo Codes' },
+    { key: 'pipeline', label: t('sales.pipeline') },
+    { key: 'leads', label: t('sales.allLeads') },
+    { key: 'promo', label: t('sales.promoCodes') },
   ]
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Sales</h1>
+      <h1 className="text-2xl font-bold text-gray-900 mb-6">{t('sales.title')}</h1>
       <div className="border-b border-gray-200 mb-6">
         <nav className="flex space-x-8">
           {tabs.map((tab) => (
@@ -65,6 +67,7 @@ export default function SalesPage() {
 // ===================== PIPELINE VIEW =====================
 
 function PipelineView() {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
 
   const { data: pipeline, isLoading } = useQuery({
@@ -80,18 +83,18 @@ function PipelineView() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['sales-pipeline'] }),
   })
 
-  if (isLoading) return <p className="text-gray-500">Loading pipeline...</p>
+  if (isLoading) return <p className="text-gray-500">{t('sales.loadingPipeline')}</p>
   if (!pipeline) return null
 
   if (pipeline.stages.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-500 mb-4">No pipeline stages configured yet.</p>
+        <p className="text-gray-500 mb-4">{t('sales.noStagesConfigured')}</p>
         <button
           onClick={() => initMutation.mutate()}
           className="bg-brand-600 text-white px-6 py-2 rounded-lg text-sm hover:bg-brand-700"
         >
-          Initialize Default Stages
+          {t('sales.initDefaultStages')}
         </button>
       </div>
     )
@@ -102,15 +105,15 @@ function PipelineView() {
       <div className="grid grid-cols-3 gap-4 mb-6">
         <div className="bg-white rounded-lg shadow p-4">
           <p className="text-2xl font-bold">{pipeline.totalLeads}</p>
-          <p className="text-sm text-gray-500">Total Leads</p>
+          <p className="text-sm text-gray-500">{t('sales.totalLeads')}</p>
         </div>
         <div className="bg-white rounded-lg shadow p-4">
           <p className="text-2xl font-bold text-green-600">{pipeline.convertedLeads}</p>
-          <p className="text-sm text-gray-500">Converted</p>
+          <p className="text-sm text-gray-500">{t('sales.converted')}</p>
         </div>
         <div className="bg-white rounded-lg shadow p-4">
           <p className="text-2xl font-bold text-brand-600">{pipeline.conversionRate.toFixed(1)}%</p>
-          <p className="text-sm text-gray-500">Conversion Rate</p>
+          <p className="text-sm text-gray-500">{t('sales.conversionRate')}</p>
         </div>
       </div>
 
@@ -124,6 +127,7 @@ function PipelineView() {
 }
 
 function PipelineColumn({ stage }: { stage: LeadStageDto }) {
+  const { t } = useTranslation()
   const { data } = useQuery({
     queryKey: ['pipeline-leads', stage.id],
     queryFn: async () => {
@@ -162,7 +166,7 @@ function PipelineColumn({ stage }: { stage: LeadStageDto }) {
               {lead.assignedStaffName && (
                 <span className="text-xs text-brand-600">{lead.assignedStaffName}</span>
               )}
-              <span className="text-xs text-gray-400">{lead.activityCount} activities</span>
+              <span className="text-xs text-gray-400">{lead.activityCount} {t('sales.activities')}</span>
             </div>
           </div>
         ))}
@@ -174,6 +178,7 @@ function PipelineColumn({ stage }: { stage: LeadStageDto }) {
 // ===================== LEADS LIST =====================
 
 function LeadsList() {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const [showCreate, setShowCreate] = useState(false)
   const [selectedLead, setSelectedLead] = useState<LeadDto | null>(null)
@@ -217,7 +222,7 @@ function LeadsList() {
         <div className="flex gap-3">
           <input
             type="text"
-            placeholder="Search by name..."
+            placeholder={t('sales.searchByName')}
             value={nameFilter}
             onChange={(e) => setNameFilter(e.target.value)}
             className="border rounded-lg px-3 py-2 text-sm w-64"
@@ -227,7 +232,7 @@ function LeadsList() {
             onChange={(e) => setSourceFilter(e.target.value)}
             className="border rounded-lg px-3 py-2 text-sm"
           >
-            <option value="">All Sources</option>
+            <option value="">{t('sales.allSources')}</option>
             {LEAD_SOURCES.map((s) => (
               <option key={s} value={s}>{s.replace(/_/g, ' ')}</option>
             ))}
@@ -237,23 +242,23 @@ function LeadsList() {
           onClick={() => setShowCreate(true)}
           className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-700"
         >
-          Add Lead
+          {t('sales.addLead')}
         </button>
       </div>
 
       {isLoading ? (
-        <p className="text-gray-500">Loading leads...</p>
+        <p className="text-gray-500">{t('sales.loadingLeads')}</p>
       ) : (
         <div className="bg-white rounded-lg shadow overflow-hidden">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">Name</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">Contact</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">Source</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">Stage</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">Assigned</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">Actions</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">{t('sales.name')}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">{t('sales.contact')}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">{t('sales.source')}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">{t('sales.stage')}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">{t('sales.assigned')}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">{t('sales.actionsCol')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
@@ -292,11 +297,11 @@ function LeadsList() {
                         onClick={() => convertMutation.mutate(lead.id)}
                         className="text-xs text-green-600 hover:text-green-800"
                       >
-                        Convert
+                        {t('sales.convert')}
                       </button>
                     )}
                     {lead.convertedMemberId && (
-                      <span className="text-xs text-green-600">Converted</span>
+                      <span className="text-xs text-green-600">{t('sales.convertedLabel')}</span>
                     )}
                   </td>
                 </tr>
@@ -333,6 +338,7 @@ function CreateLeadModal({
   onSubmit: (data: Record<string, unknown>) => void
   isLoading: boolean
 }) {
+  const { t } = useTranslation()
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
@@ -346,30 +352,30 @@ function CreateLeadModal({
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6">
-        <h2 className="text-lg font-bold mb-4">Add Lead</h2>
+        <h2 className="text-lg font-bold mb-4">{t('sales.addLeadTitle')}</h2>
         <div className="space-y-3">
           <div className="grid grid-cols-2 gap-3">
             <input
-              placeholder="First name *"
+              placeholder={t('sales.firstName')}
               value={form.firstName}
               onChange={(e) => setForm({ ...form, firstName: e.target.value })}
               className="border rounded px-3 py-2 text-sm"
             />
             <input
-              placeholder="Last name *"
+              placeholder={t('sales.lastName')}
               value={form.lastName}
               onChange={(e) => setForm({ ...form, lastName: e.target.value })}
               className="border rounded px-3 py-2 text-sm"
             />
           </div>
           <input
-            placeholder="Email"
+            placeholder={t('sales.email')}
             value={form.email}
             onChange={(e) => setForm({ ...form, email: e.target.value })}
             className="w-full border rounded px-3 py-2 text-sm"
           />
           <input
-            placeholder="Phone"
+            placeholder={t('sales.phone')}
             value={form.phone}
             onChange={(e) => setForm({ ...form, phone: e.target.value })}
             className="w-full border rounded px-3 py-2 text-sm"
@@ -384,13 +390,13 @@ function CreateLeadModal({
             ))}
           </select>
           <input
-            placeholder="Interest (e.g., Premium membership)"
+            placeholder={t('sales.interest')}
             value={form.interest}
             onChange={(e) => setForm({ ...form, interest: e.target.value })}
             className="w-full border rounded px-3 py-2 text-sm"
           />
           <textarea
-            placeholder="Notes"
+            placeholder={t('sales.notes')}
             value={form.notes}
             onChange={(e) => setForm({ ...form, notes: e.target.value })}
             className="w-full border rounded px-3 py-2 text-sm"
@@ -398,7 +404,7 @@ function CreateLeadModal({
           />
         </div>
         <div className="flex justify-end gap-3 mt-6">
-          <button onClick={onClose} className="px-4 py-2 text-sm text-gray-600">Cancel</button>
+          <button onClick={onClose} className="px-4 py-2 text-sm text-gray-600">{t('sales.cancel')}</button>
           <button
             onClick={() => onSubmit({
               ...form,
@@ -410,7 +416,7 @@ function CreateLeadModal({
             disabled={!form.firstName || !form.lastName || isLoading}
             className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-700 disabled:opacity-50"
           >
-            {isLoading ? 'Creating...' : 'Add Lead'}
+            {isLoading ? t('sales.creating') : t('sales.addLead')}
           </button>
         </div>
       </div>
@@ -425,6 +431,7 @@ function LeadDetailModal({
   lead: LeadDto
   onClose: () => void
 }) {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const [showAddActivity, setShowAddActivity] = useState(false)
 
@@ -478,16 +485,16 @@ function LeadDetailModal({
         </div>
 
         <div className="space-y-2 mb-4 text-sm">
-          {lead.email && <p>Email: {lead.email}</p>}
-          {lead.phone && <p>Phone: {lead.phone}</p>}
-          {lead.stageName && <p>Stage: <span className="font-medium" style={{ color: lead.stageColor || '#374151' }}>{lead.stageName}</span></p>}
-          {lead.assignedStaffName && <p>Assigned: {lead.assignedStaffName}</p>}
+          {lead.email && <p>{t('sales.email')}: {lead.email}</p>}
+          {lead.phone && <p>{t('sales.phone')}: {lead.phone}</p>}
+          {lead.stageName && <p>{t('sales.stage')}: <span className="font-medium" style={{ color: lead.stageColor || '#374151' }}>{lead.stageName}</span></p>}
+          {lead.assignedStaffName && <p>{t('sales.assigned')}: {lead.assignedStaffName}</p>}
           {lead.notes && <p className="text-gray-600">{lead.notes}</p>}
         </div>
 
         {stages.length > 0 && (
           <div className="mb-4">
-            <label className="block text-xs font-medium text-gray-500 mb-1">Move to stage</label>
+            <label className="block text-xs font-medium text-gray-500 mb-1">{t('sales.moveToStage')}</label>
             <div className="flex flex-wrap gap-1">
               {stages.map(s => (
                 <button key={s.id} onClick={() => moveStageMutation.mutate(s.id)}
@@ -502,12 +509,12 @@ function LeadDetailModal({
         )}
 
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-medium">Activity Log ({activityList.length})</h3>
+          <h3 className="text-sm font-medium">{t('sales.activityLog')} ({activityList.length})</h3>
           <button
             onClick={() => setShowAddActivity(!showAddActivity)}
             className="text-xs text-brand-600 hover:text-brand-700"
           >
-            + Add Activity
+            {t('sales.addActivity')}
           </button>
         </div>
 
@@ -531,8 +538,8 @@ function LeadDetailModal({
                 </span>
               </div>
               {a.description && <p className="text-sm text-gray-700 mt-1">{a.description}</p>}
-              {a.outcome && <p className="text-xs text-gray-500 mt-1">Outcome: {a.outcome}</p>}
-              {a.staffName && <p className="text-xs text-gray-400 mt-1">By: {a.staffName}</p>}
+              {a.outcome && <p className="text-xs text-gray-500 mt-1">{t('sales.outcome')}: {a.outcome}</p>}
+              {a.staffName && <p className="text-xs text-gray-400 mt-1">{t('sales.by')} {a.staffName}</p>}
             </div>
           ))}
         </div>
@@ -550,6 +557,7 @@ function AddActivityForm({
   onSubmit: (data: Record<string, unknown>) => void
   isLoading: boolean
 }) {
+  const { t } = useTranslation()
   const [form, setForm] = useState({
     activityType: 'NOTE' as LeadActivityType,
     description: '',
@@ -569,14 +577,14 @@ function AddActivityForm({
         ))}
       </select>
       <input
-        placeholder="Description"
+        placeholder={t('communication.description')}
         value={form.description}
         onChange={(e) => setForm({ ...form, description: e.target.value })}
         className="w-full border rounded px-2 py-1 text-xs"
       />
       <div className="flex gap-2">
         <input
-          placeholder="Outcome"
+          placeholder={t('sales.outcome')}
           value={form.outcome}
           onChange={(e) => setForm({ ...form, outcome: e.target.value })}
           className="flex-1 border rounded px-2 py-1 text-xs"
@@ -601,7 +609,7 @@ function AddActivityForm({
         disabled={isLoading}
         className="bg-brand-600 text-white px-3 py-1 rounded text-xs hover:bg-brand-700 disabled:opacity-50"
       >
-        {isLoading ? 'Adding...' : 'Add'}
+        {isLoading ? t('sales.adding') : t('sales.add')}
       </button>
     </div>
   )
@@ -610,6 +618,7 @@ function AddActivityForm({
 // ===================== PROMO CODES =====================
 
 function PromoCodeList() {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const [showCreate, setShowCreate] = useState(false)
 
@@ -643,12 +652,12 @@ function PromoCodeList() {
           onClick={() => setShowCreate(true)}
           className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-700"
         >
-          Create Promo Code
+          {t('sales.createPromoCode')}
         </button>
       </div>
 
       {isLoading ? (
-        <p className="text-gray-500">Loading promo codes...</p>
+        <p className="text-gray-500">{t('sales.loadingPromoCodes')}</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {codes.map((code) => (
@@ -661,7 +670,7 @@ function PromoCodeList() {
                   code.exhausted ? 'bg-yellow-100 text-yellow-700' :
                   'bg-green-100 text-green-700'
                 }`}>
-                  {!code.active ? 'Inactive' : code.expired ? 'Expired' : code.exhausted ? 'Exhausted' : 'Active'}
+                  {!code.active ? t('communication.inactive') : code.expired ? t('sales.expired') : code.exhausted ? t('sales.exhausted') : t('communication.active')}
                 </span>
               </div>
               {code.description && <p className="text-sm text-gray-600">{code.description}</p>}
@@ -669,18 +678,18 @@ function PromoCodeList() {
                 <span className="font-medium">
                   {code.discountType === 'PERCENTAGE' ? `${code.discountValue}%` : `${code.discountValue} EUR`}
                 </span>
-                {' off'}
+                {' '}{t('sales.off')}
               </p>
               <div className="text-xs text-gray-500 mt-2 space-y-1">
-                <p>Used: {code.currentUsages}{code.maxUsages ? ` / ${code.maxUsages}` : ''}</p>
-                {code.expiresAt && <p>Expires: {new Date(code.expiresAt).toLocaleDateString()}</p>}
+                <p>{t('sales.used')} {code.currentUsages}{code.maxUsages ? ` / ${code.maxUsages}` : ''}</p>
+                {code.expiresAt && <p>{t('sales.expires')} {new Date(code.expiresAt).toLocaleDateString()}</p>}
               </div>
               {code.active && !code.expired && (
                 <button
                   onClick={() => deactivateMutation.mutate(code.id)}
                   className="text-xs text-red-500 hover:text-red-700 mt-3"
                 >
-                  Deactivate
+                  {t('classes.deactivate')}
                 </button>
               )}
             </div>
@@ -708,6 +717,7 @@ function CreatePromoModal({
   onSubmit: (data: Record<string, unknown>) => void
   isLoading: boolean
 }) {
+  const { t } = useTranslation()
   const [form, setForm] = useState({
     code: '',
     description: '',
@@ -720,16 +730,16 @@ function CreatePromoModal({
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6">
-        <h2 className="text-lg font-bold mb-4">Create Promo Code</h2>
+        <h2 className="text-lg font-bold mb-4">{t('sales.createPromoCode')}</h2>
         <div className="space-y-3">
           <input
-            placeholder="Code (e.g., SUMMER2026) *"
+            placeholder={t('sales.codePlaceholder')}
             value={form.code}
             onChange={(e) => setForm({ ...form, code: e.target.value.toUpperCase() })}
             className="w-full border rounded px-3 py-2 text-sm font-mono"
           />
           <input
-            placeholder="Description"
+            placeholder={t('sales.descriptionPlaceholder')}
             value={form.description}
             onChange={(e) => setForm({ ...form, description: e.target.value })}
             className="w-full border rounded px-3 py-2 text-sm"
@@ -740,12 +750,12 @@ function CreatePromoModal({
               onChange={(e) => setForm({ ...form, discountType: e.target.value as DiscountType })}
               className="border rounded px-3 py-2 text-sm"
             >
-              <option value="PERCENTAGE">Percentage (%)</option>
-              <option value="FIXED">Fixed (EUR)</option>
+              <option value="PERCENTAGE">{t('sales.percentage')}</option>
+              <option value="FIXED">{t('sales.fixed')}</option>
             </select>
             <input
               type="number"
-              placeholder="Value *"
+              placeholder={t('sales.valuePlaceholder')}
               value={form.discountValue}
               onChange={(e) => setForm({ ...form, discountValue: e.target.value })}
               className="border rounded px-3 py-2 text-sm"
@@ -761,7 +771,7 @@ function CreatePromoModal({
             />
             <input
               type="number"
-              placeholder="Max usages"
+              placeholder={t('sales.maxUsages')}
               value={form.maxUsages}
               onChange={(e) => setForm({ ...form, maxUsages: e.target.value })}
               className="border rounded px-3 py-2 text-sm"
@@ -769,7 +779,7 @@ function CreatePromoModal({
           </div>
         </div>
         <div className="flex justify-end gap-3 mt-6">
-          <button onClick={onClose} className="px-4 py-2 text-sm text-gray-600">Cancel</button>
+          <button onClick={onClose} className="px-4 py-2 text-sm text-gray-600">{t('sales.cancel')}</button>
           <button
             onClick={() => onSubmit({
               code: form.code,
@@ -782,7 +792,7 @@ function CreatePromoModal({
             disabled={!form.code || !form.discountValue || isLoading}
             className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-700 disabled:opacity-50"
           >
-            {isLoading ? 'Creating...' : 'Create Code'}
+            {isLoading ? t('sales.creating') : t('sales.createCode')}
           </button>
         </div>
       </div>

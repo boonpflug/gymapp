@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import api from '../api/client'
 import { useAuthStore } from '../store/authStore'
@@ -7,6 +8,7 @@ import SockJS from 'sockjs-client/dist/sockjs'
 import { Client } from '@stomp/stompjs'
 
 export default function CheckInPage() {
+  const { t } = useTranslation()
   const [search, setSearch] = useState('')
   const [eventLog, setEventLog] = useState<AccessEventDto[]>([])
   const queryClient = useQueryClient()
@@ -98,7 +100,7 @@ export default function CheckInPage() {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Check-In</h1>
+        <h1 className="text-2xl font-bold text-gray-800">{t('checkin.title')}</h1>
         <OccupancyBadge occupancy={occupancyData} />
       </div>
 
@@ -107,10 +109,10 @@ export default function CheckInPage() {
         <div className="lg:col-span-2 space-y-6">
           {/* Member search */}
           <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-lg font-semibold text-gray-700 mb-4">Manual Check-In</h2>
+            <h2 className="text-lg font-semibold text-gray-700 mb-4">{t('checkin.manualCheckin')}</h2>
             <input
               type="text"
-              placeholder="Search member by name or number..."
+              placeholder={t('checkin.searchMember')}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500"
@@ -119,9 +121,9 @@ export default function CheckInPage() {
             {search.length >= 2 && (
               <div className="mt-3 border rounded-md divide-y max-h-64 overflow-auto">
                 {membersLoading ? (
-                  <div className="px-4 py-3 text-sm text-gray-500">Searching...</div>
+                  <div className="px-4 py-3 text-sm text-gray-500">{t('checkin.searching')}</div>
                 ) : members.length === 0 ? (
-                  <div className="px-4 py-3 text-sm text-gray-500">No members found</div>
+                  <div className="px-4 py-3 text-sm text-gray-500">{t('checkin.noMembersFound')}</div>
                 ) : (
                   members.map((member) => (
                     <div
@@ -141,7 +143,7 @@ export default function CheckInPage() {
                         disabled={checkInMutation.isPending}
                         className="bg-green-600 text-white px-4 py-1.5 rounded-md text-sm hover:bg-green-700 disabled:opacity-50"
                       >
-                        Check In
+                        {t('checkin.checkIn')}
                       </button>
                     </div>
                   ))
@@ -158,13 +160,13 @@ export default function CheckInPage() {
                 }`}
               >
                 {checkInMutation.data.status === 'SUCCESS'
-                  ? `${checkInMutation.data.memberName} checked in successfully`
-                  : `Denied: ${checkInMutation.data.denialReason}`}
+                  ? t('checkin.checkedInSuccess', { name: checkInMutation.data.memberName })
+                  : t('checkin.denied', { reason: checkInMutation.data.denialReason })}
               </div>
             )}
             {checkInMutation.isError && (
               <div className="mt-3 p-3 rounded-md text-sm bg-red-50 text-red-800">
-                Check-in failed. Please try again.
+                {t('checkin.checkInFailed')}
               </div>
             )}
           </div>
@@ -172,25 +174,25 @@ export default function CheckInPage() {
           {/* Recent check-ins */}
           <div className="bg-white rounded-lg shadow overflow-hidden">
             <div className="px-6 py-4 border-b">
-              <h2 className="text-lg font-semibold text-gray-700">Recent Check-Ins</h2>
+              <h2 className="text-lg font-semibold text-gray-700">{t('checkin.recentCheckins')}</h2>
             </div>
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Member
+                    {t('checkin.member')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Method
+                    {t('checkin.method')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Status
+                    {t('checkin.status')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Time
+                    {t('checkin.time')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Action
+                    {t('checkin.action')}
                   </th>
                 </tr>
               </thead>
@@ -198,7 +200,7 @@ export default function CheckInPage() {
                 {recentCheckIns.length === 0 ? (
                   <tr>
                     <td colSpan={5} className="px-6 py-4 text-center text-gray-500 text-sm">
-                      No recent check-ins
+                      {t('checkin.noRecentCheckins')}
                     </td>
                   </tr>
                 ) : (
@@ -222,12 +224,12 @@ export default function CheckInPage() {
                             onClick={() => checkOutMutation.mutate(ci.memberId)}
                             className="text-sm text-brand-600 hover:text-brand-700"
                           >
-                            Check Out
+                            {t('checkin.checkOut')}
                           </button>
                         )}
                         {ci.checkOutTime && (
                           <span className="text-xs text-gray-400">
-                            Out {new Date(ci.checkOutTime).toLocaleTimeString()}
+                            {t('checkin.out')} {new Date(ci.checkOutTime).toLocaleTimeString()}
                           </span>
                         )}
                       </td>
@@ -243,12 +245,12 @@ export default function CheckInPage() {
         <div className="space-y-6">
           <div className="bg-white rounded-lg shadow overflow-hidden">
             <div className="px-4 py-3 border-b bg-gray-50">
-              <h2 className="text-sm font-semibold text-gray-700">Live Event Monitor</h2>
+              <h2 className="text-sm font-semibold text-gray-700">{t('checkin.liveEventMonitor')}</h2>
             </div>
             <div className="max-h-[600px] overflow-auto divide-y">
               {eventLog.length === 0 ? (
                 <div className="px-4 py-8 text-center text-sm text-gray-400">
-                  Waiting for events...
+                  {t('checkin.waitingForEvents')}
                 </div>
               ) : (
                 eventLog.map((event) => (
@@ -280,6 +282,7 @@ export default function CheckInPage() {
 }
 
 function OccupancyBadge({ occupancy }: { occupancy?: OccupancyDto }) {
+  const { t } = useTranslation()
   if (!occupancy) return null
   const { currentCount, maxCapacity, atCapacity } = occupancy
   return (
@@ -288,8 +291,8 @@ function OccupancyBadge({ occupancy }: { occupancy?: OccupancyDto }) {
         atCapacity ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'
       }`}
     >
-      {currentCount} {maxCapacity ? `/ ${maxCapacity}` : ''} checked in
-      {atCapacity && ' (FULL)'}
+      {currentCount} {maxCapacity ? `/ ${maxCapacity}` : ''} {t('checkin.checkedIn')}
+      {atCapacity && ` (${t('checkin.full')})`}
     </div>
   )
 }

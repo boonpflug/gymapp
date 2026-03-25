@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import api from '../api/client'
 import type {
   RevenueReportDto,
@@ -16,15 +17,16 @@ const defaultFrom = new Date(new Date().getFullYear(), new Date().getMonth() - 2
 const defaultTo = new Date().toISOString().slice(0, 10)
 
 export default function ReportsPage() {
+  const { t } = useTranslation()
   const [tab, setTab] = useState<Tab>('revenue')
   const [from, setFrom] = useState(defaultFrom)
   const [to, setTo] = useState(defaultTo)
 
   const tabs: { key: Tab; label: string }[] = [
-    { key: 'revenue', label: 'Revenue' },
-    { key: 'members', label: 'Members' },
-    { key: 'checkins', label: 'Check-ins' },
-    { key: 'classes', label: 'Classes' },
+    { key: 'revenue', label: t('reports.revenue') },
+    { key: 'members', label: t('reports.members') },
+    { key: 'checkins', label: t('reports.checkins') },
+    { key: 'classes', label: t('reports.classes') },
   ]
 
   const handleExport = async () => {
@@ -57,8 +59,8 @@ export default function ReportsPage() {
     <div>
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-900">Reports</h1>
-          <p className="text-sm text-gray-500 mt-1">Analytics and reporting dashboard</p>
+          <h1 className="text-2xl font-semibold text-gray-900">{t('reports.title')}</h1>
+          <p className="text-sm text-gray-500 mt-1">{t('reports.subtitle')}</p>
         </div>
         <button
           onClick={handleExport}
@@ -67,14 +69,14 @@ export default function ReportsPage() {
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
           </svg>
-          Export CSV
+          {t('reports.exportCsv')}
         </button>
       </div>
 
       {/* Date range */}
       <div className="flex items-center gap-4 mb-6">
         <div className="flex items-center gap-2">
-          <label className="text-sm text-gray-600 font-medium">From</label>
+          <label className="text-sm text-gray-600 font-medium">{t('reports.from')}</label>
           <input
             type="date"
             value={from}
@@ -83,7 +85,7 @@ export default function ReportsPage() {
           />
         </div>
         <div className="flex items-center gap-2">
-          <label className="text-sm text-gray-600 font-medium">To</label>
+          <label className="text-sm text-gray-600 font-medium">{t('reports.to')}</label>
           <input
             type="date"
             value={to}
@@ -135,14 +137,15 @@ function KpiCard({ label, value, sub }: { label: string; value: string | number;
 // ── Revenue Tab ─────────────────────────────────────────
 
 function RevenueTab({ from, to }: { from: string; to: string }) {
+  const { t } = useTranslation()
   const { data, isLoading } = useQuery({
     queryKey: ['report-revenue', from, to],
     queryFn: () => api.get<RevenueReportDto>(`/reports/revenue`, { params: { from, to } }).then((r) => r.data),
     enabled: !!from && !!to,
   })
 
-  if (isLoading) return <p className="text-sm text-gray-500">Loading...</p>
-  if (!data) return <p className="text-sm text-gray-400">No data available</p>
+  if (isLoading) return <p className="text-sm text-gray-500">{t('common.loading')}</p>
+  if (!data) return <p className="text-sm text-gray-400">{t('common.noDataAvailable')}</p>
 
   const fmt = (v: number) =>
     new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(v)
@@ -150,23 +153,23 @@ function RevenueTab({ from, to }: { from: string; to: string }) {
   return (
     <div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-        <KpiCard label="Monthly Recurring Revenue" value={fmt(data.mrr)} />
-        <KpiCard label="Total Revenue" value={fmt(data.totalRevenue)} sub="In selected period" />
-        <KpiCard label="Payment Success Rate" value={`${data.paymentSuccessRate}%`} />
-        <KpiCard label="Outstanding Receivables" value={fmt(data.outstandingReceivables)} />
+        <KpiCard label={t('reports.mrr')} value={fmt(data.mrr)} />
+        <KpiCard label={t('reports.totalRevenue')} value={fmt(data.totalRevenue)} sub={t('reports.inSelectedPeriod')} />
+        <KpiCard label={t('reports.paymentSuccessRate')} value={`${data.paymentSuccessRate}%`} />
+        <KpiCard label={t('reports.outstandingReceivables')} value={fmt(data.outstandingReceivables)} />
       </div>
 
       <div className="bg-white rounded-xl border overflow-hidden">
         <div className="px-5 py-4 border-b">
-          <h3 className="text-sm font-semibold text-gray-900">Monthly Revenue Breakdown</h3>
+          <h3 className="text-sm font-semibold text-gray-900">{t('reports.monthlyRevenueBreakdown')}</h3>
         </div>
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-gray-50 text-left">
-              <th className="px-5 py-3 font-medium text-gray-600">Month</th>
-              <th className="px-5 py-3 font-medium text-gray-600 text-right">Revenue</th>
-              <th className="px-5 py-3 font-medium text-gray-600 text-right">Invoices</th>
-              <th className="px-5 py-3 font-medium text-gray-600 text-right">Paid</th>
+              <th className="px-5 py-3 font-medium text-gray-600">{t('reports.month')}</th>
+              <th className="px-5 py-3 font-medium text-gray-600 text-right">{t('reports.revenue')}</th>
+              <th className="px-5 py-3 font-medium text-gray-600 text-right">{t('reports.invoices')}</th>
+              <th className="px-5 py-3 font-medium text-gray-600 text-right">{t('reports.paid')}</th>
             </tr>
           </thead>
           <tbody className="divide-y">
@@ -181,7 +184,7 @@ function RevenueTab({ from, to }: { from: string; to: string }) {
             {(!data.monthlyRevenue || data.monthlyRevenue.length === 0) && (
               <tr>
                 <td colSpan={4} className="px-5 py-8 text-center text-gray-400">
-                  No revenue data for this period
+                  {t('reports.noRevenueData')}
                 </td>
               </tr>
             )}
@@ -195,33 +198,34 @@ function RevenueTab({ from, to }: { from: string; to: string }) {
 // ── Members Tab ─────────────────────────────────────────
 
 function MembersTab({ from, to }: { from: string; to: string }) {
+  const { t } = useTranslation()
   const { data, isLoading } = useQuery({
     queryKey: ['report-members', from, to],
     queryFn: () => api.get<MemberReportDto>(`/reports/members`, { params: { from, to } }).then((r) => r.data),
     enabled: !!from && !!to,
   })
 
-  if (isLoading) return <p className="text-sm text-gray-500">Loading...</p>
-  if (!data) return <p className="text-sm text-gray-400">No data available</p>
+  if (isLoading) return <p className="text-sm text-gray-500">{t('common.loading')}</p>
+  if (!data) return <p className="text-sm text-gray-400">{t('common.noDataAvailable')}</p>
 
   return (
     <div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-        <KpiCard label="Active Members" value={data.totalActive} />
-        <KpiCard label="Inactive Members" value={data.totalInactive} />
-        <KpiCard label="New in Period" value={data.newThisMonth} />
-        <KpiCard label="Churn Rate" value={`${data.churnRate}%`} />
+        <KpiCard label={t('reports.activeMembers')} value={data.totalActive} />
+        <KpiCard label={t('reports.inactiveMembers')} value={data.totalInactive} />
+        <KpiCard label={t('reports.newInPeriod')} value={data.newThisMonth} />
+        <KpiCard label={t('reports.churnRate')} value={`${data.churnRate}%`} />
       </div>
 
       <div className="bg-white rounded-xl border overflow-hidden">
         <div className="px-5 py-4 border-b">
-          <h3 className="text-sm font-semibold text-gray-900">Cancellation Reasons</h3>
+          <h3 className="text-sm font-semibold text-gray-900">{t('reports.cancellationReasons')}</h3>
         </div>
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-gray-50 text-left">
-              <th className="px-5 py-3 font-medium text-gray-600">Reason</th>
-              <th className="px-5 py-3 font-medium text-gray-600 text-right">Count</th>
+              <th className="px-5 py-3 font-medium text-gray-600">{t('reports.reason')}</th>
+              <th className="px-5 py-3 font-medium text-gray-600 text-right">{t('reports.count')}</th>
             </tr>
           </thead>
           <tbody className="divide-y">
@@ -234,7 +238,7 @@ function MembersTab({ from, to }: { from: string; to: string }) {
             {(!data.cancellationReasons || Object.keys(data.cancellationReasons).length === 0) && (
               <tr>
                 <td colSpan={2} className="px-5 py-8 text-center text-gray-400">
-                  No cancellations in this period
+                  {t('reports.noCancellations')}
                 </td>
               </tr>
             )}
@@ -248,35 +252,36 @@ function MembersTab({ from, to }: { from: string; to: string }) {
 // ── Check-ins Tab ───────────────────────────────────────
 
 function CheckinsTab({ from, to }: { from: string; to: string }) {
+  const { t } = useTranslation()
   const { data, isLoading } = useQuery({
     queryKey: ['report-checkins', from, to],
     queryFn: () => api.get<CheckInReportDto>(`/reports/checkins`, { params: { from, to } }).then((r) => r.data),
     enabled: !!from && !!to,
   })
 
-  if (isLoading) return <p className="text-sm text-gray-500">Loading...</p>
-  if (!data) return <p className="text-sm text-gray-400">No data available</p>
+  if (isLoading) return <p className="text-sm text-gray-500">{t('common.loading')}</p>
+  if (!data) return <p className="text-sm text-gray-400">{t('common.noDataAvailable')}</p>
 
   return (
     <div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
-        <KpiCard label="Total Check-ins" value={data.totalCheckIns.toLocaleString()} />
-        <KpiCard label="Average Daily" value={data.avgDaily} />
-        <KpiCard label="Peak Hours" value={Object.keys(data.peakHours ?? {}).length > 0 ? `${Object.keys(data.peakHours)[0]}:00` : '-'} sub="Most active hour" />
+        <KpiCard label={t('reports.totalCheckins')} value={data.totalCheckIns.toLocaleString()} />
+        <KpiCard label={t('reports.averageDaily')} value={data.avgDaily} />
+        <KpiCard label={t('reports.peakHours')} value={Object.keys(data.peakHours ?? {}).length > 0 ? `${Object.keys(data.peakHours)[0]}:00` : '-'} sub={t('reports.mostActiveHour')} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         {/* Peak Hours */}
         <div className="bg-white rounded-xl border overflow-hidden">
           <div className="px-5 py-4 border-b">
-            <h3 className="text-sm font-semibold text-gray-900">Check-ins by Hour</h3>
+            <h3 className="text-sm font-semibold text-gray-900">{t('reports.checkinsByHour')}</h3>
           </div>
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-gray-50 text-left">
-                <th className="px-5 py-3 font-medium text-gray-600">Hour</th>
-                <th className="px-5 py-3 font-medium text-gray-600 text-right">Count</th>
-                <th className="px-5 py-3 font-medium text-gray-600 w-1/2">Distribution</th>
+                <th className="px-5 py-3 font-medium text-gray-600">{t('reports.hour')}</th>
+                <th className="px-5 py-3 font-medium text-gray-600 text-right">{t('reports.count')}</th>
+                <th className="px-5 py-3 font-medium text-gray-600 w-1/2">{t('reports.distribution')}</th>
               </tr>
             </thead>
             <tbody className="divide-y">
@@ -304,14 +309,14 @@ function CheckinsTab({ from, to }: { from: string; to: string }) {
         {/* Peak Days */}
         <div className="bg-white rounded-xl border overflow-hidden">
           <div className="px-5 py-4 border-b">
-            <h3 className="text-sm font-semibold text-gray-900">Check-ins by Day of Week</h3>
+            <h3 className="text-sm font-semibold text-gray-900">{t('reports.checkinsByDay')}</h3>
           </div>
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-gray-50 text-left">
-                <th className="px-5 py-3 font-medium text-gray-600">Day</th>
-                <th className="px-5 py-3 font-medium text-gray-600 text-right">Count</th>
-                <th className="px-5 py-3 font-medium text-gray-600 w-1/2">Distribution</th>
+                <th className="px-5 py-3 font-medium text-gray-600">{t('reports.day')}</th>
+                <th className="px-5 py-3 font-medium text-gray-600 text-right">{t('reports.count')}</th>
+                <th className="px-5 py-3 font-medium text-gray-600 w-1/2">{t('reports.distribution')}</th>
               </tr>
             </thead>
             <tbody className="divide-y">
@@ -340,14 +345,14 @@ function CheckinsTab({ from, to }: { from: string; to: string }) {
       {/* Top Members */}
       <div className="bg-white rounded-xl border overflow-hidden">
         <div className="px-5 py-4 border-b">
-          <h3 className="text-sm font-semibold text-gray-900">Top 10 Most Active Members</h3>
+          <h3 className="text-sm font-semibold text-gray-900">{t('reports.top10Members')}</h3>
         </div>
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-gray-50 text-left">
               <th className="px-5 py-3 font-medium text-gray-600">#</th>
-              <th className="px-5 py-3 font-medium text-gray-600">Member</th>
-              <th className="px-5 py-3 font-medium text-gray-600 text-right">Check-ins</th>
+              <th className="px-5 py-3 font-medium text-gray-600">{t('machines.member')}</th>
+              <th className="px-5 py-3 font-medium text-gray-600 text-right">{t('reports.checkins')}</th>
             </tr>
           </thead>
           <tbody className="divide-y">
@@ -361,7 +366,7 @@ function CheckinsTab({ from, to }: { from: string; to: string }) {
             {(!data.topMembers || data.topMembers.length === 0) && (
               <tr>
                 <td colSpan={3} className="px-5 py-8 text-center text-gray-400">
-                  No check-in data for this period
+                  {t('reports.noCheckinData')}
                 </td>
               </tr>
             )}
@@ -375,24 +380,25 @@ function CheckinsTab({ from, to }: { from: string; to: string }) {
 // ── Classes Tab ─────────────────────────────────────────
 
 function ClassesTab({ from, to }: { from: string; to: string }) {
+  const { t } = useTranslation()
   const { data, isLoading } = useQuery({
     queryKey: ['report-classes', from, to],
     queryFn: () => api.get<ClassReportDto>(`/reports/classes`, { params: { from, to } }).then((r) => r.data),
     enabled: !!from && !!to,
   })
 
-  if (isLoading) return <p className="text-sm text-gray-500">Loading...</p>
-  if (!data) return <p className="text-sm text-gray-400">No data available</p>
+  if (isLoading) return <p className="text-sm text-gray-500">{t('common.loading')}</p>
+  if (!data) return <p className="text-sm text-gray-400">{t('common.noDataAvailable')}</p>
 
   return (
     <div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
-        <KpiCard label="Total Classes" value={data.totalClasses} />
-        <KpiCard label="Avg Attendance Rate" value={`${data.avgAttendanceRate}%`} />
+        <KpiCard label={t('reports.totalClasses')} value={data.totalClasses} />
+        <KpiCard label={t('reports.avgAttendanceRate')} value={`${data.avgAttendanceRate}%`} />
         <KpiCard
-          label="Most Popular"
+          label={t('reports.mostPopular')}
           value={data.mostPopular?.[0]?.className ?? '-'}
-          sub={data.mostPopular?.[0] ? `${data.mostPopular[0].totalBookings} bookings` : undefined}
+          sub={data.mostPopular?.[0] ? `${data.mostPopular[0].totalBookings} ${t('reports.bookings')}` : undefined}
         />
       </div>
 
@@ -400,15 +406,15 @@ function ClassesTab({ from, to }: { from: string; to: string }) {
         {/* Most Popular */}
         <div className="bg-white rounded-xl border overflow-hidden">
           <div className="px-5 py-4 border-b">
-            <h3 className="text-sm font-semibold text-gray-900">Most Popular Classes</h3>
+            <h3 className="text-sm font-semibold text-gray-900">{t('reports.mostPopularClasses')}</h3>
           </div>
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-gray-50 text-left">
-                <th className="px-5 py-3 font-medium text-gray-600">Class</th>
-                <th className="px-5 py-3 font-medium text-gray-600 text-right">Bookings</th>
-                <th className="px-5 py-3 font-medium text-gray-600 text-right">Avg Attend.</th>
-                <th className="px-5 py-3 font-medium text-gray-600 text-right">Utilization</th>
+                <th className="px-5 py-3 font-medium text-gray-600">{t('reports.class')}</th>
+                <th className="px-5 py-3 font-medium text-gray-600 text-right">{t('reports.bookings')}</th>
+                <th className="px-5 py-3 font-medium text-gray-600 text-right">{t('reports.avgAttendance')}</th>
+                <th className="px-5 py-3 font-medium text-gray-600 text-right">{t('reports.utilization')}</th>
               </tr>
             </thead>
             <tbody className="divide-y">
@@ -430,7 +436,7 @@ function ClassesTab({ from, to }: { from: string; to: string }) {
               ))}
               {(!data.mostPopular || data.mostPopular.length === 0) && (
                 <tr>
-                  <td colSpan={4} className="px-5 py-8 text-center text-gray-400">No class data</td>
+                  <td colSpan={4} className="px-5 py-8 text-center text-gray-400">{t('reports.noClassData')}</td>
                 </tr>
               )}
             </tbody>
@@ -440,15 +446,15 @@ function ClassesTab({ from, to }: { from: string; to: string }) {
         {/* Least Popular */}
         <div className="bg-white rounded-xl border overflow-hidden">
           <div className="px-5 py-4 border-b">
-            <h3 className="text-sm font-semibold text-gray-900">Least Popular Classes</h3>
+            <h3 className="text-sm font-semibold text-gray-900">{t('reports.leastPopularClasses')}</h3>
           </div>
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-gray-50 text-left">
-                <th className="px-5 py-3 font-medium text-gray-600">Class</th>
-                <th className="px-5 py-3 font-medium text-gray-600 text-right">Bookings</th>
-                <th className="px-5 py-3 font-medium text-gray-600 text-right">Avg Attend.</th>
-                <th className="px-5 py-3 font-medium text-gray-600 text-right">Utilization</th>
+                <th className="px-5 py-3 font-medium text-gray-600">{t('reports.class')}</th>
+                <th className="px-5 py-3 font-medium text-gray-600 text-right">{t('reports.bookings')}</th>
+                <th className="px-5 py-3 font-medium text-gray-600 text-right">{t('reports.avgAttendance')}</th>
+                <th className="px-5 py-3 font-medium text-gray-600 text-right">{t('reports.utilization')}</th>
               </tr>
             </thead>
             <tbody className="divide-y">
@@ -470,7 +476,7 @@ function ClassesTab({ from, to }: { from: string; to: string }) {
               ))}
               {(!data.leastPopular || data.leastPopular.length === 0) && (
                 <tr>
-                  <td colSpan={4} className="px-5 py-8 text-center text-gray-400">No class data</td>
+                  <td colSpan={4} className="px-5 py-8 text-center text-gray-400">{t('reports.noClassData')}</td>
                 </tr>
               )}
             </tbody>

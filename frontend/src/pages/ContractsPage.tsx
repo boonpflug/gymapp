@@ -1,15 +1,17 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import api from '../api/client'
 import type { ApiResponse, MembershipTierDto, ContractDto, MemberDto } from '../types'
 
 export default function ContractsPage() {
+  const { t } = useTranslation()
   const [tab, setTab] = useState<'tiers' | 'contracts'>('tiers')
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-800 mb-6">Contracts & Membership Tiers</h1>
+      <h1 className="text-2xl font-bold text-gray-800 mb-6">{t('contracts.title')}</h1>
       <div className="flex space-x-4 mb-6 border-b">
-        {[{ key: 'tiers' as const, label: 'Membership Tiers' }, { key: 'contracts' as const, label: 'Member Contracts' }].map(t => (
+        {[{ key: 'tiers' as const, label: t('contracts.membershipTiers') }, { key: 'contracts' as const, label: t('contracts.memberContracts') }].map(t => (
           <button key={t.key} onClick={() => setTab(t.key)}
             className={`pb-2 px-1 text-sm font-medium ${tab === t.key ? 'border-b-2 border-brand-600 text-brand-600' : 'text-gray-500 hover:text-gray-700'}`}>
             {t.label}
@@ -23,6 +25,7 @@ export default function ContractsPage() {
 }
 
 function TiersTab() {
+  const { t } = useTranslation()
   const qc = useQueryClient()
   const [showModal, setShowModal] = useState(false)
   const [editId, setEditId] = useState<string | null>(null)
@@ -54,23 +57,23 @@ function TiersTab() {
   return (
     <>
       <div className="flex justify-end mb-4">
-        <button onClick={openCreate} className="bg-brand-600 text-white px-4 py-2 rounded text-sm hover:bg-brand-700">Add Tier</button>
+        <button onClick={openCreate} className="bg-brand-600 text-white px-4 py-2 rounded text-sm hover:bg-brand-700">{t('contracts.addTier')}</button>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {tiers.map(t => (
-          <div key={t.id} className="bg-white rounded-lg shadow p-5">
-            <h3 className="text-lg font-semibold">{t.name}</h3>
-            <p className="text-3xl font-bold text-brand-600 mt-2">&euro;{t.monthlyPrice}<span className="text-sm font-normal text-gray-400">/mo</span></p>
-            {t.description && <p className="text-sm text-gray-500 mt-2">{t.description}</p>}
+        {tiers.map(tier => (
+          <div key={tier.id} className="bg-white rounded-lg shadow p-5">
+            <h3 className="text-lg font-semibold">{tier.name}</h3>
+            <p className="text-3xl font-bold text-brand-600 mt-2">&euro;{tier.monthlyPrice}<span className="text-sm font-normal text-gray-400">{t('contracts.perMonth')}</span></p>
+            {tier.description && <p className="text-sm text-gray-500 mt-2">{tier.description}</p>}
             <div className="text-xs text-gray-500 mt-3 space-y-1">
-              <p>Billing: {t.billingCycle}</p>
-              <p>Min term: {t.minimumTermMonths} months</p>
-              <p>Notice: {t.noticePeriodDays} days</p>
-              {t.classAllowance != null && <p>Classes: {t.classAllowance === 0 ? 'Unlimited' : t.classAllowance + '/mo'}</p>}
+              <p>{t('contracts.billing')}: {tier.billingCycle}</p>
+              <p>{t('contracts.minTerm')}: {tier.minimumTermMonths} {t('contracts.months')}</p>
+              <p>{t('contracts.notice')}: {tier.noticePeriodDays} {t('contracts.days')}</p>
+              {tier.classAllowance != null && <p>{t('contracts.classes')}: {tier.classAllowance === 0 ? t('contracts.unlimited') : tier.classAllowance + t('contracts.perMonth')}</p>}
             </div>
             <div className="flex gap-2 mt-4 border-t pt-3">
-              <button onClick={() => openEdit(t)} className="text-xs text-brand-600 hover:text-brand-700">Edit</button>
-              <button onClick={() => deleteMutation.mutate(t.id)} className="text-xs text-red-600 hover:text-red-800">Delete</button>
+              <button onClick={() => openEdit(tier)} className="text-xs text-brand-600 hover:text-brand-700">{t('common.edit')}</button>
+              <button onClick={() => deleteMutation.mutate(tier.id)} className="text-xs text-red-600 hover:text-red-800">{t('common.delete')}</button>
             </div>
           </div>
         ))}
@@ -78,24 +81,24 @@ function TiersTab() {
       {showModal && (
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg">
-            <h2 className="text-lg font-semibold mb-4">{editId ? 'Edit Tier' : 'Add Tier'}</h2>
+            <h2 className="text-lg font-semibold mb-4">{editId ? t('contracts.editTier') : t('contracts.addTier')}</h2>
             <form onSubmit={handleSubmit} className="space-y-3">
-              <Inp label="Name *" value={form.name} onChange={v => setForm({ ...form, name: v })} required />
-              <Inp label="Description" value={form.description} onChange={v => setForm({ ...form, description: v })} />
+              <Inp label={t('contracts.nameRequired')} value={form.name} onChange={v => setForm({ ...form, name: v })} required />
+              <Inp label={t('common.description')} value={form.description} onChange={v => setForm({ ...form, description: v })} />
               <div className="grid grid-cols-2 gap-3">
-                <Inp label="Monthly Price *" type="number" value={form.monthlyPrice} onChange={v => setForm({ ...form, monthlyPrice: v })} required />
-                <div><label className="block text-sm font-medium text-gray-700 mb-1">Billing Cycle</label>
+                <Inp label={t('contracts.monthlyPriceRequired')} type="number" value={form.monthlyPrice} onChange={v => setForm({ ...form, monthlyPrice: v })} required />
+                <div><label className="block text-sm font-medium text-gray-700 mb-1">{t('contracts.billingCycle')}</label>
                   <select value={form.billingCycle} onChange={e => setForm({ ...form, billingCycle: e.target.value })} className="w-full border rounded px-3 py-2 text-sm">
-                    <option value="MONTHLY">Monthly</option><option value="QUARTERLY">Quarterly</option><option value="YEARLY">Yearly</option>
+                    <option value="MONTHLY">{t('contracts.monthly')}</option><option value="QUARTERLY">{t('contracts.quarterly')}</option><option value="YEARLY">{t('contracts.yearly')}</option>
                   </select></div>
-                <Inp label="Min Term (months)" type="number" value={form.minimumTermMonths} onChange={v => setForm({ ...form, minimumTermMonths: v })} />
-                <Inp label="Notice (days)" type="number" value={form.noticePeriodDays} onChange={v => setForm({ ...form, noticePeriodDays: v })} />
+                <Inp label={t('contracts.minTermMonths')} type="number" value={form.minimumTermMonths} onChange={v => setForm({ ...form, minimumTermMonths: v })} />
+                <Inp label={t('contracts.noticeDays')} type="number" value={form.noticePeriodDays} onChange={v => setForm({ ...form, noticePeriodDays: v })} />
               </div>
-              <Inp label="Class Allowance (0=unlimited)" type="number" value={form.classAllowance} onChange={v => setForm({ ...form, classAllowance: v })} />
-              <Inp label="Access Rules" value={form.accessRules} onChange={v => setForm({ ...form, accessRules: v })} />
+              <Inp label={t('contracts.classAllowance')} type="number" value={form.classAllowance} onChange={v => setForm({ ...form, classAllowance: v })} />
+              <Inp label={t('contracts.accessRules')} value={form.accessRules} onChange={v => setForm({ ...form, accessRules: v })} />
               <div className="flex justify-end gap-3 pt-2">
-                <button type="button" onClick={close} className="px-4 py-2 text-sm text-gray-600">Cancel</button>
-                <button type="submit" disabled={saveMutation.isPending} className="bg-brand-600 text-white px-4 py-2 rounded text-sm disabled:opacity-50">{saveMutation.isPending ? 'Saving...' : editId ? 'Update' : 'Create'}</button>
+                <button type="button" onClick={close} className="px-4 py-2 text-sm text-gray-600">{t('common.cancel')}</button>
+                <button type="submit" disabled={saveMutation.isPending} className="bg-brand-600 text-white px-4 py-2 rounded text-sm disabled:opacity-50">{saveMutation.isPending ? t('common.saving') : editId ? t('common.update') : t('common.create')}</button>
               </div>
             </form>
           </div>
@@ -106,6 +109,7 @@ function TiersTab() {
 }
 
 function ContractsTab() {
+  const { t } = useTranslation()
   const qc = useQueryClient()
   const [memberSearch, setMemberSearch] = useState('')
   const [selectedMember, setSelectedMember] = useState<MemberDto | null>(null)
@@ -152,8 +156,8 @@ function ContractsTab() {
   return (
     <>
       <div className="mb-6">
-        <label className="block text-sm font-medium text-gray-700 mb-1">Search member</label>
-        <input type="text" placeholder="Type member name..." value={memberSearch}
+        <label className="block text-sm font-medium text-gray-700 mb-1">{t('contracts.searchMember')}</label>
+        <input type="text" placeholder={t('contracts.typeMemberName')} value={memberSearch}
           onChange={e => { setMemberSearch(e.target.value); if (selectedMember) setSelectedMember(null) }}
           className="w-full max-w-md px-4 py-2 border rounded-md" />
         {!selectedMember && (membersRes?.data ?? []).length > 0 && (
@@ -164,52 +168,52 @@ function ContractsTab() {
             ))}
           </div>
         )}
-        {selectedMember && <button onClick={() => { setSelectedMember(null); setMemberSearch('') }} className="text-xs text-gray-500 mt-1 underline">Clear</button>}
+        {selectedMember && <button onClick={() => { setSelectedMember(null); setMemberSearch('') }} className="text-xs text-gray-500 mt-1 underline">{t('common.clear')}</button>}
       </div>
 
       {selectedMember && (
         <>
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold">Contracts for {selectedMember.firstName} {selectedMember.lastName}</h3>
-            <button onClick={() => setShowCreate(true)} className="bg-brand-600 text-white px-4 py-2 rounded text-sm hover:bg-brand-700">New Contract</button>
+            <h3 className="text-lg font-semibold">{t('contracts.contractsFor', { name: selectedMember.firstName + ' ' + selectedMember.lastName })}</h3>
+            <button onClick={() => setShowCreate(true)} className="bg-brand-600 text-white px-4 py-2 rounded text-sm hover:bg-brand-700">{t('contracts.newContract')}</button>
           </div>
 
-          {contracts.length === 0 ? <p className="text-gray-500">No contracts.</p> : (
+          {contracts.length === 0 ? <p className="text-gray-500">{t('contracts.noContracts')}</p> : (
             <div className="space-y-4">
               {contracts.map(c => (
                 <div key={c.id} className="bg-white rounded-lg shadow p-5">
                   <div className="flex items-center justify-between mb-3">
                     <div>
                       <h4 className="font-semibold text-lg">{c.membershipTierName}</h4>
-                      <p className="text-sm text-gray-500">{c.startDate} — {c.endDate ?? 'Ongoing'}</p>
+                      <p className="text-sm text-gray-500">{c.startDate} — {c.endDate ?? t('common.ongoing')}</p>
                     </div>
                     <span className={`text-xs px-3 py-1 rounded-full font-medium ${sc[c.status] ?? 'bg-gray-100'}`}>{c.status?.replace(/_/g, ' ')}</span>
                   </div>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm mb-3">
-                    <div><p className="text-gray-500">Amount</p><p className="font-semibold">&euro;{c.monthlyAmount}/mo</p></div>
-                    <div><p className="text-gray-500">Next Billing</p><p className="font-semibold">{c.nextBillingDate ?? '—'}</p></div>
-                    <div><p className="text-gray-500">Auto Renew</p><p className="font-semibold">{c.autoRenew ? 'Yes' : 'No'}</p></div>
-                    {c.cancellationEffectiveDate && <div><p className="text-gray-500">Cancel Date</p><p className="font-semibold text-red-600">{c.cancellationEffectiveDate}</p></div>}
+                    <div><p className="text-gray-500">{t('contracts.amount')}</p><p className="font-semibold">&euro;{c.monthlyAmount}{t('contracts.perMonth')}</p></div>
+                    <div><p className="text-gray-500">{t('contracts.nextBilling')}</p><p className="font-semibold">{c.nextBillingDate ?? '—'}</p></div>
+                    <div><p className="text-gray-500">{t('contracts.autoRenew')}</p><p className="font-semibold">{c.autoRenew ? t('common.yes') : t('common.no')}</p></div>
+                    {c.cancellationEffectiveDate && <div><p className="text-gray-500">{t('contracts.cancelDate')}</p><p className="font-semibold text-red-600">{c.cancellationEffectiveDate}</p></div>}
                   </div>
                   <div className="flex gap-3 border-t pt-3">
-                    {c.status === 'ACTIVE' && <><button onClick={() => setFreezeId(c.id)} className="text-xs text-blue-600">Freeze</button><button onClick={() => setCancelId(c.id)} className="text-xs text-red-600">Cancel</button></>}
-                    {c.status === 'PAUSED' && <button onClick={() => unfreezeMut.mutate(c.id)} className="text-xs text-green-600">Unfreeze</button>}
-                    {c.status === 'PENDING_CANCELLATION' && <button onClick={() => withdrawMut.mutate(c.id)} className="text-xs text-green-600">Withdraw Cancellation</button>}
+                    {c.status === 'ACTIVE' && <><button onClick={() => setFreezeId(c.id)} className="text-xs text-blue-600">{t('contracts.freeze')}</button><button onClick={() => setCancelId(c.id)} className="text-xs text-red-600">{t('common.cancel')}</button></>}
+                    {c.status === 'PAUSED' && <button onClick={() => unfreezeMut.mutate(c.id)} className="text-xs text-green-600">{t('contracts.unfreeze')}</button>}
+                    {c.status === 'PENDING_CANCELLATION' && <button onClick={() => withdrawMut.mutate(c.id)} className="text-xs text-green-600">{t('contracts.withdrawCancellation')}</button>}
                   </div>
                   {freezeId === c.id && (
                     <div className="mt-3 bg-blue-50 border border-blue-200 rounded p-3 space-y-2">
                       <div className="grid grid-cols-2 gap-2">
-                        <Inp label="Start" type="date" value={freezeForm.startDate} onChange={v => setFreezeForm({ ...freezeForm, startDate: v })} required />
-                        <Inp label="End" type="date" value={freezeForm.endDate} onChange={v => setFreezeForm({ ...freezeForm, endDate: v })} required />
+                        <Inp label={t('contracts.start')} type="date" value={freezeForm.startDate} onChange={v => setFreezeForm({ ...freezeForm, startDate: v })} required />
+                        <Inp label={t('contracts.end')} type="date" value={freezeForm.endDate} onChange={v => setFreezeForm({ ...freezeForm, endDate: v })} required />
                       </div>
-                      <Inp label="Reason" value={freezeForm.reason} onChange={v => setFreezeForm({ ...freezeForm, reason: v })} />
-                      <div className="flex gap-2"><button onClick={() => freezeMut.mutate({ id: c.id, data: freezeForm })} className="text-xs bg-blue-600 text-white px-3 py-1 rounded">Freeze</button><button onClick={() => setFreezeId(null)} className="text-xs text-gray-500">Cancel</button></div>
+                      <Inp label={t('contracts.reason')} value={freezeForm.reason} onChange={v => setFreezeForm({ ...freezeForm, reason: v })} />
+                      <div className="flex gap-2"><button onClick={() => freezeMut.mutate({ id: c.id, data: freezeForm })} className="text-xs bg-blue-600 text-white px-3 py-1 rounded">{t('contracts.freeze')}</button><button onClick={() => setFreezeId(null)} className="text-xs text-gray-500">{t('common.cancel')}</button></div>
                     </div>
                   )}
                   {cancelId === c.id && (
                     <div className="mt-3 bg-red-50 border border-red-200 rounded p-3 space-y-2">
-                      <Inp label="Reason" value={cancelReason} onChange={setCancelReason} />
-                      <div className="flex gap-2"><button onClick={() => cancelMut.mutate({ id: c.id, reason: cancelReason })} className="text-xs bg-red-600 text-white px-3 py-1 rounded">Confirm</button><button onClick={() => setCancelId(null)} className="text-xs text-gray-500">Back</button></div>
+                      <Inp label={t('contracts.reason')} value={cancelReason} onChange={setCancelReason} />
+                      <div className="flex gap-2"><button onClick={() => cancelMut.mutate({ id: c.id, reason: cancelReason })} className="text-xs bg-red-600 text-white px-3 py-1 rounded">{t('common.confirm')}</button><button onClick={() => setCancelId(null)} className="text-xs text-gray-500">{t('common.back')}</button></div>
                     </div>
                   )}
                 </div>
@@ -220,17 +224,17 @@ function ContractsTab() {
           {showCreate && (
             <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
               <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
-                <h2 className="text-lg font-semibold mb-4">New Contract for {selectedMember.firstName}</h2>
+                <h2 className="text-lg font-semibold mb-4">{t('contracts.newContractFor', { name: selectedMember.firstName })}</h2>
                 <form onSubmit={e => { e.preventDefault(); createMut.mutate({ memberId: selectedMember.id, membershipTierId: createForm.membershipTierId, startDate: createForm.startDate || undefined, discountCode: createForm.discountCode || undefined }) }} className="space-y-3">
-                  <div><label className="block text-sm font-medium text-gray-700 mb-1">Tier *</label>
+                  <div><label className="block text-sm font-medium text-gray-700 mb-1">{t('contracts.tierRequired')}</label>
                     <select value={createForm.membershipTierId} onChange={e => setCreateForm({ ...createForm, membershipTierId: e.target.value })} required className="w-full border rounded px-3 py-2 text-sm">
-                      <option value="">Select...</option>{tiers.map(t => <option key={t.id} value={t.id}>{t.name} — €{t.monthlyPrice}/mo</option>)}
+                      <option value="">{t('contracts.selectTier')}</option>{tiers.map(tier => <option key={tier.id} value={tier.id}>{tier.name} — €{tier.monthlyPrice}{t('contracts.perMonth')}</option>)}
                     </select></div>
-                  <Inp label="Start Date" type="date" value={createForm.startDate} onChange={v => setCreateForm({ ...createForm, startDate: v })} />
-                  <Inp label="Discount Code" value={createForm.discountCode} onChange={v => setCreateForm({ ...createForm, discountCode: v })} />
+                  <Inp label={t('contracts.startDate')} type="date" value={createForm.startDate} onChange={v => setCreateForm({ ...createForm, startDate: v })} />
+                  <Inp label={t('contracts.discountCode')} value={createForm.discountCode} onChange={v => setCreateForm({ ...createForm, discountCode: v })} />
                   <div className="flex justify-end gap-3 pt-2">
-                    <button type="button" onClick={() => setShowCreate(false)} className="px-4 py-2 text-sm text-gray-600">Cancel</button>
-                    <button type="submit" disabled={createMut.isPending || !createForm.membershipTierId} className="bg-brand-600 text-white px-4 py-2 rounded text-sm disabled:opacity-50">{createMut.isPending ? 'Creating...' : 'Create'}</button>
+                    <button type="button" onClick={() => setShowCreate(false)} className="px-4 py-2 text-sm text-gray-600">{t('common.cancel')}</button>
+                    <button type="submit" disabled={createMut.isPending || !createForm.membershipTierId} className="bg-brand-600 text-white px-4 py-2 rounded text-sm disabled:opacity-50">{createMut.isPending ? t('common.creating') : t('common.create')}</button>
                   </div>
                 </form>
               </div>

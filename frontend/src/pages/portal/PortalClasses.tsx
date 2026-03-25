@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import api from '../../api/client'
 import type { ApiResponse, ClassScheduleDto, ClassBookingDto, MemberDto } from '../../types'
 
@@ -28,6 +29,7 @@ function getMonday(date: Date): Date {
 }
 
 export default function PortalClasses() {
+  const { t } = useTranslation()
   const qc = useQueryClient()
   const [tab, setTab] = useState<'schedule' | 'bookings'>('schedule')
   const [weekOffset, setWeekOffset] = useState(0)
@@ -109,7 +111,7 @@ export default function PortalClasses() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">Classes</h1>
+      <h1 className="text-2xl font-bold mb-6">{t('portal.classes.title')}</h1>
 
       <div className="flex space-x-4 mb-6 border-b">
         <button
@@ -118,7 +120,7 @@ export default function PortalClasses() {
             tab === 'schedule' ? 'border-b-2 border-brand-600 text-brand-600' : 'text-gray-500'
           }`}
         >
-          Weekly Schedule
+          {t('portal.classes.weeklySchedule')}
         </button>
         <button
           onClick={() => setTab('bookings')}
@@ -126,7 +128,7 @@ export default function PortalClasses() {
             tab === 'bookings' ? 'border-b-2 border-brand-600 text-brand-600' : 'text-gray-500'
           }`}
         >
-          My Bookings ({bookings.filter(b => b.status === 'CONFIRMED').length})
+          {t('portal.classes.myBookings')} ({bookings.filter(b => b.status === 'CONFIRMED').length})
         </button>
       </div>
 
@@ -138,7 +140,7 @@ export default function PortalClasses() {
               onClick={() => setWeekOffset(w => w - 1)}
               className="px-3 py-1.5 text-sm border rounded-lg hover:bg-gray-50"
             >
-              &larr; Previous
+              &larr; {t('portal.previous')}
             </button>
             <div className="text-center">
               <p className="text-sm font-semibold text-gray-700">{weekLabel}</p>
@@ -147,7 +149,7 @@ export default function PortalClasses() {
                   onClick={() => setWeekOffset(0)}
                   className="text-xs text-brand-600 hover:text-brand-700"
                 >
-                  Back to this week
+                  {t('portal.classes.backToThisWeek')}
                 </button>
               )}
             </div>
@@ -155,12 +157,12 @@ export default function PortalClasses() {
               onClick={() => setWeekOffset(w => w + 1)}
               className="px-3 py-1.5 text-sm border rounded-lg hover:bg-gray-50"
             >
-              Next &rarr;
+              {t('portal.next')} &rarr;
             </button>
           </div>
 
           {schedulesLoading ? (
-            <p className="text-sm text-gray-400 text-center py-8">Loading schedule...</p>
+            <p className="text-sm text-gray-400 text-center py-8">{t('portal.loadingSchedule')}</p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-7 gap-2">
               {dayNames.map((day, i) => {
@@ -178,7 +180,7 @@ export default function PortalClasses() {
                     </h3>
                     <p className="text-xs text-gray-400 text-center mb-3">{dayDate.toLocaleDateString()}</p>
                     {daySchedules.length === 0 ? (
-                      <p className="text-xs text-gray-400 text-center">No classes</p>
+                      <p className="text-xs text-gray-400 text-center">{t('portal.noClasses')}</p>
                     ) : (
                       <div className="space-y-2">
                         {daySchedules.map(s => {
@@ -202,12 +204,12 @@ export default function PortalClasses() {
                               <p className="text-gray-500">{s.trainerName}</p>
                               <p className={`${isFull ? 'text-red-500' : 'text-gray-500'}`}>
                                 {s.bookedCount}/{s.capacity}
-                                {s.waitlistCount > 0 ? ` (+${s.waitlistCount} waitlist)` : ''}
+                                {s.waitlistCount > 0 ? ` (${t('portal.classes.waitlist', { count: s.waitlistCount })})` : ''}
                               </p>
                               {isPastClass ? (
-                                <span className="text-gray-400 text-[10px]">Past</span>
+                                <span className="text-gray-400 text-[10px]">{t('portal.past')}</span>
                               ) : isBooked ? (
-                                <span className="text-brand-600 font-medium">Booked</span>
+                                <span className="text-brand-600 font-medium">{t('portal.classes.booked')}</span>
                               ) : (
                                 <button
                                   onClick={() => bookMutation.mutate(s.id)}
@@ -216,7 +218,7 @@ export default function PortalClasses() {
                                     isFull ? 'bg-orange-500 hover:bg-orange-600' : 'bg-brand-600 hover:bg-brand-700'
                                   }`}
                                 >
-                                  {bookMutation.isPending ? '...' : isFull ? 'Join Waitlist' : 'Book'}
+                                  {bookMutation.isPending ? '...' : isFull ? t('portal.classes.joinWaitlist') : t('portal.classes.book')}
                                 </button>
                               )}
                             </div>
@@ -235,7 +237,7 @@ export default function PortalClasses() {
       {tab === 'bookings' && (
         <div className="space-y-3">
           {bookings.length === 0 ? (
-            <p className="text-gray-500">No bookings yet. Go to the schedule to book a class!</p>
+            <p className="text-gray-500">{t('portal.classes.noBookings')}</p>
           ) : (
             bookings.map(b => (
               <div key={b.id} className="bg-white rounded-lg shadow p-4 flex items-center justify-between">
@@ -260,7 +262,7 @@ export default function PortalClasses() {
                       onClick={() => cancelBookingMutation.mutate(b.id)}
                       className="text-xs text-red-600 hover:text-red-800"
                     >
-                      Cancel
+                      {t('portal.classes.cancelBooking')}
                     </button>
                   )}
                 </div>

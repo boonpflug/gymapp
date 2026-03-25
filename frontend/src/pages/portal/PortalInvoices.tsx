@@ -1,8 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import api from '../../api/client'
 import type { ApiResponse, InvoiceDto } from '../../types'
 
 export default function PortalInvoices() {
+  const { t } = useTranslation()
+
   const { data: invoicesRes } = useQuery({
     queryKey: ['portal-invoices'],
     queryFn: () => api.get<ApiResponse<InvoiceDto[]>>('/portal/invoices').then(r => r.data),
@@ -12,11 +15,11 @@ export default function PortalInvoices() {
   const outstanding = invoices.filter(i => i.status === 'ISSUED' || i.status === 'OVERDUE')
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">My Invoices</h1>
+      <h1 className="text-2xl font-bold mb-6">{t('portal.invoices.title')}</h1>
 
       {outstanding.length > 0 && (
         <div className="mb-6">
-          <h2 className="text-lg font-semibold mb-3 text-red-700">Outstanding</h2>
+          <h2 className="text-lg font-semibold mb-3 text-red-700">{t('portal.invoices.outstanding')}</h2>
           <div className="space-y-2">
             {outstanding.map(inv => (
               <InvoiceRow key={inv.id} invoice={inv} />
@@ -25,20 +28,20 @@ export default function PortalInvoices() {
         </div>
       )}
 
-      <h2 className="text-lg font-semibold mb-3">All Invoices</h2>
+      <h2 className="text-lg font-semibold mb-3">{t('portal.invoices.allInvoices')}</h2>
       {invoices.length === 0 ? (
-        <p className="text-gray-500">No invoices found.</p>
+        <p className="text-gray-500">{t('portal.invoices.noInvoices')}</p>
       ) : (
         <div className="bg-white rounded-lg shadow overflow-hidden">
           <table className="w-full text-sm">
             <thead className="bg-gray-50">
               <tr>
-                <th className="text-left px-4 py-3 font-medium text-gray-600">Invoice #</th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600">Issued</th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600">Due Date</th>
-                <th className="text-right px-4 py-3 font-medium text-gray-600">Amount</th>
-                <th className="text-right px-4 py-3 font-medium text-gray-600">Total</th>
-                <th className="text-center px-4 py-3 font-medium text-gray-600">Status</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600">{t('portal.invoices.invoiceNumber')}</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600">{t('portal.invoices.issued')}</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600">{t('portal.invoices.dueDate')}</th>
+                <th className="text-right px-4 py-3 font-medium text-gray-600">{t('portal.invoices.amount')}</th>
+                <th className="text-right px-4 py-3 font-medium text-gray-600">{t('portal.invoices.total')}</th>
+                <th className="text-center px-4 py-3 font-medium text-gray-600">{t('portal.invoices.status')}</th>
               </tr>
             </thead>
             <tbody>
@@ -65,11 +68,12 @@ export default function PortalInvoices() {
 }
 
 function InvoiceRow({ invoice }: { invoice: InvoiceDto }) {
+  const { t } = useTranslation()
   return (
     <div className="bg-white rounded-lg shadow p-4 flex items-center justify-between">
       <div>
         <p className="font-medium">{invoice.invoiceNumber}</p>
-        <p className="text-sm text-gray-500">Due: {invoice.dueDate}</p>
+        <p className="text-sm text-gray-500">{t('portal.invoices.due', { date: invoice.dueDate })}</p>
       </div>
       <div className="text-right">
         <p className="text-lg font-semibold text-red-600">&euro;{invoice.totalAmount}</p>

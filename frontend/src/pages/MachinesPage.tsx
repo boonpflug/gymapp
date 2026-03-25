@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import api from '../api/client'
 import type {
   ApiResponse,
@@ -14,19 +15,21 @@ import type {
 } from '../types'
 
 type Tab = 'inventory' | 'sensor' | 'progress' | 'maintenance'
-const tabs: { key: Tab; label: string }[] = [
-  { key: 'inventory', label: 'Inventory' },
-  { key: 'sensor', label: 'Sensor Data' },
-  { key: 'progress', label: 'Strength Progress' },
-  { key: 'maintenance', label: 'Maintenance' },
-]
 
 export default function MachinesPage() {
+  const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState<Tab>('inventory')
+
+  const tabs: { key: Tab; label: string }[] = [
+    { key: 'inventory', label: t('machines.inventory') },
+    { key: 'sensor', label: t('machines.sensorData') },
+    { key: 'progress', label: t('machines.strengthProgress') },
+    { key: 'maintenance', label: t('machines.maintenance') },
+  ]
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Machine Management</h1>
+      <h1 className="text-2xl font-bold text-gray-900 mb-6">{t('machines.title')}</h1>
       <div className="border-b border-gray-200 mb-6">
         <nav className="flex space-x-8">
           {tabs.map((t) => (
@@ -109,6 +112,7 @@ function MeasurementTypeBadge({ type }: { type: MeasurementType }) {
 // ── Inventory Tab ──────────────────────────────────────
 
 function InventoryTab() {
+  const { t } = useTranslation()
   const qc = useQueryClient()
   const [statusFilter, setStatusFilter] = useState<MachineStatus | ''>('')
   const [facilityFilter, setFacilityFilter] = useState('')
@@ -143,14 +147,14 @@ function InventoryTab() {
           onChange={(e) => setStatusFilter(e.target.value as MachineStatus | '')}
           className="border rounded-lg px-3 py-2 text-sm"
         >
-          <option value="">All Statuses</option>
-          <option value="ACTIVE">Active</option>
-          <option value="MAINTENANCE">Maintenance</option>
-          <option value="OUT_OF_ORDER">Out of Order</option>
-          <option value="DECOMMISSIONED">Decommissioned</option>
+          <option value="">{t('machines.allStatuses')}</option>
+          <option value="ACTIVE">{t('machines.active')}</option>
+          <option value="MAINTENANCE">{t('machines.maintenanceStatus')}</option>
+          <option value="OUT_OF_ORDER">{t('machines.outOfOrder')}</option>
+          <option value="DECOMMISSIONED">{t('machines.decommissioned')}</option>
         </select>
         <input
-          placeholder="Filter by Facility ID..."
+          placeholder={t('machines.filterByFacility')}
           value={facilityFilter}
           onChange={(e) => setFacilityFilter(e.target.value)}
           className="border rounded-lg px-3 py-2 text-sm w-56"
@@ -159,14 +163,14 @@ function InventoryTab() {
           onClick={() => setShowRegister(true)}
           className="ml-auto bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700"
         >
-          + Register Machine
+          + {t('machines.registerMachine')}
         </button>
       </div>
 
       {isLoading ? (
-        <p className="text-gray-500 text-sm">Loading machines...</p>
+        <p className="text-gray-500 text-sm">{t('machines.loadingMachines')}</p>
       ) : machines.length === 0 ? (
-        <p className="text-gray-400 text-sm">No machines found.</p>
+        <p className="text-gray-400 text-sm">{t('machines.noMachines')}</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {machines.map((m) => (
@@ -192,10 +196,10 @@ function InventoryTab() {
                   <h3 className="text-sm font-semibold text-gray-900 truncate">{m.name}</h3>
                   {m.fullName && <p className="text-xs text-gray-500 truncate">{m.fullName}</p>}
                   <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2 text-xs text-gray-500">
-                    {m.category && <span>Category: {m.category}</span>}
-                    {m.series && <span>Series: {m.series}</span>}
+                    {m.category && <span>{t('machines.category')}: {m.category}</span>}
+                    {m.series && <span>{t('machines.series')}: {m.series}</span>}
                     {m.serialNumber && <span>S/N: {m.serialNumber}</span>}
-                    {m.facilityId && <span>Facility: {m.facilityId.slice(0, 8)}...</span>}
+                    {m.facilityId && <span>{t('machines.facility')}: {m.facilityId.slice(0, 8)}...</span>}
                   </div>
                 </div>
               </div>
@@ -206,7 +210,7 @@ function InventoryTab() {
                   onClick={() => setStatusDropdown(statusDropdown === m.id ? null : m.id)}
                   className="text-xs text-indigo-600 hover:text-indigo-800 font-medium"
                 >
-                  Change Status
+                  {t('machines.changeStatus')}
                 </button>
                 {statusDropdown === m.id && (
                   <div className="absolute top-6 left-0 bg-white border rounded-lg shadow-lg z-10 py-1">
@@ -238,6 +242,7 @@ function InventoryTab() {
 // ── Register Machine Modal ──────────────────────────────────
 
 function RegisterMachineModal({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation()
   const qc = useQueryClient()
   const [form, setForm] = useState({
     code: '', name: '', fullName: '', series: '', category: '', facilityId: '',
@@ -256,7 +261,7 @@ function RegisterMachineModal({ onClose }: { onClose: () => void }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={onClose} />
       <div className="relative bg-white rounded-xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Register Machine</h2>
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('machines.registerMachine')}</h2>
         <div className="space-y-3">
           <div className="grid grid-cols-2 gap-3">
             <input placeholder="Code *" value={form.code} onChange={(e) => set('code', e.target.value)} className="border rounded-lg px-3 py-2 text-sm" />
@@ -282,14 +287,14 @@ function RegisterMachineModal({ onClose }: { onClose: () => void }) {
             </div>
             <div className="flex items-center gap-2 pt-5">
               <input type="checkbox" checked={form.isComputerAssisted} onChange={(e) => set('isComputerAssisted', e.target.checked)} className="rounded" />
-              <label className="text-sm text-gray-700">Computer-Assisted</label>
+              <label className="text-sm text-gray-700">{t('machines.computerAssisted')}</label>
             </div>
           </div>
           <input placeholder="Image URL" value={form.imageUrl} onChange={(e) => set('imageUrl', e.target.value)} className="border rounded-lg px-3 py-2 text-sm w-full" />
           <textarea placeholder="Notes" value={form.notes} onChange={(e) => set('notes', e.target.value)} rows={2} className="border rounded-lg px-3 py-2 text-sm w-full" />
         </div>
         <div className="flex justify-end gap-3 mt-5">
-          <button onClick={onClose} className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800">Cancel</button>
+          <button onClick={onClose} className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800">{t('common.cancel')}</button>
           <button onClick={() => create.mutate()} disabled={!form.code || !form.name} className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 disabled:opacity-50">
             Register
           </button>
@@ -302,6 +307,7 @@ function RegisterMachineModal({ onClose }: { onClose: () => void }) {
 // ── Sensor Data Tab ──────────────────────────────────────
 
 function SensorDataTab() {
+  const { t } = useTranslation()
   const [memberFilter, setMemberFilter] = useState('')
   const [machineFilter, setMachineFilter] = useState('')
   const [showRecord, setShowRecord] = useState(false)
@@ -330,7 +336,7 @@ function SensorDataTab() {
     <div>
       <div className="flex items-center gap-4 mb-6">
         <input
-          placeholder="Member ID..."
+          placeholder={t('machines.memberIdFilter')}
           value={memberFilter}
           onChange={(e) => setMemberFilter(e.target.value)}
           className="border rounded-lg px-3 py-2 text-sm w-56"
@@ -340,7 +346,7 @@ function SensorDataTab() {
           onChange={(e) => setMachineFilter(e.target.value)}
           className="border rounded-lg px-3 py-2 text-sm"
         >
-          <option value="">All Machines</option>
+          <option value="">{t('machines.allMachines')}</option>
           {machines.map((m) => (
             <option key={m.id} value={m.id}>{m.code} - {m.name}</option>
           ))}
@@ -349,24 +355,24 @@ function SensorDataTab() {
           onClick={() => setShowRecord(true)}
           className="ml-auto bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700"
         >
-          + Record Session
+          {t('machines.recordSession')}
         </button>
       </div>
 
       {isLoading ? (
-        <p className="text-gray-500 text-sm">Loading sessions...</p>
+        <p className="text-gray-500 text-sm">{t('machines.loadingSessions')}</p>
       ) : sessions.length === 0 ? (
-        <p className="text-gray-400 text-sm">No sensor sessions found.</p>
+        <p className="text-gray-400 text-sm">{t('machines.noSessions')}</p>
       ) : (
         <div className="bg-white rounded-xl border overflow-hidden">
           <table className="w-full text-sm">
             <thead className="bg-gray-50 text-gray-600">
               <tr>
-                <th className="text-left px-4 py-3 font-medium">Machine</th>
-                <th className="text-left px-4 py-3 font-medium">Member</th>
-                <th className="text-left px-4 py-3 font-medium">Started</th>
-                <th className="text-left px-4 py-3 font-medium">Duration</th>
-                <th className="text-left px-4 py-3 font-medium">Actions</th>
+                <th className="text-left px-4 py-3 font-medium">{t('machines.machine')}</th>
+                <th className="text-left px-4 py-3 font-medium">{t('machines.member')}</th>
+                <th className="text-left px-4 py-3 font-medium">{t('machines.started')}</th>
+                <th className="text-left px-4 py-3 font-medium">{t('machines.duration')}</th>
+                <th className="text-left px-4 py-3 font-medium">{t('common.actions')}</th>
               </tr>
             </thead>
             <tbody className="divide-y">
@@ -386,7 +392,7 @@ function SensorDataTab() {
                       onClick={() => setViewSession(s)}
                       className="text-indigo-600 hover:text-indigo-800 text-xs font-medium"
                     >
-                      View Data
+                      {t('machines.viewData')}
                     </button>
                   </td>
                 </tr>
@@ -402,17 +408,17 @@ function SensorDataTab() {
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={() => setViewSession(null)} />
           <div className="relative bg-white rounded-xl shadow-2xl w-full max-w-lg max-h-[80vh] overflow-y-auto p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-2">Session Details</h2>
+            <h2 className="text-lg font-semibold text-gray-900 mb-2">{t('machines.sessionDetails')}</h2>
             <p className="text-sm text-gray-500 mb-1">{viewSession.machineCode} - {viewSession.machineName}</p>
             <p className="text-sm text-gray-500 mb-4">Member: {viewSession.memberName || viewSession.memberId}</p>
             <div className="bg-gray-50 rounded-lg p-4">
-              <h3 className="text-xs font-medium text-gray-600 mb-2">Raw Sensor Data</h3>
+              <h3 className="text-xs font-medium text-gray-600 mb-2">{t('machines.rawSensorData')}</h3>
               <pre className="text-xs text-gray-800 whitespace-pre-wrap break-all font-mono">
-                {viewSession.sensorData ? JSON.stringify(JSON.parse(viewSession.sensorData), null, 2) : 'No sensor data available'}
+                {viewSession.sensorData ? JSON.stringify(JSON.parse(viewSession.sensorData), null, 2) : t('machines.noSensorData')}
               </pre>
             </div>
             <div className="flex justify-end mt-4">
-              <button onClick={() => setViewSession(null)} className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800">Close</button>
+              <button onClick={() => setViewSession(null)} className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800">{t('common.close')}</button>
             </div>
           </div>
         </div>
@@ -424,6 +430,7 @@ function SensorDataTab() {
 // ── Record Session Modal ──────────────────────────────────
 
 function RecordSessionModal({ machines, onClose }: { machines: MachineDto[]; onClose: () => void }) {
+  const { t } = useTranslation()
   const qc = useQueryClient()
   const [form, setForm] = useState({
     machineId: '', memberId: '', startedAt: '', endedAt: '', sensorData: '',
@@ -440,10 +447,10 @@ function RecordSessionModal({ machines, onClose }: { machines: MachineDto[]; onC
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={onClose} />
       <div className="relative bg-white rounded-xl shadow-2xl w-full max-w-lg p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Record Sensor Session</h2>
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('machines.recordSensorSession')}</h2>
         <div className="space-y-3">
           <select value={form.machineId} onChange={(e) => set('machineId', e.target.value)} className="border rounded-lg px-3 py-2 text-sm w-full">
-            <option value="">Select Machine</option>
+            <option value="">{t('machines.selectMachine')}</option>
             {machines.map((m) => <option key={m.id} value={m.id}>{m.code} - {m.name}</option>)}
           </select>
           <input placeholder="Member ID *" value={form.memberId} onChange={(e) => set('memberId', e.target.value)} className="border rounded-lg px-3 py-2 text-sm w-full" />
@@ -463,7 +470,7 @@ function RecordSessionModal({ machines, onClose }: { machines: MachineDto[]; onC
           </div>
         </div>
         <div className="flex justify-end gap-3 mt-5">
-          <button onClick={onClose} className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800">Cancel</button>
+          <button onClick={onClose} className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800">{t('common.cancel')}</button>
           <button onClick={() => create.mutate()} disabled={!form.machineId || !form.memberId} className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 disabled:opacity-50">
             Record
           </button>
@@ -476,6 +483,7 @@ function RecordSessionModal({ machines, onClose }: { machines: MachineDto[]; onC
 // ── Strength Progress Tab ──────────────────────────────────────
 
 function StrengthProgressTab() {
+  const { t } = useTranslation()
   const [memberId, setMemberId] = useState('')
   const [machineId, setMachineId] = useState('')
   const [measurementType, setMeasurementType] = useState<MeasurementType | ''>('')
@@ -529,7 +537,7 @@ function StrengthProgressTab() {
 
     return (
       <div className="bg-white rounded-xl border p-4 mb-4">
-        <h3 className="text-sm font-semibold text-gray-900 mb-3">Peak Force Over Time</h3>
+        <h3 className="text-sm font-semibold text-gray-900 mb-3">{t('machines.peakForceOverTime')}</h3>
         <svg viewBox={`0 0 ${w} ${h}`} className="w-full" style={{ maxHeight: 220 }}>
           {/* Grid lines */}
           {[0, 0.25, 0.5, 0.75, 1].map((pct) => {
@@ -563,25 +571,25 @@ function StrengthProgressTab() {
           className="border rounded-lg px-3 py-2 text-sm w-56"
         />
         <select value={machineId} onChange={(e) => setMachineId(e.target.value)} className="border rounded-lg px-3 py-2 text-sm">
-          <option value="">All Machines</option>
+          <option value="">{t('machines.allMachines')}</option>
           {machines.map((m) => <option key={m.id} value={m.id}>{m.code} - {m.name}</option>)}
         </select>
         <select value={measurementType} onChange={(e) => setMeasurementType(e.target.value as MeasurementType | '')} className="border rounded-lg px-3 py-2 text-sm">
-          <option value="">All Types</option>
-          <option value="ISOMETRIC">Isometric</option>
-          <option value="DYNAMIC">Dynamic</option>
-          <option value="RANGE_OF_MOTION">Range of Motion</option>
+          <option value="">{t('machines.allTypes')}</option>
+          <option value="ISOMETRIC">{t('machines.isometric')}</option>
+          <option value="DYNAMIC">{t('machines.dynamic')}</option>
+          <option value="RANGE_OF_MOTION">{t('machines.rangeOfMotion')}</option>
         </select>
         <button
           onClick={handleFetch}
           disabled={!memberId}
           className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 disabled:opacity-50"
         >
-          Fetch Progress
+          {t('machines.fetchProgress')}
         </button>
       </div>
 
-      {isLoading && <p className="text-gray-500 text-sm">Loading progress...</p>}
+      {isLoading && <p className="text-gray-500 text-sm">{t('machines.loadingProgress')}</p>}
 
       {progress && (
         <div>
@@ -589,23 +597,23 @@ function StrengthProgressTab() {
           <div className="bg-white rounded-xl border p-4 mb-4">
             <div className="flex items-center gap-6">
               <div>
-                <p className="text-xs text-gray-500">Member</p>
+                <p className="text-xs text-gray-500">{t('machines.member')}</p>
                 <p className="text-sm font-semibold text-gray-900">{progress.memberName}</p>
               </div>
               <div>
-                <p className="text-xs text-gray-500">Machine</p>
+                <p className="text-xs text-gray-500">{t('machines.machine')}</p>
                 <p className="text-sm font-semibold text-gray-900">{progress.machineCode} - {progress.machineName}</p>
               </div>
               <div>
-                <p className="text-xs text-gray-500">Initial Peak Force</p>
+                <p className="text-xs text-gray-500">{t('machines.initialPeakForce')}</p>
                 <p className="text-sm font-semibold text-gray-900">{progress.initialPeakForce ? `${progress.initialPeakForce} N` : '-'}</p>
               </div>
               <div>
-                <p className="text-xs text-gray-500">Latest Peak Force</p>
+                <p className="text-xs text-gray-500">{t('machines.latestPeakForce')}</p>
                 <p className="text-sm font-semibold text-gray-900">{progress.latestPeakForce ? `${progress.latestPeakForce} N` : '-'}</p>
               </div>
               <div>
-                <p className="text-xs text-gray-500">Improvement</p>
+                <p className="text-xs text-gray-500">{t('machines.improvement')}</p>
                 <p className={`text-sm font-bold ${progress.improvementPercent >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                   {progress.improvementPercent >= 0 ? '+' : ''}{progress.improvementPercent.toFixed(1)}%
                 </p>
@@ -622,14 +630,14 @@ function StrengthProgressTab() {
               <table className="w-full text-sm">
                 <thead className="bg-gray-50 text-gray-600">
                   <tr>
-                    <th className="text-left px-4 py-3 font-medium">Date</th>
-                    <th className="text-left px-4 py-3 font-medium">Type</th>
-                    <th className="text-left px-4 py-3 font-medium">Peak Force</th>
-                    <th className="text-left px-4 py-3 font-medium">Avg Force</th>
-                    <th className="text-left px-4 py-3 font-medium">ROM</th>
-                    <th className="text-left px-4 py-3 font-medium">TUT</th>
-                    <th className="text-left px-4 py-3 font-medium">Reps</th>
-                    <th className="text-left px-4 py-3 font-medium">Set #</th>
+                    <th className="text-left px-4 py-3 font-medium">{t('machines.measurementDate')}</th>
+                    <th className="text-left px-4 py-3 font-medium">{t('machines.measurementType')}</th>
+                    <th className="text-left px-4 py-3 font-medium">{t('machines.peakForce')}</th>
+                    <th className="text-left px-4 py-3 font-medium">{t('machines.avgForce')}</th>
+                    <th className="text-left px-4 py-3 font-medium">{t('machines.rom')}</th>
+                    <th className="text-left px-4 py-3 font-medium">{t('machines.tut')}</th>
+                    <th className="text-left px-4 py-3 font-medium">{t('machines.reps')}</th>
+                    <th className="text-left px-4 py-3 font-medium">{t('machines.setNumber')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y">
@@ -660,6 +668,7 @@ function StrengthProgressTab() {
 // ── Maintenance Tab ──────────────────────────────────────
 
 function MaintenanceTab() {
+  const { t } = useTranslation()
   const [machineFilter, setMachineFilter] = useState('')
   const [showLog, setShowLog] = useState(false)
 
@@ -694,7 +703,7 @@ function MaintenanceTab() {
       {/* Upcoming maintenance alerts */}
       {upcomingMachines.length > 0 && (
         <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6">
-          <h3 className="text-sm font-semibold text-amber-800 mb-2">Upcoming Maintenance (next 7 days)</h3>
+          <h3 className="text-sm font-semibold text-amber-800 mb-2">{t('machines.upcomingMaintenance')}</h3>
           <div className="space-y-1">
             {upcomingMachines.map((m) => (
               <div key={m.id} className="flex items-center gap-2 text-sm">
@@ -713,7 +722,7 @@ function MaintenanceTab() {
           onChange={(e) => setMachineFilter(e.target.value)}
           className="border rounded-lg px-3 py-2 text-sm"
         >
-          <option value="">All Machines</option>
+          <option value="">{t('machines.allMachines')}</option>
           {machines.map((m) => (
             <option key={m.id} value={m.id}>{m.code} - {m.name}</option>
           ))}
@@ -722,26 +731,26 @@ function MaintenanceTab() {
           onClick={() => setShowLog(true)}
           className="ml-auto bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700"
         >
-          + Log Maintenance
+          {t('machines.logMaintenance')}
         </button>
       </div>
 
       {isLoading ? (
-        <p className="text-gray-500 text-sm">Loading maintenance logs...</p>
+        <p className="text-gray-500 text-sm">{t('machines.loadingMaintenanceLogs')}</p>
       ) : logs.length === 0 ? (
-        <p className="text-gray-400 text-sm">No maintenance logs found.</p>
+        <p className="text-gray-400 text-sm">{t('machines.noMaintenanceLogs')}</p>
       ) : (
         <div className="bg-white rounded-xl border overflow-hidden">
           <table className="w-full text-sm">
             <thead className="bg-gray-50 text-gray-600">
               <tr>
-                <th className="text-left px-4 py-3 font-medium">Machine</th>
-                <th className="text-left px-4 py-3 font-medium">Type</th>
-                <th className="text-left px-4 py-3 font-medium">Description</th>
-                <th className="text-left px-4 py-3 font-medium">Performed By</th>
-                <th className="text-left px-4 py-3 font-medium">Date</th>
-                <th className="text-left px-4 py-3 font-medium">Next Due</th>
-                <th className="text-left px-4 py-3 font-medium">Cost</th>
+                <th className="text-left px-4 py-3 font-medium">{t('machines.machine')}</th>
+                <th className="text-left px-4 py-3 font-medium">{t('machines.maintenanceType')}</th>
+                <th className="text-left px-4 py-3 font-medium">{t('common.description')}</th>
+                <th className="text-left px-4 py-3 font-medium">{t('machines.performedBy')}</th>
+                <th className="text-left px-4 py-3 font-medium">{t('common.date')}</th>
+                <th className="text-left px-4 py-3 font-medium">{t('machines.nextDueDate')}</th>
+                <th className="text-left px-4 py-3 font-medium">{t('machines.cost')}</th>
               </tr>
             </thead>
             <tbody className="divide-y">
@@ -769,6 +778,7 @@ function MaintenanceTab() {
 // ── Log Maintenance Modal ──────────────────────────────────
 
 function LogMaintenanceModal({ machines, onClose }: { machines: MachineDto[]; onClose: () => void }) {
+  const { t } = useTranslation()
   const qc = useQueryClient()
   const [form, setForm] = useState({
     machineId: '', maintenanceType: 'ROUTINE' as MaintenanceType, description: '',
@@ -790,17 +800,17 @@ function LogMaintenanceModal({ machines, onClose }: { machines: MachineDto[]; on
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={onClose} />
       <div className="relative bg-white rounded-xl shadow-2xl w-full max-w-lg p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Log Maintenance</h2>
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('machines.logMaintenanceTitle')}</h2>
         <div className="space-y-3">
           <select value={form.machineId} onChange={(e) => set('machineId', e.target.value)} className="border rounded-lg px-3 py-2 text-sm w-full">
-            <option value="">Select Machine *</option>
+            <option value="">{t('machines.selectMachineRequired')}</option>
             {machines.map((m) => <option key={m.id} value={m.id}>{m.code} - {m.name}</option>)}
           </select>
           <select value={form.maintenanceType} onChange={(e) => set('maintenanceType', e.target.value)} className="border rounded-lg px-3 py-2 text-sm w-full">
-            <option value="ROUTINE">Routine</option>
-            <option value="REPAIR">Repair</option>
-            <option value="CALIBRATION">Calibration</option>
-            <option value="FIRMWARE_UPDATE">Firmware Update</option>
+            <option value="ROUTINE">{t('machines.routine')}</option>
+            <option value="REPAIR">{t('machines.repair')}</option>
+            <option value="CALIBRATION">{t('machines.calibration')}</option>
+            <option value="FIRMWARE_UPDATE">{t('machines.firmwareUpdate')}</option>
           </select>
           <input placeholder="Description" value={form.description} onChange={(e) => set('description', e.target.value)} className="border rounded-lg px-3 py-2 text-sm w-full" />
           <input placeholder="Performed By" value={form.performedBy} onChange={(e) => set('performedBy', e.target.value)} className="border rounded-lg px-3 py-2 text-sm w-full" />
@@ -818,7 +828,7 @@ function LogMaintenanceModal({ machines, onClose }: { machines: MachineDto[]; on
           <textarea placeholder="Notes" value={form.notes} onChange={(e) => set('notes', e.target.value)} rows={2} className="border rounded-lg px-3 py-2 text-sm w-full" />
         </div>
         <div className="flex justify-end gap-3 mt-5">
-          <button onClick={onClose} className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800">Cancel</button>
+          <button onClick={onClose} className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800">{t('common.cancel')}</button>
           <button onClick={() => create.mutate()} disabled={!form.machineId || !form.performedAt} className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 disabled:opacity-50">
             Log
           </button>

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import api from '../api/client'
 import type {
@@ -24,18 +25,19 @@ const DELAY_DIRECTIONS: DelayDirection[] = ['IMMEDIATE', 'BEFORE', 'AFTER']
 type Tab = 'templates' | 'rules' | 'messages' | 'stats'
 
 export default function CommunicationPage() {
+  const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState<Tab>('templates')
 
   const tabs: { key: Tab; label: string }[] = [
-    { key: 'templates', label: 'Templates' },
-    { key: 'rules', label: 'Notification Rules' },
-    { key: 'messages', label: 'Message History' },
-    { key: 'stats', label: 'Stats' },
+    { key: 'templates', label: t('communication.templates') },
+    { key: 'rules', label: t('communication.notificationRules') },
+    { key: 'messages', label: t('communication.messageHistory') },
+    { key: 'stats', label: t('communication.stats') },
   ]
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Communication</h1>
+      <h1 className="text-2xl font-bold text-gray-900 mb-6">{t('communication.title')}</h1>
       <div className="border-b border-gray-200 mb-6">
         <nav className="flex space-x-8">
           {tabs.map((tab) => (
@@ -65,6 +67,7 @@ export default function CommunicationPage() {
 // ===================== TEMPLATES =====================
 
 function TemplateList() {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const [showCreate, setShowCreate] = useState(false)
   const [selectedTemplate, setSelectedTemplate] = useState<CommunicationTemplateDto | null>(null)
@@ -120,7 +123,7 @@ function TemplateList() {
           onChange={(e) => setChannelFilter(e.target.value)}
           className="border rounded-lg px-3 py-2 text-sm"
         >
-          <option value="">All Channels</option>
+          <option value="">{t('communication.allChannels')}</option>
           {CHANNEL_TYPES.map((c) => (
             <option key={c} value={c}>{c}</option>
           ))}
@@ -129,31 +132,31 @@ function TemplateList() {
           onClick={() => setShowCreate(true)}
           className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-700"
         >
-          Create Template
+          {t('communication.createTemplate')}
         </button>
       </div>
 
       {isLoading ? (
-        <p className="text-gray-500">Loading templates...</p>
+        <p className="text-gray-500">{t('communication.loadingTemplates')}</p>
       ) : (
         <div className="space-y-3">
-          {templates.map((t) => (
+          {templates.map((tmpl) => (
             <div
-              key={t.id}
-              onClick={() => setSelectedTemplate(t)}
+              key={tmpl.id}
+              onClick={() => setSelectedTemplate(tmpl)}
               className="bg-white rounded-lg shadow p-4 cursor-pointer hover:shadow-md transition-shadow"
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="font-medium text-gray-900">{t.name}</h3>
-                  {t.subject && <p className="text-sm text-gray-500 mt-1">Subject: {t.subject}</p>}
+                  <h3 className="font-medium text-gray-900">{tmpl.name}</h3>
+                  {tmpl.subject && <p className="text-sm text-gray-500 mt-1">{t('communication.subject')}: {tmpl.subject}</p>}
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className={`text-xs px-2 py-0.5 rounded ${channelColor(t.channelType)}`}>
-                    {t.channelType}
+                  <span className={`text-xs px-2 py-0.5 rounded ${channelColor(tmpl.channelType)}`}>
+                    {tmpl.channelType}
                   </span>
-                  {t.category && (
-                    <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded">{t.category}</span>
+                  {tmpl.category && (
+                    <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded">{tmpl.category}</span>
                   )}
                 </div>
               </div>
@@ -190,6 +193,7 @@ function CreateTemplateModal({
   onSubmit: (data: Record<string, unknown>) => void
   isLoading: boolean
 }) {
+  const { t } = useTranslation()
   const [form, setForm] = useState({
     name: '',
     channelType: 'EMAIL' as ChannelType,
@@ -204,10 +208,10 @@ function CreateTemplateModal({
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto p-6">
-        <h2 className="text-lg font-bold mb-4">Create Template</h2>
+        <h2 className="text-lg font-bold mb-4">{t('communication.createTemplateTitle')}</h2>
         <div className="space-y-3">
           <input
-            placeholder="Template name *"
+            placeholder={t('communication.templateName')}
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
             className="w-full border rounded px-3 py-2 text-sm"
@@ -222,20 +226,20 @@ function CreateTemplateModal({
             ))}
           </select>
           <input
-            placeholder="Subject (for email)"
+            placeholder={t('communication.subjectForEmail')}
             value={form.subject}
             onChange={(e) => setForm({ ...form, subject: e.target.value })}
             className="w-full border rounded px-3 py-2 text-sm"
           />
           <textarea
-            placeholder="Body HTML — use {{member.firstName}}, {{studio.name}}, etc."
+            placeholder={t('communication.bodyHtmlPlaceholder')}
             value={form.bodyHtml}
             onChange={(e) => setForm({ ...form, bodyHtml: e.target.value })}
             className="w-full border rounded px-3 py-2 text-sm font-mono"
             rows={6}
           />
           <textarea
-            placeholder="Body plain text (fallback)"
+            placeholder={t('communication.bodyTextPlaceholder')}
             value={form.bodyText}
             onChange={(e) => setForm({ ...form, bodyText: e.target.value })}
             className="w-full border rounded px-3 py-2 text-sm"
@@ -243,13 +247,13 @@ function CreateTemplateModal({
           />
           <div className="grid grid-cols-3 gap-3">
             <input
-              placeholder="Category"
+              placeholder={t('communication.categoryPlaceholder')}
               value={form.category}
               onChange={(e) => setForm({ ...form, category: e.target.value })}
               className="border rounded px-3 py-2 text-sm"
             />
             <input
-              placeholder="Locale"
+              placeholder={t('communication.locale')}
               value={form.locale}
               onChange={(e) => setForm({ ...form, locale: e.target.value })}
               className="border rounded px-3 py-2 text-sm"
@@ -259,12 +263,12 @@ function CreateTemplateModal({
               value={form.brandColor}
               onChange={(e) => setForm({ ...form, brandColor: e.target.value })}
               className="border rounded px-1 py-1 h-10"
-              title="Brand color"
+              title={t('communication.brandColor')}
             />
           </div>
         </div>
         <div className="flex justify-end gap-3 mt-6">
-          <button onClick={onClose} className="px-4 py-2 text-sm text-gray-600">Cancel</button>
+          <button onClick={onClose} className="px-4 py-2 text-sm text-gray-600">{t('communication.cancel')}</button>
           <button
             onClick={() => onSubmit({
               ...form,
@@ -275,7 +279,7 @@ function CreateTemplateModal({
             disabled={!form.name || isLoading}
             className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-700 disabled:opacity-50"
           >
-            {isLoading ? 'Creating...' : 'Create Template'}
+            {isLoading ? t('communication.creating') : t('communication.createTemplate')}
           </button>
         </div>
       </div>
@@ -292,6 +296,7 @@ function TemplateDetailModal({
   onClose: () => void
   onDeactivate: (id: string) => void
 }) {
+  const { t } = useTranslation()
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto p-6">
@@ -302,11 +307,11 @@ function TemplateDetailModal({
         <div className="space-y-3">
           <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded">{template.channelType}</span>
           {template.subject && (
-            <p className="text-sm"><span className="font-medium">Subject:</span> {template.subject}</p>
+            <p className="text-sm"><span className="font-medium">{t('communication.subject')}:</span> {template.subject}</p>
           )}
           {template.bodyHtml && (
             <div>
-              <h4 className="text-sm font-medium mb-1">Body HTML</h4>
+              <h4 className="text-sm font-medium mb-1">{t('communication.bodyHtml')}</h4>
               <div className="bg-gray-50 rounded p-3 text-xs font-mono whitespace-pre-wrap max-h-48 overflow-y-auto">
                 {template.bodyHtml}
               </div>
@@ -314,13 +319,13 @@ function TemplateDetailModal({
           )}
           {template.bodyText && (
             <div>
-              <h4 className="text-sm font-medium mb-1">Body Text</h4>
+              <h4 className="text-sm font-medium mb-1">{t('communication.bodyText')}</h4>
               <p className="text-sm text-gray-600 bg-gray-50 rounded p-3">{template.bodyText}</p>
             </div>
           )}
           <div className="flex gap-4 text-xs text-gray-500">
-            {template.category && <span>Category: {template.category}</span>}
-            {template.locale && <span>Locale: {template.locale}</span>}
+            {template.category && <span>{t('communication.categoryPlaceholder')}: {template.category}</span>}
+            {template.locale && <span>{t('communication.locale')}: {template.locale}</span>}
           </div>
         </div>
         <div className="flex justify-end gap-2 mt-6 border-t pt-4">
@@ -328,7 +333,7 @@ function TemplateDetailModal({
             onClick={() => onDeactivate(template.id)}
             className="text-sm text-red-600 hover:text-red-800"
           >
-            Deactivate
+            {t('communication.deactivate')}
           </button>
         </div>
       </div>
@@ -339,6 +344,7 @@ function TemplateDetailModal({
 // ===================== NOTIFICATION RULES =====================
 
 function RuleList() {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const [showCreate, setShowCreate] = useState(false)
 
@@ -377,14 +383,14 @@ function RuleList() {
           onClick={() => setShowCreate(true)}
           className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-700"
         >
-          Create Rule
+          {t('communication.createRule')}
         </button>
       </div>
 
       {isLoading ? (
-        <p className="text-gray-500">Loading rules...</p>
+        <p className="text-gray-500">{t('communication.loadingRules')}</p>
       ) : rules.length === 0 ? (
-        <p className="text-gray-400">No notification rules yet. Create one to automate communications.</p>
+        <p className="text-gray-400">{t('communication.noRulesYet')}</p>
       ) : (
         <div className="space-y-3">
           {rules.map((rule) => (
@@ -393,13 +399,13 @@ function RuleList() {
                 <div>
                   <h3 className="font-medium text-gray-900">{rule.name}</h3>
                   <p className="text-xs text-gray-500 mt-1">
-                    Trigger: <span className="font-medium">{rule.triggerEvent.replace(/_/g, ' ')}</span>
+                    {t('communication.trigger')} <span className="font-medium">{rule.triggerEvent.replace(/_/g, ' ')}</span>
                     {' '}&rarr;{' '}
                     <span className="font-medium">{rule.channelType}</span>
                     {rule.delayDays > 0 && (
-                      <> ({rule.delayDays} days {rule.delayDirection.toLowerCase()})</>
+                      <> ({rule.delayDays} {t('communication.days')} {rule.delayDirection.toLowerCase()})</>
                     )}
-                    {rule.templateName && <> &middot; Template: {rule.templateName}</>}
+                    {rule.templateName && <> &middot; {t('communication.template')} {rule.templateName}</>}
                   </p>
                   {rule.description && (
                     <p className="text-sm text-gray-600 mt-1">{rule.description}</p>
@@ -414,13 +420,13 @@ function RuleList() {
                         : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
                     }`}
                   >
-                    {rule.active ? 'Active' : 'Inactive'}
+                    {rule.active ? t('communication.active') : t('communication.inactive')}
                   </button>
                   <button
                     onClick={() => deleteMutation.mutate(rule.id)}
                     className="text-xs text-red-400 hover:text-red-600"
                   >
-                    Delete
+                    {t('communication.delete')}
                   </button>
                 </div>
               </div>
@@ -449,6 +455,7 @@ function CreateRuleModal({
   onSubmit: (data: Record<string, unknown>) => void
   isLoading: boolean
 }) {
+  const { t } = useTranslation()
   const [form, setForm] = useState({
     name: '',
     triggerEvent: 'WELCOME' as TriggerEvent,
@@ -472,10 +479,10 @@ function CreateRuleModal({
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6">
-        <h2 className="text-lg font-bold mb-4">Create Notification Rule</h2>
+        <h2 className="text-lg font-bold mb-4">{t('communication.createNotificationRule')}</h2>
         <div className="space-y-3">
           <input
-            placeholder="Rule name *"
+            placeholder={t('communication.ruleName')}
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
             className="w-full border rounded px-3 py-2 text-sm"
@@ -485,8 +492,8 @@ function CreateRuleModal({
             onChange={(e) => setForm({ ...form, triggerEvent: e.target.value as TriggerEvent })}
             className="w-full border rounded px-3 py-2 text-sm"
           >
-            {TRIGGER_EVENTS.map((t) => (
-              <option key={t} value={t}>{t.replace(/_/g, ' ')}</option>
+            {TRIGGER_EVENTS.map((te) => (
+              <option key={te} value={te}>{te.replace(/_/g, ' ')}</option>
             ))}
           </select>
           <select
@@ -494,9 +501,9 @@ function CreateRuleModal({
             onChange={(e) => setForm({ ...form, templateId: e.target.value })}
             className="w-full border rounded px-3 py-2 text-sm"
           >
-            <option value="">Select template *</option>
-            {(templates?.data ?? []).map((t) => (
-              <option key={t.id} value={t.id}>{t.name} ({t.channelType})</option>
+            <option value="">{t('communication.selectTemplate')}</option>
+            {(templates?.data ?? []).map((tmpl) => (
+              <option key={tmpl.id} value={tmpl.id}>{tmpl.name} ({tmpl.channelType})</option>
             ))}
           </select>
           <select
@@ -520,7 +527,7 @@ function CreateRuleModal({
             </select>
             <input
               type="number"
-              placeholder="Delay days"
+              placeholder={t('communication.delayDays')}
               value={form.delayDays}
               onChange={(e) => setForm({ ...form, delayDays: parseInt(e.target.value) || 0 })}
               className="border rounded px-3 py-2 text-sm"
@@ -528,7 +535,7 @@ function CreateRuleModal({
             />
           </div>
           <textarea
-            placeholder="Description"
+            placeholder={t('communication.description')}
             value={form.description}
             onChange={(e) => setForm({ ...form, description: e.target.value })}
             className="w-full border rounded px-3 py-2 text-sm"
@@ -536,7 +543,7 @@ function CreateRuleModal({
           />
         </div>
         <div className="flex justify-end gap-3 mt-6">
-          <button onClick={onClose} className="px-4 py-2 text-sm text-gray-600">Cancel</button>
+          <button onClick={onClose} className="px-4 py-2 text-sm text-gray-600">{t('communication.cancel')}</button>
           <button
             onClick={() => onSubmit({
               ...form,
@@ -545,7 +552,7 @@ function CreateRuleModal({
             disabled={!form.name || !form.templateId || isLoading}
             className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-700 disabled:opacity-50"
           >
-            {isLoading ? 'Creating...' : 'Create Rule'}
+            {isLoading ? t('communication.creating') : t('communication.createRuleBtn')}
           </button>
         </div>
       </div>
@@ -556,6 +563,7 @@ function CreateRuleModal({
 // ===================== MESSAGE HISTORY =====================
 
 function MessageHistory() {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const [statusFilter, setStatusFilter] = useState<string>('')
 
@@ -597,30 +605,30 @@ function MessageHistory() {
           onChange={(e) => setStatusFilter(e.target.value)}
           className="border rounded-lg px-3 py-2 text-sm"
         >
-          <option value="">All Statuses</option>
-          <option value="PENDING">Pending</option>
-          <option value="SENT">Sent</option>
-          <option value="DELIVERED">Delivered</option>
-          <option value="FAILED">Failed</option>
-          <option value="OPENED">Opened</option>
+          <option value="">{t('communication.allStatuses')}</option>
+          <option value="PENDING">{t('communication.pending')}</option>
+          <option value="SENT">{t('communication.sent')}</option>
+          <option value="DELIVERED">{t('communication.delivered')}</option>
+          <option value="FAILED">{t('communication.failed')}</option>
+          <option value="OPENED">{t('communication.opened')}</option>
         </select>
       </div>
 
       {isLoading ? (
-        <p className="text-gray-500">Loading messages...</p>
+        <p className="text-gray-500">{t('communication.loadingMessages')}</p>
       ) : messages.length === 0 ? (
-        <p className="text-gray-400">No messages sent yet.</p>
+        <p className="text-gray-400">{t('communication.noMessagesSent')}</p>
       ) : (
         <div className="bg-white rounded-lg shadow overflow-hidden">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">Member</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">Channel</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">Subject</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">Status</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">Sent</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">Actions</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">{t('communication.memberCol')}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">{t('communication.channel')}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">{t('communication.subjectCol')}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">{t('communication.statusCol')}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">{t('communication.sentCol')}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">{t('communication.actions')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
@@ -645,7 +653,7 @@ function MessageHistory() {
                         onClick={() => resendMutation.mutate(msg.id)}
                         className="text-xs text-brand-600 hover:text-brand-700"
                       >
-                        Resend
+                        {t('communication.resend')}
                       </button>
                     )}
                   </td>
@@ -662,6 +670,7 @@ function MessageHistory() {
 // ===================== STATS =====================
 
 function StatsView() {
+  const { t } = useTranslation()
   const { data, isLoading } = useQuery({
     queryKey: ['message-stats'],
     queryFn: async () => {
@@ -670,19 +679,19 @@ function StatsView() {
     },
   })
 
-  if (isLoading || !data) return <p className="text-gray-500">Loading stats...</p>
+  if (isLoading || !data) return <p className="text-gray-500">{t('communication.loadingStats')}</p>
 
   const stats = [
-    { label: 'Total Sent', value: data.totalSent, color: 'bg-blue-50 text-blue-700' },
-    { label: 'Delivered', value: data.delivered, color: 'bg-green-50 text-green-700' },
-    { label: 'Opened', value: data.opened, color: 'bg-purple-50 text-purple-700' },
-    { label: 'Failed', value: data.failed, color: 'bg-red-50 text-red-700' },
-    { label: 'Pending', value: data.pending, color: 'bg-yellow-50 text-yellow-700' },
+    { label: t('communication.totalSent'), value: data.totalSent, color: 'bg-blue-50 text-blue-700' },
+    { label: t('communication.delivered'), value: data.delivered, color: 'bg-green-50 text-green-700' },
+    { label: t('communication.opened'), value: data.opened, color: 'bg-purple-50 text-purple-700' },
+    { label: t('communication.failed'), value: data.failed, color: 'bg-red-50 text-red-700' },
+    { label: t('communication.pending'), value: data.pending, color: 'bg-yellow-50 text-yellow-700' },
   ]
 
   return (
     <div>
-      <p className="text-sm text-gray-500 mb-4">Last 30 days</p>
+      <p className="text-sm text-gray-500 mb-4">{t('communication.last30Days')}</p>
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         {stats.map((s) => (
           <div key={s.label} className={`rounded-lg p-4 ${s.color}`}>
@@ -693,7 +702,7 @@ function StatsView() {
       </div>
       {data.totalSent > 0 && (
         <div className="mt-6 bg-white rounded-lg shadow p-4">
-          <h3 className="text-sm font-medium mb-3">Delivery Rate</h3>
+          <h3 className="text-sm font-medium mb-3">{t('communication.deliveryRate')}</h3>
           <div className="flex items-center gap-4">
             <div className="flex-1 bg-gray-200 rounded-full h-3">
               <div

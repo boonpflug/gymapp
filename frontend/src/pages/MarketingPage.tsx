@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import api from '../api/client'
 import type {
@@ -15,31 +16,33 @@ import type {
 } from '../types'
 
 type Tab = 'campaigns' | 'audience' | 'atrisk'
-const tabs: { key: Tab; label: string }[] = [
-  { key: 'campaigns', label: 'Campaigns' },
-  { key: 'audience', label: 'Audience Builder' },
-  { key: 'atrisk', label: 'At-Risk Members' },
-]
 
 export default function MarketingPage() {
+  const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState<Tab>('campaigns')
+
+  const tabItems: { key: Tab; label: string }[] = [
+    { key: 'campaigns', label: t('marketing.campaigns') },
+    { key: 'audience', label: t('marketing.audienceBuilder') },
+    { key: 'atrisk', label: t('marketing.atRiskMembers') },
+  ]
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Marketing</h1>
+      <h1 className="text-2xl font-bold text-gray-900 mb-6">{t('marketing.title')}</h1>
       <div className="border-b border-gray-200 mb-6">
         <nav className="flex space-x-8">
-          {tabs.map((t) => (
+          {tabItems.map((tabItem) => (
             <button
-              key={t.key}
-              onClick={() => setActiveTab(t.key)}
+              key={tabItem.key}
+              onClick={() => setActiveTab(tabItem.key)}
               className={`py-3 px-1 border-b-2 text-sm font-medium ${
-                activeTab === t.key
+                activeTab === tabItem.key
                   ? 'border-brand-500 text-brand-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
-              {t.label}
+              {tabItem.label}
             </button>
           ))}
         </nav>
@@ -54,6 +57,7 @@ export default function MarketingPage() {
 // ── Campaigns Tab ──────────────────────────────────────
 
 function CampaignsTab() {
+  const { t } = useTranslation()
   const [page, setPage] = useState(0)
   const [statusFilter, setStatusFilter] = useState<string>('')
   const [showCreate, setShowCreate] = useState(false)
@@ -83,11 +87,11 @@ function CampaignsTab() {
       {/* Stats Cards */}
       {stats && (
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
-          <StatCard label="Total Campaigns" value={stats.totalCampaigns} />
-          <StatCard label="Total Sent" value={stats.totalSent} />
-          <StatCard label="Delivered" value={stats.totalDelivered} />
-          <StatCard label="Opened" value={stats.totalOpened} />
-          <StatCard label="Avg Open Rate" value={`${stats.avgOpenRate.toFixed(1)}%`} />
+          <StatCard label={t('marketing.totalCampaigns')} value={stats.totalCampaigns} />
+          <StatCard label={t('marketing.totalSent')} value={stats.totalSent} />
+          <StatCard label={t('marketing.delivered')} value={stats.totalDelivered} />
+          <StatCard label={t('marketing.opened')} value={stats.totalOpened} />
+          <StatCard label={t('marketing.avgOpenRate')} value={`${stats.avgOpenRate.toFixed(1)}%`} />
         </div>
       )}
 
@@ -101,26 +105,26 @@ function CampaignsTab() {
             setPage(0)
           }}
         >
-          <option value="">All Statuses</option>
-          <option value="DRAFT">Draft</option>
-          <option value="SCHEDULED">Scheduled</option>
-          <option value="SENDING">Sending</option>
-          <option value="SENT">Sent</option>
-          <option value="CANCELLED">Cancelled</option>
+          <option value="">{t('marketing.allStatuses')}</option>
+          <option value="DRAFT">{t('marketing.draft')}</option>
+          <option value="SCHEDULED">{t('marketing.scheduled')}</option>
+          <option value="SENDING">{t('marketing.sending')}</option>
+          <option value="SENT">{t('marketing.sent')}</option>
+          <option value="CANCELLED">{t('marketing.cancelled')}</option>
         </select>
         <button
           onClick={() => setShowCreate(true)}
           className="bg-brand-600 text-white px-4 py-2 rounded-lg hover:bg-brand-700 text-sm"
         >
-          + New Campaign
+          {t('marketing.newCampaign')}
         </button>
       </div>
 
       {/* Campaigns Table */}
       {isLoading ? (
-        <p className="text-gray-500 text-sm">Loading...</p>
+        <p className="text-gray-500 text-sm">{t('marketing.loading')}</p>
       ) : campaigns.length === 0 ? (
-        <p className="text-gray-500 text-sm">No campaigns found.</p>
+        <p className="text-gray-500 text-sm">{t('marketing.noCampaignsFound')}</p>
       ) : (
         <div className="bg-white rounded-lg shadow overflow-hidden">
           <table className="min-w-full divide-y divide-gray-200">
@@ -254,6 +258,7 @@ function CampaignActions({ campaign }: { campaign: CampaignDto }) {
 // ── Create Campaign Modal ──────────────────────────────
 
 function CreateCampaignModal({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation()
   const qc = useQueryClient()
   const [form, setForm] = useState({
     name: '',
@@ -305,7 +310,7 @@ function CreateCampaignModal({ onClose }: { onClose: () => void }) {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-auto">
       <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl p-6 m-4 max-h-[90vh] overflow-y-auto">
-        <h2 className="text-lg font-semibold mb-4">Create Campaign</h2>
+        <h2 className="text-lg font-semibold mb-4">{t('marketing.createCampaign')}</h2>
         <form
           onSubmit={(e) => {
             e.preventDefault()
@@ -525,6 +530,7 @@ function CreateCampaignModal({ onClose }: { onClose: () => void }) {
 // ── Campaign Detail Modal ──────────────────────────────
 
 function CampaignDetailModal({ campaign, onClose }: { campaign: CampaignDto; onClose: () => void }) {
+  const { t } = useTranslation()
   const [recipientPage, setRecipientPage] = useState(0)
 
   const { data: recipientsData } = useQuery({
@@ -576,9 +582,9 @@ function CampaignDetailModal({ campaign, onClose }: { campaign: CampaignDto; onC
         </div>
 
         {/* Recipients List */}
-        <h3 className="text-sm font-semibold text-gray-700 mb-2">Recipients</h3>
+        <h3 className="text-sm font-semibold text-gray-700 mb-2">{t('marketing.recipientsTitle')}</h3>
         {recipients.length === 0 ? (
-          <p className="text-sm text-gray-400">No recipients yet.</p>
+          <p className="text-sm text-gray-400">{t('marketing.noRecipientsYet')}</p>
         ) : (
           <table className="min-w-full divide-y divide-gray-200 text-sm">
             <thead className="bg-gray-50">
@@ -665,7 +671,7 @@ function AudienceBuilderTab() {
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       {/* Criteria Panel */}
       <div className="bg-white rounded-lg shadow p-6">
-        <h3 className="text-sm font-semibold text-gray-700 mb-4">Define Audience Segment</h3>
+        <h3 className="text-sm font-semibold text-gray-700 mb-4">{t('marketing.defineAudienceSegment')}</h3>
         <div className="space-y-4">
           <div>
             <label className="block text-xs text-gray-500 mb-1">Member Status</label>
@@ -911,15 +917,15 @@ function AtRiskTab() {
         <div className="grid grid-cols-3 gap-4 mb-6">
           <div className="bg-red-50 rounded-lg p-4">
             <p className="text-2xl font-bold text-red-600">{summary.HIGH ?? 0}</p>
-            <p className="text-sm text-gray-600">High Risk</p>
+            <p className="text-sm text-gray-600">{t('marketing.highRisk')}</p>
           </div>
           <div className="bg-yellow-50 rounded-lg p-4">
             <p className="text-2xl font-bold text-yellow-600">{summary.MEDIUM ?? 0}</p>
-            <p className="text-sm text-gray-600">Medium Risk</p>
+            <p className="text-sm text-gray-600">{t('marketing.mediumRisk')}</p>
           </div>
           <div className="bg-blue-50 rounded-lg p-4">
             <p className="text-2xl font-bold text-blue-600">{summary.LOW ?? 0}</p>
-            <p className="text-sm text-gray-600">Low Risk</p>
+            <p className="text-sm text-gray-600">{t('marketing.lowRisk')}</p>
           </div>
         </div>
       )}

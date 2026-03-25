@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import api from '../api/client'
 import type {
@@ -30,18 +31,19 @@ const GOAL_TYPES: GoalType[] = [
 type Tab = 'exercises' | 'plans' | 'templates' | 'catalog' | 'goals'
 
 export default function TrainingPage() {
+  const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState<Tab>('exercises')
   const tabs: { key: Tab; label: string }[] = [
-    { key: 'exercises', label: 'Exercise Library' },
-    { key: 'plans', label: 'Training Plans' },
-    { key: 'templates', label: 'Templates' },
-    { key: 'catalog', label: 'Catalog' },
-    { key: 'goals', label: 'Goals' },
+    { key: 'exercises', label: t('training.exerciseLibrary') },
+    { key: 'plans', label: t('training.plans') },
+    { key: 'templates', label: t('training.templates') },
+    { key: 'catalog', label: t('training.catalog') },
+    { key: 'goals', label: t('training.goals') },
   ]
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Training</h1>
+      <h1 className="text-2xl font-bold text-gray-900 mb-6">{t('training.title')}</h1>
       <div className="border-b border-gray-200 mb-6">
         <nav className="flex space-x-8">
           {tabs.map((tab) => (
@@ -64,6 +66,7 @@ export default function TrainingPage() {
 // ===================== EXERCISE LIBRARY =====================
 
 function ExerciseLibrary() {
+  const { t } = useTranslation()
   const qc = useQueryClient()
   const [search, setSearch] = useState('')
   const [muscleFilter, setMuscleFilter] = useState('')
@@ -96,17 +99,17 @@ function ExerciseLibrary() {
     <div>
       <div className="flex items-center justify-between mb-4">
         <div className="flex gap-3 flex-1">
-          <input type="text" placeholder="Search exercises..." value={search} onChange={e => setSearch(e.target.value)} className="border rounded-lg px-3 py-2 text-sm w-64" />
+          <input type="text" placeholder={t('training.searchExercises')} value={search} onChange={e => setSearch(e.target.value)} className="border rounded-lg px-3 py-2 text-sm w-64" />
           <select value={muscleFilter} onChange={e => setMuscleFilter(e.target.value)} className="border rounded-lg px-3 py-2 text-sm">
-            <option value="">All Muscles</option>
+            <option value="">{t('training.allMuscles')}</option>
             {MUSCLE_GROUPS.map(mg => <option key={mg} value={mg}>{mg.replace(/_/g, ' ')}</option>)}
           </select>
           <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)} className="border rounded-lg px-3 py-2 text-sm">
-            <option value="">All Types</option>
+            <option value="">{t('training.allTypes')}</option>
             {EXERCISE_TYPES.map(t => <option key={t} value={t}>{t.replace(/_/g, ' ')}</option>)}
           </select>
         </div>
-        <button onClick={openCreate} className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-700">Add Exercise</button>
+        <button onClick={openCreate} className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-700">{t('training.addExercise')}</button>
       </div>
 
       {isLoading ? <p className="text-gray-500">Loading...</p> : (
@@ -147,6 +150,7 @@ function ExerciseModal({ initial, onClose, onSubmit, isLoading }: {
   initial: ExerciseDto | null; onClose: () => void
   onSubmit: (data: Record<string, unknown>) => void; isLoading: boolean
 }) {
+  const { t } = useTranslation()
   const [form, setForm] = useState({
     name: initial?.name ?? '', description: initial?.description ?? '',
     exerciseType: (initial?.exerciseType ?? 'STRENGTH') as ExerciseType,
@@ -195,7 +199,7 @@ function ExerciseModal({ initial, onClose, onSubmit, isLoading }: {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto p-6">
-        <h2 className="text-lg font-bold mb-4">{initial ? 'Edit Exercise' : 'Add Exercise'}</h2>
+        <h2 className="text-lg font-bold mb-4">{initial ? t('training.editExercise') : t('training.addExercise')}</h2>
         <div className="space-y-3">
           {/* Name field with smart suggest */}
           <div className="relative">

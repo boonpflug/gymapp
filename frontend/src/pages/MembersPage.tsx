@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import api from '../api/client'
 import type { ApiResponse, MemberDto } from '../types'
 
@@ -17,6 +18,7 @@ const emptyForm: MemberForm = {
 }
 
 export default function MembersPage() {
+  const { t } = useTranslation()
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(0)
   const [showModal, setShowModal] = useState(false)
@@ -82,14 +84,14 @@ export default function MembersPage() {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Members</h1>
+        <h1 className="text-2xl font-bold text-gray-800">{t('members.title')}</h1>
         <button onClick={openCreate} className="bg-brand-600 text-white px-4 py-2 rounded-md hover:bg-brand-700 text-sm">
-          Add Member
+          {t('members.addMember')}
         </button>
       </div>
 
       <div className="mb-4">
-        <input type="text" placeholder="Search by name..." value={search}
+        <input type="text" placeholder={t('members.searchPlaceholder')} value={search}
           onChange={(e) => { setSearch(e.target.value); setPage(0) }}
           className="w-full max-w-md px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500" />
       </div>
@@ -98,20 +100,20 @@ export default function MembersPage() {
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Member #</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Phone</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Joined</th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('members.memberNumber')}</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('common.name')}</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('common.email')}</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('common.phone')}</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('common.status')}</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('members.joined')}</th>
+              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">{t('common.actions')}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
             {isLoading ? (
-              <tr><td colSpan={7} className="px-6 py-4 text-center text-gray-500">Loading...</td></tr>
+              <tr><td colSpan={7} className="px-6 py-4 text-center text-gray-500">{t('common.loading')}</td></tr>
             ) : members.length === 0 ? (
-              <tr><td colSpan={7} className="px-6 py-4 text-center text-gray-500">No members found</td></tr>
+              <tr><td colSpan={7} className="px-6 py-4 text-center text-gray-500">{t('members.noMembers')}</td></tr>
             ) : (
               members.map((m) => (
                 <tr key={m.id} className="hover:bg-gray-50 cursor-pointer" onClick={() => openEdit(m)}>
@@ -124,7 +126,7 @@ export default function MembersPage() {
                   <td className="px-6 py-4 text-right" onClick={e => e.stopPropagation()}>
                     {m.status === 'ACTIVE' && (
                       <button onClick={() => deactivateMutation.mutate(m.id)}
-                        className="text-xs text-red-600 hover:text-red-800">Deactivate</button>
+                        className="text-xs text-red-600 hover:text-red-800">{t('members.deactivate')}</button>
                     )}
                   </td>
                 </tr>
@@ -134,12 +136,12 @@ export default function MembersPage() {
         </table>
         {meta && meta.totalPages > 1 && (
           <div className="flex items-center justify-between px-6 py-3 border-t bg-gray-50">
-            <p className="text-sm text-gray-500">Page {meta.page + 1} of {meta.totalPages} ({meta.totalElements} members)</p>
+            <p className="text-sm text-gray-500">{t('members.pageInfo', { current: meta.page + 1, total: meta.totalPages, count: meta.totalElements })}</p>
             <div className="flex gap-2">
               <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0}
-                className="px-3 py-1 text-sm border rounded disabled:opacity-50">Previous</button>
+                className="px-3 py-1 text-sm border rounded disabled:opacity-50">{t('common.previous')}</button>
               <button onClick={() => setPage(p => p + 1)} disabled={page >= meta.totalPages - 1}
-                className="px-3 py-1 text-sm border rounded disabled:opacity-50">Next</button>
+                className="px-3 py-1 text-sm border rounded disabled:opacity-50">{t('common.next')}</button>
             </div>
           </div>
         )}
@@ -149,46 +151,46 @@ export default function MembersPage() {
       {showModal && (
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <h2 className="text-lg font-semibold mb-4">{editId ? 'Edit Member' : 'Add Member'}</h2>
+            <h2 className="text-lg font-semibold mb-4">{editId ? t('members.editMember') : t('members.addMember')}</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
-                <Field label="First Name *" value={form.firstName} onChange={v => setForm({ ...form, firstName: v })} required />
-                <Field label="Last Name *" value={form.lastName} onChange={v => setForm({ ...form, lastName: v })} required />
-                <Field label="Email *" type="email" value={form.email} onChange={v => setForm({ ...form, email: v })} required />
-                <Field label="Phone" value={form.phone} onChange={v => setForm({ ...form, phone: v })} />
-                <Field label="Date of Birth" type="date" value={form.dateOfBirth} onChange={v => setForm({ ...form, dateOfBirth: v })} />
+                <Field label={t('members.firstNameRequired')} value={form.firstName} onChange={v => setForm({ ...form, firstName: v })} required />
+                <Field label={t('members.lastNameRequired')} value={form.lastName} onChange={v => setForm({ ...form, lastName: v })} required />
+                <Field label={t('members.emailRequired')} type="email" value={form.email} onChange={v => setForm({ ...form, email: v })} required />
+                <Field label={t('common.phone')} value={form.phone} onChange={v => setForm({ ...form, phone: v })} />
+                <Field label={t('members.dateOfBirth')} type="date" value={form.dateOfBirth} onChange={v => setForm({ ...form, dateOfBirth: v })} />
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('members.gender')}</label>
                   <select value={form.gender} onChange={e => setForm({ ...form, gender: e.target.value })} className="w-full border rounded px-3 py-2 text-sm">
-                    <option value="">Select</option>
-                    <option value="MALE">Male</option>
-                    <option value="FEMALE">Female</option>
-                    <option value="OTHER">Other</option>
+                    <option value="">{t('members.selectGender')}</option>
+                    <option value="MALE">{t('members.male')}</option>
+                    <option value="FEMALE">{t('members.female')}</option>
+                    <option value="OTHER">{t('members.other')}</option>
                   </select>
                 </div>
-                <Field label="Street" value={form.street} onChange={v => setForm({ ...form, street: v })} />
-                <Field label="City" value={form.city} onChange={v => setForm({ ...form, city: v })} />
-                <Field label="State" value={form.state} onChange={v => setForm({ ...form, state: v })} />
-                <Field label="Postal Code" value={form.postalCode} onChange={v => setForm({ ...form, postalCode: v })} />
-                <Field label="Country" value={form.country} onChange={v => setForm({ ...form, country: v })} />
+                <Field label={t('members.street')} value={form.street} onChange={v => setForm({ ...form, street: v })} />
+                <Field label={t('members.city')} value={form.city} onChange={v => setForm({ ...form, city: v })} />
+                <Field label={t('members.state')} value={form.state} onChange={v => setForm({ ...form, state: v })} />
+                <Field label={t('members.postalCode')} value={form.postalCode} onChange={v => setForm({ ...form, postalCode: v })} />
+                <Field label={t('members.country')} value={form.country} onChange={v => setForm({ ...form, country: v })} />
               </div>
               <div className="border-t pt-4 mt-2">
-                <h3 className="text-sm font-semibold text-gray-700 mb-3">Emergency Contact</h3>
+                <h3 className="text-sm font-semibold text-gray-700 mb-3">{t('members.emergencyContact')}</h3>
                 <div className="grid grid-cols-2 gap-4">
-                  <Field label="Name" value={form.emergencyContactName} onChange={v => setForm({ ...form, emergencyContactName: v })} />
-                  <Field label="Phone" value={form.emergencyContactPhone} onChange={v => setForm({ ...form, emergencyContactPhone: v })} />
+                  <Field label={t('common.name')} value={form.emergencyContactName} onChange={v => setForm({ ...form, emergencyContactName: v })} />
+                  <Field label={t('common.phone')} value={form.emergencyContactPhone} onChange={v => setForm({ ...form, emergencyContactPhone: v })} />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Health Notes</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('members.healthNotes')}</label>
                 <textarea value={form.healthNotes} onChange={e => setForm({ ...form, healthNotes: e.target.value })}
                   rows={2} className="w-full border rounded px-3 py-2 text-sm" />
               </div>
               <div className="flex justify-end gap-3 pt-2">
-                <button type="button" onClick={closeModal} className="px-4 py-2 text-sm text-gray-600">Cancel</button>
+                <button type="button" onClick={closeModal} className="px-4 py-2 text-sm text-gray-600">{t('common.cancel')}</button>
                 <button type="submit" disabled={isPending}
                   className="bg-brand-600 text-white px-4 py-2 rounded text-sm hover:bg-brand-700 disabled:opacity-50">
-                  {isPending ? 'Saving...' : editId ? 'Update' : 'Create'}
+                  {isPending ? t('common.saving') : editId ? t('common.update') : t('common.create')}
                 </button>
               </div>
             </form>

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import api from '../api/client'
 import type {
   ApiResponse,
@@ -14,19 +15,21 @@ import type {
 } from '../types'
 
 type Tab = 'agenda' | 'appointments' | 'types' | 'anamnese'
-const tabs: { key: Tab; label: string }[] = [
-  { key: 'agenda', label: 'Agenda' },
-  { key: 'appointments', label: 'Appointments' },
-  { key: 'types', label: 'Types' },
-  { key: 'anamnese', label: 'Anamnese' },
-]
 
 export default function AppointmentsPage() {
+  const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState<Tab>('agenda')
+
+  const tabs: { key: Tab; label: string }[] = [
+    { key: 'agenda', label: t('appointments.agenda') },
+    { key: 'appointments', label: t('appointments.appointments') },
+    { key: 'types', label: t('appointments.types') },
+    { key: 'anamnese', label: t('appointments.anamnese') },
+  ]
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Appointments &amp; Agenda</h1>
+      <h1 className="text-2xl font-bold text-gray-900 mb-6">{t('appointments.title')}</h1>
       <div className="border-b border-gray-200 mb-6">
         <nav className="flex space-x-8">
           {tabs.map((t) => (
@@ -87,6 +90,7 @@ function todayString() {
 // ── Agenda Tab ──────────────────────────────────────────
 
 function AgendaTab() {
+  const { t } = useTranslation()
   const [staffId, setStaffId] = useState('')
   const [date, setDate] = useState(todayString())
   const qc = useQueryClient()
@@ -120,16 +124,16 @@ function AgendaTab() {
 
   const nextActions: Record<AppointmentStatus, { label: string; action: string; color: string }[]> = {
     SCHEDULED: [
-      { label: 'Confirm', action: 'confirm', color: 'text-indigo-600 hover:text-indigo-800' },
-      { label: 'Cancel', action: 'cancel', color: 'text-red-600 hover:text-red-800' },
+      { label: t('appointments.confirmAction'), action: 'confirm', color: 'text-indigo-600 hover:text-indigo-800' },
+      { label: t('appointments.cancelAction'), action: 'cancel', color: 'text-red-600 hover:text-red-800' },
     ],
     CONFIRMED: [
-      { label: 'Start', action: 'start', color: 'text-yellow-600 hover:text-yellow-800' },
-      { label: 'Cancel', action: 'cancel', color: 'text-red-600 hover:text-red-800' },
+      { label: t('appointments.startAction'), action: 'start', color: 'text-yellow-600 hover:text-yellow-800' },
+      { label: t('appointments.cancelAction'), action: 'cancel', color: 'text-red-600 hover:text-red-800' },
     ],
     IN_PROGRESS: [
-      { label: 'Complete', action: 'complete', color: 'text-green-600 hover:text-green-800' },
-      { label: 'No-Show', action: 'no-show', color: 'text-gray-600 hover:text-gray-800' },
+      { label: t('appointments.completeAction'), action: 'complete', color: 'text-green-600 hover:text-green-800' },
+      { label: t('appointments.noShowAction'), action: 'no-show', color: 'text-gray-600 hover:text-gray-800' },
     ],
     COMPLETED: [],
     CANCELLED: [],
@@ -140,16 +144,16 @@ function AgendaTab() {
     <div>
       <div className="flex flex-wrap items-end gap-4 mb-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Staff ID</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">{t('appointments.staffId')}</label>
           <input
             className="border rounded-lg px-3 py-2 text-sm w-64"
-            placeholder="Enter staff ID..."
+            placeholder={t('appointments.enterStaffId')}
             value={staffId}
             onChange={(e) => setStaffId(e.target.value)}
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">{t('common.date')}</label>
           <input
             type="date"
             className="border rounded-lg px-3 py-2 text-sm"
@@ -157,7 +161,7 @@ function AgendaTab() {
             onChange={(e) => setDate(e.target.value)}
           />
         </div>
-        {isFetching && <span className="text-xs text-gray-400">Loading...</span>}
+        {isFetching && <span className="text-xs text-gray-400">{t('common.loading')}</span>}
       </div>
 
       {!staffId ? (
@@ -165,20 +169,20 @@ function AgendaTab() {
           <svg className="w-12 h-12 mx-auto text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
-          <p className="text-gray-400 text-sm">Enter a staff ID to view their daily agenda.</p>
+          <p className="text-gray-400 text-sm">{t('appointments.enterStaffIdPrompt')}</p>
         </div>
       ) : isLoading ? (
-        <p className="text-gray-500 text-sm">Loading agenda...</p>
+        <p className="text-gray-500 text-sm">{t('appointments.loadingAgenda')}</p>
       ) : !agenda ? (
         <div className="bg-white rounded-lg shadow p-8 text-center">
-          <p className="text-gray-400 text-sm">No agenda data for this date.</p>
+          <p className="text-gray-400 text-sm">{t('appointments.noAgendaData')}</p>
         </div>
       ) : (
         <div>
           <div className="flex items-center gap-4 mb-4">
             <h3 className="text-sm font-semibold text-gray-900">{agenda.staffName}</h3>
             <span className="text-xs text-gray-500">
-              {agenda.bookedSlots} / {agenda.totalSlots} slots booked
+              {agenda.bookedSlots} / {agenda.totalSlots} {t('appointments.slotsBooked')}
             </span>
             <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden max-w-xs">
               <div
@@ -190,7 +194,7 @@ function AgendaTab() {
 
           {agenda.appointments.length === 0 ? (
             <div className="bg-white rounded-lg shadow p-8 text-center">
-              <p className="text-gray-400 text-sm">No appointments scheduled for this day.</p>
+              <p className="text-gray-400 text-sm">{t('appointments.noAppointmentsDay')}</p>
             </div>
           ) : (
             <div className="space-y-2">
@@ -237,6 +241,7 @@ function AgendaTab() {
 // ── Appointments Tab ────────────────────────────────────
 
 function AppointmentsTab() {
+  const { t } = useTranslation()
   const [page, setPage] = useState(0)
   const [filterMode, setFilterMode] = useState<'staff' | 'member'>('staff')
   const [filterId, setFilterId] = useState('')
@@ -278,58 +283,58 @@ function AppointmentsTab() {
     <div>
       <div className="flex flex-wrap items-end gap-4 mb-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Filter by</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">{t('appointments.filterBy')}</label>
           <select
             className="border rounded-lg px-3 py-2 text-sm"
             value={filterMode}
             onChange={(e) => { setFilterMode(e.target.value as 'staff' | 'member'); setFilterId(''); setPage(0) }}
           >
-            <option value="staff">Staff</option>
-            <option value="member">Member</option>
+            <option value="staff">{t('appointments.staffFilter')}</option>
+            <option value="member">{t('appointments.memberFilter')}</option>
           </select>
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">{filterMode === 'staff' ? 'Staff' : 'Member'} ID</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">{filterMode === 'staff' ? t('appointments.staffFilter') : t('appointments.memberFilter')} ID</label>
           <input
             className="border rounded-lg px-3 py-2 text-sm w-64"
-            placeholder={`Enter ${filterMode} ID...`}
+            placeholder={t('appointments.enterId', { mode: filterMode })}
             value={filterId}
             onChange={(e) => { setFilterId(e.target.value); setPage(0) }}
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">{t('common.status')}</label>
           <select
             className="border rounded-lg px-3 py-2 text-sm"
             value={statusFilter}
             onChange={(e) => { setStatusFilter(e.target.value as AppointmentStatus | ''); setPage(0) }}
           >
-            <option value="">All</option>
-            <option value="SCHEDULED">Scheduled</option>
-            <option value="CONFIRMED">Confirmed</option>
-            <option value="IN_PROGRESS">In Progress</option>
-            <option value="COMPLETED">Completed</option>
-            <option value="CANCELLED">Cancelled</option>
-            <option value="NO_SHOW">No Show</option>
+            <option value="">{t('common.all')}</option>
+            <option value="SCHEDULED">{t('appointments.scheduled')}</option>
+            <option value="CONFIRMED">{t('appointments.confirmed')}</option>
+            <option value="IN_PROGRESS">{t('appointments.inProgress')}</option>
+            <option value="COMPLETED">{t('appointments.completed')}</option>
+            <option value="CANCELLED">{t('appointments.cancelled')}</option>
+            <option value="NO_SHOW">{t('appointments.noShow')}</option>
           </select>
         </div>
         <button
           onClick={() => setShowCreate(true)}
           className="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 text-sm ml-auto"
         >
-          + New Appointment
+          {t('appointments.newAppointment')}
         </button>
       </div>
 
       {!filterId ? (
         <div className="bg-white rounded-lg shadow p-12 text-center">
-          <p className="text-gray-400 text-sm">Enter an ID to view appointments.</p>
+          <p className="text-gray-400 text-sm">{t('appointments.enterIdToView')}</p>
         </div>
       ) : isLoading ? (
-        <p className="text-gray-500 text-sm">Loading...</p>
+        <p className="text-gray-500 text-sm">{t('common.loading')}</p>
       ) : appointments.length === 0 ? (
         <div className="bg-white rounded-lg shadow p-8 text-center">
-          <p className="text-gray-400 text-sm">No appointments found.</p>
+          <p className="text-gray-400 text-sm">{t('appointments.noAppointmentsFound')}</p>
         </div>
       ) : (
         <>
@@ -337,12 +342,12 @@ function AppointmentsTab() {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date / Time</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Member</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Staff</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('appointments.dateTime')}</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('appointments.memberFilter')}</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('appointments.staffFilter')}</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('appointments.type')}</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('common.status')}</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('common.actions')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
@@ -360,20 +365,20 @@ function AppointmentsTab() {
                       <div className="flex gap-2">
                         {apt.status === 'SCHEDULED' && (
                           <>
-                            <button onClick={() => handleAction(apt.id, 'confirm')} className="text-xs font-medium text-indigo-600 hover:text-indigo-800">Confirm</button>
-                            <button onClick={() => handleAction(apt.id, 'cancel')} className="text-xs font-medium text-red-600 hover:text-red-800">Cancel</button>
+                            <button onClick={() => handleAction(apt.id, 'confirm')} className="text-xs font-medium text-indigo-600 hover:text-indigo-800">{t('appointments.confirmAction')}</button>
+                            <button onClick={() => handleAction(apt.id, 'cancel')} className="text-xs font-medium text-red-600 hover:text-red-800">{t('appointments.cancelAction')}</button>
                           </>
                         )}
                         {apt.status === 'CONFIRMED' && (
                           <>
-                            <button onClick={() => handleAction(apt.id, 'start')} className="text-xs font-medium text-yellow-600 hover:text-yellow-800">Start</button>
-                            <button onClick={() => handleAction(apt.id, 'cancel')} className="text-xs font-medium text-red-600 hover:text-red-800">Cancel</button>
+                            <button onClick={() => handleAction(apt.id, 'start')} className="text-xs font-medium text-yellow-600 hover:text-yellow-800">{t('appointments.startAction')}</button>
+                            <button onClick={() => handleAction(apt.id, 'cancel')} className="text-xs font-medium text-red-600 hover:text-red-800">{t('appointments.cancelAction')}</button>
                           </>
                         )}
                         {apt.status === 'IN_PROGRESS' && (
                           <>
-                            <button onClick={() => handleAction(apt.id, 'complete')} className="text-xs font-medium text-green-600 hover:text-green-800">Complete</button>
-                            <button onClick={() => handleAction(apt.id, 'no-show')} className="text-xs font-medium text-gray-600 hover:text-gray-800">No-Show</button>
+                            <button onClick={() => handleAction(apt.id, 'complete')} className="text-xs font-medium text-green-600 hover:text-green-800">{t('appointments.completeAction')}</button>
+                            <button onClick={() => handleAction(apt.id, 'no-show')} className="text-xs font-medium text-gray-600 hover:text-gray-800">{t('appointments.noShowAction')}</button>
                           </>
                         )}
                       </div>
@@ -395,14 +400,14 @@ function AppointmentsTab() {
                   disabled={page === 0}
                   className="px-3 py-1 border rounded text-sm disabled:opacity-50"
                 >
-                  Previous
+                  {t('common.previous')}
                 </button>
                 <button
                   onClick={() => setPage((p) => p + 1)}
                   disabled={page >= (meta.totalPages ?? 1) - 1}
                   className="px-3 py-1 border rounded text-sm disabled:opacity-50"
                 >
-                  Next
+                  {t('common.next')}
                 </button>
               </div>
             </div>
@@ -418,6 +423,7 @@ function AppointmentsTab() {
 // ── Create Appointment Modal ────────────────────────────
 
 function CreateAppointmentModal({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation()
   const qc = useQueryClient()
   const [form, setForm] = useState({
     memberId: '',
@@ -450,7 +456,7 @@ function CreateAppointmentModal({ onClose }: { onClose: () => void }) {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-auto">
       <div className="bg-white rounded-xl shadow-xl w-full max-w-lg p-6 m-4 max-h-[90vh] overflow-y-auto">
-        <h2 className="text-lg font-semibold mb-4">Create Appointment</h2>
+        <h2 className="text-lg font-semibold mb-4">{t('appointments.createAppointment')}</h2>
         <form
           onSubmit={(e) => {
             e.preventDefault()
@@ -460,7 +466,7 @@ function CreateAppointmentModal({ onClose }: { onClose: () => void }) {
         >
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Member ID *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('appointments.memberIdRequired')}</label>
               <input
                 className="w-full border rounded-lg px-3 py-2 text-sm"
                 value={form.memberId}
@@ -469,7 +475,7 @@ function CreateAppointmentModal({ onClose }: { onClose: () => void }) {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Staff ID *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('appointments.staffIdRequired')}</label>
               <input
                 className="w-full border rounded-lg px-3 py-2 text-sm"
                 value={form.staffId}
@@ -480,14 +486,14 @@ function CreateAppointmentModal({ onClose }: { onClose: () => void }) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Appointment Type *</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('appointments.appointmentTypeRequired')}</label>
             <select
               className="w-full border rounded-lg px-3 py-2 text-sm"
               value={form.appointmentTypeId}
               onChange={(e) => setForm({ ...form, appointmentTypeId: e.target.value })}
               required
             >
-              <option value="">Select a type...</option>
+              <option value="">{t('appointments.selectType')}</option>
               {types.map((t) => (
                 <option key={t.id} value={t.id}>
                   {t.name} ({t.durationMinutes} min)
@@ -497,7 +503,7 @@ function CreateAppointmentModal({ onClose }: { onClose: () => void }) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Start Date/Time *</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('appointments.startDateTime')}</label>
             <input
               type="datetime-local"
               className="w-full border rounded-lg px-3 py-2 text-sm"
@@ -508,7 +514,7 @@ function CreateAppointmentModal({ onClose }: { onClose: () => void }) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Notes</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('common.notes')}</label>
             <textarea
               className="w-full border rounded-lg px-3 py-2 text-sm"
               rows={3}
@@ -518,19 +524,19 @@ function CreateAppointmentModal({ onClose }: { onClose: () => void }) {
           </div>
 
           {createMutation.isError && (
-            <p className="text-red-600 text-sm">Failed to create appointment. Please check the data and try again.</p>
+            <p className="text-red-600 text-sm">{t('appointments.failedCreateAppointment')}</p>
           )}
 
           <div className="flex justify-end gap-3 pt-2">
             <button type="button" onClick={onClose} className="px-4 py-2 border rounded-lg text-sm text-gray-600 hover:bg-gray-50">
-              Cancel
+              {t('common.cancel')}
             </button>
             <button
               type="submit"
               disabled={createMutation.isPending}
               className="px-4 py-2 bg-teal-600 text-white rounded-lg text-sm hover:bg-teal-700 disabled:opacity-50"
             >
-              {createMutation.isPending ? 'Creating...' : 'Create Appointment'}
+              {createMutation.isPending ? t('common.creating') : t('appointments.createAppointment')}
             </button>
           </div>
         </form>
@@ -542,6 +548,7 @@ function CreateAppointmentModal({ onClose }: { onClose: () => void }) {
 // ── Types Tab ───────────────────────────────────────────
 
 function TypesTab() {
+  const { t } = useTranslation()
   const [showCreate, setShowCreate] = useState(false)
   const qc = useQueryClient()
 
@@ -561,58 +568,58 @@ function TypesTab() {
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <p className="text-sm text-gray-500">{types.length} appointment type{types.length !== 1 ? 's' : ''}</p>
+        <p className="text-sm text-gray-500">{types.length !== 1 ? t('appointments.typesCountPlural', { count: types.length }) : t('appointments.typesCount', { count: types.length })}</p>
         <button
           onClick={() => setShowCreate(true)}
           className="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 text-sm"
         >
-          + New Type
+          {t('appointments.newType')}
         </button>
       </div>
 
       {isLoading ? (
-        <p className="text-gray-500 text-sm">Loading...</p>
+        <p className="text-gray-500 text-sm">{t('common.loading')}</p>
       ) : types.length === 0 ? (
         <div className="bg-white rounded-lg shadow p-8 text-center">
-          <p className="text-gray-400 text-sm">No appointment types configured yet.</p>
+          <p className="text-gray-400 text-sm">{t('appointments.noTypesYet')}</p>
           <button onClick={() => setShowCreate(true)} className="mt-2 text-teal-600 text-sm font-medium hover:text-teal-700">
-            Create your first type
+            {t('appointments.createFirstType')}
           </button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {types.map((t) => (
-            <div key={t.id} className="bg-white rounded-lg shadow p-4 flex flex-col">
+          {types.map((tp) => (
+            <div key={tp.id} className="bg-white rounded-lg shadow p-4 flex flex-col">
               <div className="flex items-start justify-between mb-2">
                 <div className="flex items-center gap-2">
-                  {t.color && (
-                    <span className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: t.color }} />
+                  {tp.color && (
+                    <span className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: tp.color }} />
                   )}
-                  <h4 className="text-sm font-semibold text-gray-900">{t.name}</h4>
+                  <h4 className="text-sm font-semibold text-gray-900">{tp.name}</h4>
                 </div>
-                <span className={`text-xs px-2 py-0.5 rounded ${t.active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
-                  {t.active ? 'Active' : 'Inactive'}
+                <span className={`text-xs px-2 py-0.5 rounded ${tp.active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
+                  {tp.active ? t('common.active') : t('common.inactive')}
                 </span>
               </div>
-              {t.description && <p className="text-xs text-gray-500 mb-2">{t.description}</p>}
+              {tp.description && <p className="text-xs text-gray-500 mb-2">{tp.description}</p>}
               <div className="flex flex-wrap gap-2 mb-3">
                 <span className="bg-teal-100 text-teal-700 px-2 py-0.5 rounded text-xs font-medium">
-                  {t.durationMinutes} min
+                  {tp.durationMinutes} min
                 </span>
-                {t.requiresTrainer && (
+                {tp.requiresTrainer && (
                   <span className="bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded text-xs font-medium">
-                    Trainer Required
+                    {t('appointments.trainerRequired')}
                   </span>
                 )}
               </div>
               <div className="flex items-center justify-end text-xs mt-auto pt-2 border-t">
-                {t.active && (
+                {tp.active && (
                   <button
-                    onClick={() => deactivateMutation.mutate(t.id)}
+                    onClick={() => deactivateMutation.mutate(tp.id)}
                     disabled={deactivateMutation.isPending}
                     className="text-red-600 hover:text-red-800 font-medium"
                   >
-                    Deactivate
+                    {t('common.deactivate')}
                   </button>
                 )}
               </div>
@@ -629,6 +636,7 @@ function TypesTab() {
 // ── Create Type Modal ───────────────────────────────────
 
 function CreateTypeModal({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation()
   const qc = useQueryClient()
   const [form, setForm] = useState({
     name: '',
@@ -653,7 +661,7 @@ function CreateTypeModal({ onClose }: { onClose: () => void }) {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-auto">
       <div className="bg-white rounded-xl shadow-xl w-full max-w-lg p-6 m-4 max-h-[90vh] overflow-y-auto">
-        <h2 className="text-lg font-semibold mb-4">Create Appointment Type</h2>
+        <h2 className="text-lg font-semibold mb-4">{t('appointments.createType')}</h2>
         <form
           onSubmit={(e) => {
             e.preventDefault()
@@ -662,7 +670,7 @@ function CreateTypeModal({ onClose }: { onClose: () => void }) {
           className="space-y-4"
         >
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Name *</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('loyalty.nameRequired')}</label>
             <input
               className="w-full border rounded-lg px-3 py-2 text-sm"
               value={form.name}
@@ -672,7 +680,7 @@ function CreateTypeModal({ onClose }: { onClose: () => void }) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('common.description')}</label>
             <input
               className="w-full border rounded-lg px-3 py-2 text-sm"
               value={form.description}
@@ -682,7 +690,7 @@ function CreateTypeModal({ onClose }: { onClose: () => void }) {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Duration (minutes) *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('appointments.durationMinutes')}</label>
               <input
                 type="number"
                 min={5}
@@ -693,7 +701,7 @@ function CreateTypeModal({ onClose }: { onClose: () => void }) {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Color</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('loyalty.color')}</label>
               <div className="flex items-center gap-2">
                 <input
                   type="color"
@@ -714,23 +722,23 @@ function CreateTypeModal({ onClose }: { onClose: () => void }) {
               onChange={(e) => setForm({ ...form, requiresTrainer: e.target.checked })}
               className="rounded border-gray-300 text-teal-600 focus:ring-teal-500"
             />
-            <label htmlFor="requiresTrainer" className="text-sm text-gray-700">Requires Trainer</label>
+            <label htmlFor="requiresTrainer" className="text-sm text-gray-700">{t('appointments.requiresTrainer')}</label>
           </div>
 
           {createMutation.isError && (
-            <p className="text-red-600 text-sm">Failed to create type. Please try again.</p>
+            <p className="text-red-600 text-sm">{t('appointments.failedCreateType')}</p>
           )}
 
           <div className="flex justify-end gap-3 pt-2">
             <button type="button" onClick={onClose} className="px-4 py-2 border rounded-lg text-sm text-gray-600 hover:bg-gray-50">
-              Cancel
+              {t('common.cancel')}
             </button>
             <button
               type="submit"
               disabled={createMutation.isPending}
               className="px-4 py-2 bg-teal-600 text-white rounded-lg text-sm hover:bg-teal-700 disabled:opacity-50"
             >
-              {createMutation.isPending ? 'Creating...' : 'Create Type'}
+              {createMutation.isPending ? t('common.creating') : t('appointments.createType')}
             </button>
           </div>
         </form>
@@ -744,6 +752,7 @@ function CreateTypeModal({ onClose }: { onClose: () => void }) {
 type AnamneseSubTab = 'forms' | 'submissions'
 
 function AnamneseTab() {
+  const { t } = useTranslation()
   const [subTab, setSubTab] = useState<AnamneseSubTab>('forms')
 
   return (
@@ -755,7 +764,7 @@ function AnamneseTab() {
             subTab === 'forms' ? 'bg-teal-100 text-teal-700' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
           }`}
         >
-          Forms
+          {t('appointments.forms')}
         </button>
         <button
           onClick={() => setSubTab('submissions')}
@@ -763,7 +772,7 @@ function AnamneseTab() {
             subTab === 'submissions' ? 'bg-teal-100 text-teal-700' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
           }`}
         >
-          Submissions
+          {t('appointments.submissions')}
         </button>
       </div>
       {subTab === 'forms' && <AnamneseFormsPanel />}
@@ -775,6 +784,7 @@ function AnamneseTab() {
 // ── Anamnese Forms Panel ────────────────────────────────
 
 function AnamneseFormsPanel() {
+  const { t } = useTranslation()
   const [showCreate, setShowCreate] = useState(false)
   const [viewForm, setViewForm] = useState<AnamneseFormDto | null>(null)
 
@@ -789,22 +799,22 @@ function AnamneseFormsPanel() {
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <p className="text-sm text-gray-500">{forms.length} form{forms.length !== 1 ? 's' : ''}</p>
+        <p className="text-sm text-gray-500">{forms.length !== 1 ? t('appointments.formsCountPlural', { count: forms.length }) : t('appointments.formsCount', { count: forms.length })}</p>
         <button
           onClick={() => setShowCreate(true)}
           className="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 text-sm"
         >
-          + New Form
+          {t('appointments.newForm')}
         </button>
       </div>
 
       {isLoading ? (
-        <p className="text-gray-500 text-sm">Loading...</p>
+        <p className="text-gray-500 text-sm">{t('common.loading')}</p>
       ) : forms.length === 0 ? (
         <div className="bg-white rounded-lg shadow p-8 text-center">
-          <p className="text-gray-400 text-sm">No anamnese forms yet.</p>
+          <p className="text-gray-400 text-sm">{t('appointments.noFormsYet')}</p>
           <button onClick={() => setShowCreate(true)} className="mt-2 text-teal-600 text-sm font-medium hover:text-teal-700">
-            Create your first form
+            {t('appointments.createFirstForm')}
           </button>
         </div>
       ) : (
@@ -814,7 +824,7 @@ function AnamneseFormsPanel() {
               <div className="flex items-start justify-between mb-2">
                 <h4 className="text-sm font-semibold text-gray-900">{f.name}</h4>
                 <span className={`text-xs px-2 py-0.5 rounded ${f.active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
-                  {f.active ? 'Active' : 'Inactive'}
+                  {f.active ? t('common.active') : t('common.inactive')}
                 </span>
               </div>
               {f.description && <p className="text-xs text-gray-500 mb-2">{f.description}</p>}
@@ -831,7 +841,7 @@ function AnamneseFormsPanel() {
                   onClick={() => setViewForm(f)}
                   className="text-teal-600 hover:text-teal-800 font-medium"
                 >
-                  View Details
+                  {t('appointments.viewDetails')}
                 </button>
               </div>
             </div>
@@ -848,6 +858,7 @@ function AnamneseFormsPanel() {
 // ── View Form Modal ─────────────────────────────────────
 
 function ViewFormModal({ form, onClose }: { form: AnamneseFormDto; onClose: () => void }) {
+  const { t } = useTranslation()
   const questions = [...(form.questions ?? [])].sort((a, b) => a.sortOrder - b.sortOrder)
   const sections = Array.from(new Set(questions.map((q) => q.section || 'General')))
 
@@ -861,7 +872,7 @@ function ViewFormModal({ form, onClose }: { form: AnamneseFormDto; onClose: () =
             <div className="flex gap-2 mt-2">
               <span className="bg-teal-100 text-teal-700 px-2 py-0.5 rounded text-xs font-medium">v{form.version}</span>
               <span className={`text-xs px-2 py-0.5 rounded ${form.active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
-                {form.active ? 'Active' : 'Inactive'}
+                {form.active ? t('common.active') : t('common.inactive')}
               </span>
             </div>
           </div>
@@ -873,7 +884,7 @@ function ViewFormModal({ form, onClose }: { form: AnamneseFormDto; onClose: () =
         </div>
 
         {questions.length === 0 ? (
-          <p className="text-gray-400 text-sm">No questions in this form.</p>
+          <p className="text-gray-400 text-sm">{t('appointments.noQuestions')}</p>
         ) : (
           <div className="space-y-4">
             {sections.map((section) => (
@@ -907,7 +918,7 @@ function ViewFormModal({ form, onClose }: { form: AnamneseFormDto; onClose: () =
 
         <div className="flex justify-end mt-6">
           <button onClick={onClose} className="px-4 py-2 border rounded-lg text-sm text-gray-600 hover:bg-gray-50">
-            Close
+            {t('common.close')}
           </button>
         </div>
       </div>
@@ -927,6 +938,7 @@ interface QuestionDraft {
 }
 
 function CreateFormModal({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation()
   const qc = useQueryClient()
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
@@ -967,7 +979,7 @@ function CreateFormModal({ onClose }: { onClose: () => void }) {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-auto">
       <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl p-6 m-4 max-h-[90vh] overflow-y-auto">
-        <h2 className="text-lg font-semibold mb-4">Create Anamnese Form</h2>
+        <h2 className="text-lg font-semibold mb-4">{t('appointments.createAnamneseForm')}</h2>
         <form
           onSubmit={(e) => {
             e.preventDefault()
@@ -977,7 +989,7 @@ function CreateFormModal({ onClose }: { onClose: () => void }) {
         >
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Form Name *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('appointments.formNameRequired')}</label>
               <input
                 className="w-full border rounded-lg px-3 py-2 text-sm"
                 value={name}
@@ -986,7 +998,7 @@ function CreateFormModal({ onClose }: { onClose: () => void }) {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('common.description')}</label>
               <input
                 className="w-full border rounded-lg px-3 py-2 text-sm"
                 value={description}
@@ -997,21 +1009,21 @@ function CreateFormModal({ onClose }: { onClose: () => void }) {
 
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="text-sm font-medium text-gray-700">Questions</label>
+              <label className="text-sm font-medium text-gray-700">{t('appointments.questions')}</label>
               <button
                 type="button"
                 onClick={addQuestion}
                 className="text-teal-600 text-sm font-medium hover:text-teal-700"
               >
-                + Add Question
+                {t('appointments.addQuestion')}
               </button>
             </div>
 
             {questions.length === 0 ? (
               <div className="bg-gray-50 rounded-lg p-6 text-center">
-                <p className="text-gray-400 text-sm">No questions added yet.</p>
+                <p className="text-gray-400 text-sm">{t('appointments.noQuestionsAdded')}</p>
                 <button type="button" onClick={addQuestion} className="mt-1 text-teal-600 text-sm font-medium hover:text-teal-700">
-                  Add your first question
+                  {t('appointments.addFirstQuestion')}
                 </button>
               </div>
             ) : (
@@ -1084,19 +1096,19 @@ function CreateFormModal({ onClose }: { onClose: () => void }) {
           </div>
 
           {createMutation.isError && (
-            <p className="text-red-600 text-sm">Failed to create form. Please try again.</p>
+            <p className="text-red-600 text-sm">{t('appointments.failedCreateForm')}</p>
           )}
 
           <div className="flex justify-end gap-3 pt-2">
             <button type="button" onClick={onClose} className="px-4 py-2 border rounded-lg text-sm text-gray-600 hover:bg-gray-50">
-              Cancel
+              {t('common.cancel')}
             </button>
             <button
               type="submit"
               disabled={createMutation.isPending}
               className="px-4 py-2 bg-teal-600 text-white rounded-lg text-sm hover:bg-teal-700 disabled:opacity-50"
             >
-              {createMutation.isPending ? 'Creating...' : 'Create Form'}
+              {createMutation.isPending ? t('common.creating') : t('appointments.createForm')}
             </button>
           </div>
         </form>
@@ -1108,6 +1120,7 @@ function CreateFormModal({ onClose }: { onClose: () => void }) {
 // ── Anamnese Submissions Panel ──────────────────────────
 
 function AnamneseSubmissionsPanel() {
+  const { t } = useTranslation()
   const [page, setPage] = useState(0)
   const [viewSubmission, setViewSubmission] = useState<AnamneseSubmissionDto | null>(null)
 
@@ -1125,10 +1138,10 @@ function AnamneseSubmissionsPanel() {
   return (
     <div>
       {isLoading ? (
-        <p className="text-gray-500 text-sm">Loading...</p>
+        <p className="text-gray-500 text-sm">{t('common.loading')}</p>
       ) : submissions.length === 0 ? (
         <div className="bg-white rounded-lg shadow p-8 text-center">
-          <p className="text-gray-400 text-sm">No submissions yet.</p>
+          <p className="text-gray-400 text-sm">{t('appointments.noSubmissionsYet')}</p>
         </div>
       ) : (
         <>
@@ -1136,12 +1149,12 @@ function AnamneseSubmissionsPanel() {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Member</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Form</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Submitted By</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Answers</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Action</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('appointments.memberFilter')}</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('appointments.forms')}</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('appointments.submittedBy')}</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('common.date')}</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('appointments.answers')}</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('common.actions')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
@@ -1157,7 +1170,7 @@ function AnamneseSubmissionsPanel() {
                         onClick={() => setViewSubmission(s)}
                         className="text-xs font-medium text-teal-600 hover:text-teal-800"
                       >
-                        View
+                        {t('common.view')}
                       </button>
                     </td>
                   </tr>
@@ -1177,14 +1190,14 @@ function AnamneseSubmissionsPanel() {
                   disabled={page === 0}
                   className="px-3 py-1 border rounded text-sm disabled:opacity-50"
                 >
-                  Previous
+                  {t('common.previous')}
                 </button>
                 <button
                   onClick={() => setPage((p) => p + 1)}
                   disabled={page >= (meta.totalPages ?? 1) - 1}
                   className="px-3 py-1 border rounded text-sm disabled:opacity-50"
                 >
-                  Next
+                  {t('common.next')}
                 </button>
               </div>
             </div>
@@ -1200,12 +1213,13 @@ function AnamneseSubmissionsPanel() {
 // ── View Submission Modal ───────────────────────────────
 
 function ViewSubmissionModal({ submission, onClose }: { submission: AnamneseSubmissionDto; onClose: () => void }) {
+  const { t } = useTranslation()
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-auto">
       <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl p-6 m-4 max-h-[90vh] overflow-y-auto">
         <div className="flex items-start justify-between mb-4">
           <div>
-            <h2 className="text-lg font-semibold">Submission Details</h2>
+            <h2 className="text-lg font-semibold">{t('appointments.submissionDetails')}</h2>
             <p className="text-sm text-gray-500 mt-0.5">
               {submission.memberName || submission.memberId} &mdash; {submission.formName || submission.formId}
             </p>
@@ -1229,7 +1243,7 @@ function ViewSubmissionModal({ submission, onClose }: { submission: AnamneseSubm
         )}
 
         {(!submission.answers || submission.answers.length === 0) ? (
-          <p className="text-gray-400 text-sm">No answers recorded.</p>
+          <p className="text-gray-400 text-sm">{t('appointments.noAnswers')}</p>
         ) : (
           <div className="space-y-3">
             {submission.answers.map((a, i) => (
@@ -1248,7 +1262,7 @@ function ViewSubmissionModal({ submission, onClose }: { submission: AnamneseSubm
 
         <div className="flex justify-end mt-6">
           <button onClick={onClose} className="px-4 py-2 border rounded-lg text-sm text-gray-600 hover:bg-gray-50">
-            Close
+            {t('common.close')}
           </button>
         </div>
       </div>

@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useLogin } from '../api/auth'
 import { useAuthStore } from '../store/authStore'
 
 export default function LoginPage() {
+  const { t } = useTranslation()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [tenantId] = useState('demo_gym')
@@ -52,23 +54,23 @@ export default function LoginPage() {
             <h1 className="text-3xl font-semibold text-white tracking-tight">Fitagend</h1>
           </div>
           <p className="text-brand-400 text-sm">
-            {isPortalLogin ? 'Member Portal' : 'Studio Management Platform'}
+            {isPortalLogin ? t('auth.memberPortal') : t('auth.studioManagement')}
           </p>
         </div>
 
         {/* Card */}
         <div className="bg-white rounded-2xl shadow-2xl shadow-black/20 p-8">
           <h2 className="text-xl font-semibold text-gray-900 mb-1">
-            {isPortalLogin ? 'Welcome back' : 'Sign in'}
+            {isPortalLogin ? t('auth.welcomeBack') : t('auth.signIn')}
           </h2>
           <p className="text-sm text-gray-500 mb-6">
-            {isPortalLogin ? 'Access your membership dashboard' : 'Enter your credentials to continue'}
+            {isPortalLogin ? t('auth.accessMembership') : t('auth.enterCredentials')}
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <input type="hidden" value={tenantId} />
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Email</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">{t('auth.email')}</label>
               <input
                 type="email"
                 value={email}
@@ -76,11 +78,11 @@ export default function LoginPage() {
                 required
                 autoComplete="email"
                 className="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-shadow"
-                placeholder="you@studio.com"
+                placeholder={t('auth.emailPlaceholder')}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Password</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">{t('auth.password')}</label>
               <input
                 type="password"
                 value={password}
@@ -93,7 +95,7 @@ export default function LoginPage() {
 
             {login.isError && (
               <div className="bg-red-50 text-red-700 text-sm px-4 py-3 rounded-xl">
-                Login failed. Please check your credentials.
+                {t('auth.invalidCredentials')}
               </div>
             )}
 
@@ -102,23 +104,23 @@ export default function LoginPage() {
               disabled={login.isPending}
               className="w-full bg-brand-600 text-white py-2.5 rounded-xl font-medium text-sm hover:bg-brand-700 focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 disabled:opacity-50 transition-colors"
             >
-              {login.isPending ? 'Signing in...' : 'Sign in'}
+              {login.isPending ? t('auth.signingIn') : t('auth.loginButton')}
             </button>
           </form>
 
           <div className="mt-6 pt-4 border-t text-center">
             {!isPortalLogin ? (
               <p className="text-sm text-gray-500">
-                Member?{' '}
+                {t('auth.member')}{' '}
                 <a href="/portal" className="text-brand-600 hover:text-brand-700 font-medium">
-                  Open Member Portal
+                  {t('auth.openMemberPortal')}
                 </a>
               </p>
             ) : (
               <p className="text-sm text-gray-500">
-                Staff?{' '}
+                {t('auth.staffQuestion')}{' '}
                 <a href="/login" className="text-brand-600 hover:text-brand-700 font-medium">
-                  Open Staff Dashboard
+                  {t('auth.openStaffDashboard')}
                 </a>
               </p>
             )}
@@ -127,7 +129,7 @@ export default function LoginPage() {
 
         {/* Footer */}
         <p className="text-center text-brand-600/50 text-xs mt-6">
-          Powered by Fitagend
+          {t('auth.poweredBy')}
         </p>
       </div>
     </div>

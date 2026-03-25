@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import api from '../../api/client'
 import type { ApiResponse, ContractDto } from '../../types'
 
 export default function PortalContracts() {
+  const { t } = useTranslation()
   const qc = useQueryClient()
   const [cancelId, setCancelId] = useState<string | null>(null)
   const [cancelReason, setCancelReason] = useState('')
@@ -42,10 +44,10 @@ export default function PortalContracts() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">My Contracts</h1>
+      <h1 className="text-2xl font-bold mb-6">{t('portal.contracts.title')}</h1>
 
       {contracts.length === 0 ? (
-        <p className="text-gray-500">No contracts found.</p>
+        <p className="text-gray-500">{t('portal.contracts.noContracts')}</p>
       ) : (
         <div className="space-y-4">
           {contracts.map(c => (
@@ -54,7 +56,7 @@ export default function PortalContracts() {
                 <div>
                   <h3 className="text-lg font-semibold">{c.membershipTierName}</h3>
                   <p className="text-sm text-gray-500">
-                    Started: {c.startDate} {c.endDate ? `| Ends: ${c.endDate}` : '| Ongoing'}
+                    {t('portal.contracts.started', { date: c.startDate })} {c.endDate ? `| ${t('portal.contracts.ends', { date: c.endDate })}` : `| ${t('portal.ongoing')}`}
                   </p>
                 </div>
                 <span className={`text-xs px-3 py-1 rounded-full font-medium ${
@@ -70,20 +72,20 @@ export default function PortalContracts() {
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm mb-4">
                 <div>
-                  <p className="text-gray-500">Monthly Amount</p>
+                  <p className="text-gray-500">{t('portal.contracts.monthlyAmount')}</p>
                   <p className="font-semibold">&euro;{c.monthlyAmount}</p>
                 </div>
                 <div>
-                  <p className="text-gray-500">Next Billing</p>
+                  <p className="text-gray-500">{t('portal.contracts.nextBilling')}</p>
                   <p className="font-semibold">{c.nextBillingDate ?? '—'}</p>
                 </div>
                 <div>
-                  <p className="text-gray-500">Auto Renew</p>
-                  <p className="font-semibold">{c.autoRenew ? 'Yes' : 'No'}</p>
+                  <p className="text-gray-500">{t('portal.contracts.autoRenew')}</p>
+                  <p className="font-semibold">{c.autoRenew ? t('portal.contracts.yes') : t('portal.contracts.no')}</p>
                 </div>
                 {c.cancellationEffectiveDate && (
                   <div>
-                    <p className="text-gray-500">Cancellation Effective</p>
+                    <p className="text-gray-500">{t('portal.contracts.cancellationEffective')}</p>
                     <p className="font-semibold text-red-600">{c.cancellationEffectiveDate}</p>
                   </div>
                 )}
@@ -96,7 +98,7 @@ export default function PortalContracts() {
                     onClick={() => startCancel(c.id)}
                     className="text-sm text-red-600 hover:text-red-800"
                   >
-                    Cancel Contract
+                    {t('portal.contracts.cancelContract')}
                   </button>
                 )}
                 {c.status === 'PENDING_CANCELLATION' && (
@@ -105,7 +107,7 @@ export default function PortalContracts() {
                     disabled={withdrawMutation.isPending}
                     className="text-sm text-brand-600 hover:text-brand-700"
                   >
-                    Withdraw Cancellation
+                    {t('portal.contracts.withdrawCancellation')}
                   </button>
                 )}
               </div>
@@ -114,24 +116,23 @@ export default function PortalContracts() {
               {showFreezeHint === c.id && (
                 <div className="mt-3 bg-blue-50 border border-blue-200 rounded p-4">
                   <p className="text-sm text-blue-800 font-medium mb-2">
-                    Before cancelling, have you considered freezing your membership?
+                    {t('portal.contracts.freezeHintTitle')}
                   </p>
                   <p className="text-sm text-blue-700 mb-3">
-                    Freezing pauses your contract temporarily. You keep your membership benefits and pricing
-                    when you return. Contact the front desk to freeze your contract.
+                    {t('portal.contracts.freezeHintBody')}
                   </p>
                   <div className="flex gap-3">
                     <button
                       onClick={() => setShowFreezeHint(null)}
                       className="text-sm bg-blue-600 text-white px-3 py-1.5 rounded hover:bg-blue-700"
                     >
-                      I'll consider freezing
+                      {t('portal.contracts.considerFreezing')}
                     </button>
                     <button
                       onClick={() => proceedToCancel(c.id)}
                       className="text-sm text-red-600 hover:text-red-800"
                     >
-                      Proceed to cancel
+                      {t('portal.contracts.proceedToCancel')}
                     </button>
                   </div>
                 </div>
@@ -140,11 +141,11 @@ export default function PortalContracts() {
               {/* Cancel form */}
               {cancelId === c.id && (
                 <div className="mt-3 bg-red-50 border border-red-200 rounded p-4">
-                  <p className="text-sm font-medium text-red-800 mb-2">Cancel Contract</p>
+                  <p className="text-sm font-medium text-red-800 mb-2">{t('portal.contracts.cancelContractTitle')}</p>
                   <textarea
                     value={cancelReason}
                     onChange={e => setCancelReason(e.target.value)}
-                    placeholder="Reason for cancellation (optional)"
+                    placeholder={t('portal.contracts.cancelReasonPlaceholder')}
                     rows={2}
                     className="w-full border rounded px-3 py-2 text-sm mb-3"
                   />
@@ -154,13 +155,13 @@ export default function PortalContracts() {
                       disabled={cancelMutation.isPending}
                       className="text-sm bg-red-600 text-white px-3 py-1.5 rounded hover:bg-red-700 disabled:opacity-50"
                     >
-                      {cancelMutation.isPending ? 'Cancelling...' : 'Confirm Cancellation'}
+                      {cancelMutation.isPending ? t('portal.contracts.cancelling') : t('portal.contracts.confirmCancellation')}
                     </button>
                     <button
                       onClick={() => { setCancelId(null); setCancelReason('') }}
                       className="text-sm text-gray-600"
                     >
-                      Back
+                      {t('portal.back')}
                     </button>
                   </div>
                 </div>

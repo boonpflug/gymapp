@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import api from '../api/client'
 import type {
@@ -11,6 +12,7 @@ import type {
 } from '../types'
 
 export default function ClassesPage() {
+  const { t } = useTranslation()
   const [tab, setTab] = useState<'schedule' | 'classes' | 'categories'>('schedule')
   const [selectedSchedule, setSelectedSchedule] = useState<ClassScheduleDto | null>(null)
   const [showCreateClass, setShowCreateClass] = useState(false)
@@ -31,14 +33,14 @@ export default function ClassesPage() {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Classes & Booking</h1>
+        <h1 className="text-2xl font-bold text-gray-800">{t('classes.title')}</h1>
         <div className="flex gap-2">
           {tab === 'schedule' && (
             <button
               onClick={() => setShowCreateSchedule(true)}
               className="bg-brand-600 text-white px-4 py-2 rounded-md text-sm hover:bg-brand-700"
             >
-              + Schedule Class
+              {t('classes.scheduleClass')}
             </button>
           )}
           {tab === 'classes' && (
@@ -46,7 +48,7 @@ export default function ClassesPage() {
               onClick={() => setShowCreateClass(true)}
               className="bg-brand-600 text-white px-4 py-2 rounded-md text-sm hover:bg-brand-700"
             >
-              + New Class
+              {t('classes.newClass')}
             </button>
           )}
           {tab === 'categories' && (
@@ -54,7 +56,7 @@ export default function ClassesPage() {
               onClick={() => setShowCreateCategory(true)}
               className="bg-brand-600 text-white px-4 py-2 rounded-md text-sm hover:bg-brand-700"
             >
-              + New Category
+              {t('classes.newCategory')}
             </button>
           )}
         </div>
@@ -62,17 +64,17 @@ export default function ClassesPage() {
 
       {/* Tabs */}
       <div className="flex border-b mb-6">
-        {(['schedule', 'classes', 'categories'] as const).map((t) => (
+        {(['schedule', 'classes', 'categories'] as const).map((tabKey) => (
           <button
-            key={t}
-            onClick={() => setTab(t)}
+            key={tabKey}
+            onClick={() => setTab(tabKey)}
             className={`px-4 py-2 text-sm font-medium border-b-2 ${
-              tab === t
+              tab === tabKey
                 ? 'border-brand-600 text-brand-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700'
             }`}
           >
-            {t === 'schedule' ? 'Weekly Schedule' : t === 'classes' ? 'Class Definitions' : 'Categories'}
+            {tabKey === 'schedule' ? t('classes.weeklySchedule') : tabKey === 'classes' ? t('classes.definitions') : t('classes.categories')}
           </button>
         ))}
       </div>
@@ -130,6 +132,7 @@ function ScheduleTab({
   selectedSchedule: ClassScheduleDto | null
   onSelect: (s: ClassScheduleDto | null) => void
 }) {
+  const { t } = useTranslation()
   const { data: schedules, isLoading } = useQuery({
     queryKey: ['class-schedule', weekStart],
     queryFn: async () => {
@@ -158,7 +161,7 @@ function ScheduleTab({
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <div className="lg:col-span-2">
         {isLoading ? (
-          <div className="text-center text-gray-500 py-8">Loading schedule...</div>
+          <div className="text-center text-gray-500 py-8">{t('classes.loadingSchedule')}</div>
         ) : (
           <div className="bg-white rounded-lg shadow overflow-hidden">
             <div className="grid grid-cols-7 border-b">
@@ -196,7 +199,7 @@ function ScheduleTab({
                           {s.bookedCount}/{s.capacity}
                         </span>
                         {s.waitlistCount > 0 && (
-                          <span className="text-orange-500">+{s.waitlistCount} wl</span>
+                          <span className="text-orange-500">+{s.waitlistCount} {t('classes.wl')}</span>
                         )}
                       </div>
                     </button>
@@ -214,7 +217,7 @@ function ScheduleTab({
           <ScheduleDetail schedule={selectedSchedule} onClose={() => onSelect(null)} />
         ) : (
           <div className="bg-white rounded-lg shadow p-6 text-center text-gray-400 text-sm">
-            Select a class from the schedule to view details
+            {t('classes.selectClassDetails')}
           </div>
         )}
       </div>
@@ -223,6 +226,7 @@ function ScheduleTab({
 }
 
 function ScheduleDetail({ schedule, onClose }: { schedule: ClassScheduleDto; onClose: () => void }) {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
 
   const { data: bookings } = useQuery({
@@ -278,24 +282,24 @@ function ScheduleDetail({ schedule, onClose }: { schedule: ClassScheduleDto; onC
 
       <div className="p-4 space-y-3 text-sm">
         <div className="flex justify-between">
-          <span className="text-gray-500">Room</span>
+          <span className="text-gray-500">{t('classes.room')}</span>
           <span className="text-gray-800">{schedule.room || '—'}</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-gray-500">Trainer</span>
+          <span className="text-gray-500">{t('classes.trainer')}</span>
           <span className="text-gray-800">{schedule.trainerName || '—'}</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-gray-500">Capacity</span>
+          <span className="text-gray-500">{t('classes.capacity')}</span>
           <span className="text-gray-800">
             {schedule.bookedCount} / {schedule.capacity}
           </span>
         </div>
         {schedule.virtualLink && (
           <div className="flex justify-between">
-            <span className="text-gray-500">Virtual</span>
+            <span className="text-gray-500">{t('classes.virtual')}</span>
             <a href={schedule.virtualLink} target="_blank" rel="noreferrer" className="text-brand-600 hover:underline">
-              Join Link
+              {t('classes.joinLink')}
             </a>
           </div>
         )}
@@ -306,28 +310,28 @@ function ScheduleDetail({ schedule, onClose }: { schedule: ClassScheduleDto; onC
             disabled={cancelScheduleMutation.isPending}
             className="w-full mt-2 px-3 py-1.5 text-xs text-red-600 border border-red-300 rounded hover:bg-red-50"
           >
-            Cancel This Class
+            {t('classes.cancelThisClass')}
           </button>
         )}
         {schedule.cancelled && (
-          <div className="mt-2 p-2 bg-red-50 text-red-700 rounded text-xs text-center">Cancelled</div>
+          <div className="mt-2 p-2 bg-red-50 text-red-700 rounded text-xs text-center">{t('classes.cancelled')}</div>
         )}
       </div>
 
       {/* Bookings */}
       <div className="border-t">
         <div className="px-4 py-2 bg-gray-50 text-xs font-semibold text-gray-600">
-          Bookings ({bookings?.length ?? 0})
+          {t('classes.bookings')} ({bookings?.length ?? 0})
         </div>
         <div className="divide-y max-h-48 overflow-auto">
           {bookings?.length === 0 && (
-            <div className="px-4 py-3 text-xs text-gray-400 text-center">No bookings yet</div>
+            <div className="px-4 py-3 text-xs text-gray-400 text-center">{t('classes.noBookingsYet')}</div>
           )}
           {bookings?.map((b) => (
             <div key={b.id} className="px-4 py-2 flex items-center justify-between">
               <div>
                 <span className="text-sm text-gray-800">{b.memberName || b.guestName}</span>
-                {b.guestEmail && <span className="text-xs text-gray-400 ml-2">(guest)</span>}
+                {b.guestEmail && <span className="text-xs text-gray-400 ml-2">({t('classes.guest')})</span>}
               </div>
               <div className="flex items-center gap-1">
                 {b.status === 'CONFIRMED' && (
@@ -336,24 +340,24 @@ function ScheduleDetail({ schedule, onClose }: { schedule: ClassScheduleDto; onC
                       onClick={() => attendanceMutation.mutate({ bookingId: b.id, status: 'ATTENDED' })}
                       className="px-2 py-0.5 text-xs bg-green-100 text-green-700 rounded hover:bg-green-200"
                     >
-                      Present
+                      {t('classes.present')}
                     </button>
                     <button
                       onClick={() => attendanceMutation.mutate({ bookingId: b.id, status: 'NO_SHOW' })}
                       className="px-2 py-0.5 text-xs bg-red-100 text-red-700 rounded hover:bg-red-200"
                     >
-                      No Show
+                      {t('classes.noShow')}
                     </button>
                   </>
                 )}
                 {b.status === 'ATTENDED' && (
-                  <span className="px-2 py-0.5 text-xs bg-green-100 text-green-800 rounded-full">Attended</span>
+                  <span className="px-2 py-0.5 text-xs bg-green-100 text-green-800 rounded-full">{t('classes.attended')}</span>
                 )}
                 {b.status === 'NO_SHOW' && (
-                  <span className="px-2 py-0.5 text-xs bg-red-100 text-red-800 rounded-full">No Show</span>
+                  <span className="px-2 py-0.5 text-xs bg-red-100 text-red-800 rounded-full">{t('classes.noShow')}</span>
                 )}
                 {b.status === 'CANCELLED' && (
-                  <span className="px-2 py-0.5 text-xs bg-gray-100 text-gray-600 rounded-full">Cancelled</span>
+                  <span className="px-2 py-0.5 text-xs bg-gray-100 text-gray-600 rounded-full">{t('classes.cancelled')}</span>
                 )}
               </div>
             </div>
@@ -365,7 +369,7 @@ function ScheduleDetail({ schedule, onClose }: { schedule: ClassScheduleDto; onC
       {(waitlist?.length ?? 0) > 0 && (
         <div className="border-t">
           <div className="px-4 py-2 bg-orange-50 text-xs font-semibold text-orange-700">
-            Waitlist ({waitlist?.length})
+            {t('classes.waitlist')} ({waitlist?.length})
           </div>
           <div className="divide-y max-h-32 overflow-auto">
             {waitlist?.map((w) => (
@@ -386,6 +390,7 @@ function ScheduleDetail({ schedule, onClose }: { schedule: ClassScheduleDto; onC
 // ============ CLASS DEFINITIONS TAB ============
 
 function ClassDefinitionsTab() {
+  const { t } = useTranslation()
   const { data, isLoading } = useQuery({
     queryKey: ['class-definitions'],
     queryFn: async () => {
@@ -401,23 +406,23 @@ function ClassDefinitionsTab() {
       <table className="min-w-full divide-y divide-gray-200">
         <thead className="bg-gray-50">
           <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Duration</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Capacity</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Room</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Trial</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Waitlist</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('classes.name')}</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('classes.category')}</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('classes.duration')}</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('classes.capacity')}</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('classes.room')}</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('classes.trial')}</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('classes.waitlist')}</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200">
           {isLoading ? (
             <tr>
-              <td colSpan={7} className="px-6 py-8 text-center text-gray-500">Loading...</td>
+              <td colSpan={7} className="px-6 py-8 text-center text-gray-500">{t('classes.loading')}</td>
             </tr>
           ) : data?.length === 0 ? (
             <tr>
-              <td colSpan={7} className="px-6 py-8 text-center text-gray-500">No classes defined yet</td>
+              <td colSpan={7} className="px-6 py-8 text-center text-gray-500">{t('classes.noClassesDefined')}</td>
             </tr>
           ) : (
             data?.map((cls) => (
@@ -438,7 +443,7 @@ function ClassDefinitionsTab() {
                       cls.allowTrial ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-500'
                     }`}
                   >
-                    {cls.allowTrial ? 'Yes' : 'No'}
+                    {cls.allowTrial ? t('classes.yes') : t('classes.no')}
                   </span>
                 </td>
                 <td className="px-6 py-4">
@@ -447,7 +452,7 @@ function ClassDefinitionsTab() {
                       cls.allowWaitlist ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-500'
                     }`}
                   >
-                    {cls.allowWaitlist ? 'Yes' : 'No'}
+                    {cls.allowWaitlist ? t('classes.yes') : t('classes.no')}
                   </span>
                 </td>
               </tr>
@@ -462,6 +467,7 @@ function ClassDefinitionsTab() {
 // ============ CATEGORIES TAB ============
 
 function CategoriesTab() {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
 
   const { data, isLoading } = useQuery({
@@ -481,9 +487,9 @@ function CategoriesTab() {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      {isLoading && <div className="text-gray-500 col-span-full text-center py-8">Loading...</div>}
+      {isLoading && <div className="text-gray-500 col-span-full text-center py-8">{t('classes.loading')}</div>}
       {data?.length === 0 && (
-        <div className="text-gray-500 col-span-full text-center py-8">No categories yet</div>
+        <div className="text-gray-500 col-span-full text-center py-8">{t('classes.noCategoriesYet')}</div>
       )}
       {data?.map((cat) => (
         <div key={cat.id} className="bg-white rounded-lg shadow p-4">
@@ -493,7 +499,7 @@ function CategoriesTab() {
             )}
             <h3 className="font-semibold text-gray-800">{cat.name}</h3>
             {!cat.active && (
-              <span className="px-2 py-0.5 text-xs bg-gray-100 text-gray-500 rounded-full">Inactive</span>
+              <span className="px-2 py-0.5 text-xs bg-gray-100 text-gray-500 rounded-full">{t('classes.inactive')}</span>
             )}
           </div>
           {cat.description && <p className="text-sm text-gray-500 mb-3">{cat.description}</p>}
@@ -502,7 +508,7 @@ function CategoriesTab() {
               onClick={() => deactivateMutation.mutate(cat.id)}
               className="text-xs text-red-500 hover:text-red-700"
             >
-              Deactivate
+              {t('classes.deactivate')}
             </button>
           )}
         </div>
@@ -514,6 +520,7 @@ function CategoriesTab() {
 // ============ CREATE CATEGORY MODAL ============
 
 function CreateCategoryModal({ onClose, onCreated }: { onClose: () => void; onCreated: () => void }) {
+  const { t } = useTranslation()
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [color, setColor] = useState('#6366f1')
@@ -528,41 +535,41 @@ function CreateCategoryModal({ onClose, onCreated }: { onClose: () => void; onCr
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
-        <h2 className="text-lg font-semibold mb-4">New Category</h2>
+        <h2 className="text-lg font-semibold mb-4">{t('classes.newCategoryTitle')}</h2>
         <div className="space-y-3">
           <input
             type="text"
-            placeholder="Category name"
+            placeholder={t('classes.categoryName')}
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="w-full px-3 py-2 border rounded-md text-sm"
           />
           <textarea
-            placeholder="Description (optional)"
+            placeholder={t('classes.descriptionOptional')}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             className="w-full px-3 py-2 border rounded-md text-sm"
             rows={2}
           />
           <div className="flex items-center gap-2">
-            <label className="text-sm text-gray-600">Color</label>
+            <label className="text-sm text-gray-600">{t('classes.color')}</label>
             <input type="color" value={color} onChange={(e) => setColor(e.target.value)} className="w-8 h-8" />
           </div>
         </div>
         <div className="flex justify-end gap-2 mt-4">
           <button onClick={onClose} className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800">
-            Cancel
+            {t('classes.cancel')}
           </button>
           <button
             onClick={() => mutation.mutate()}
             disabled={!name || mutation.isPending}
             className="px-4 py-2 text-sm bg-brand-600 text-white rounded-md hover:bg-brand-700 disabled:opacity-50"
           >
-            {mutation.isPending ? 'Creating...' : 'Create'}
+            {mutation.isPending ? t('classes.creating') : t('classes.create')}
           </button>
         </div>
         {mutation.isError && (
-          <p className="mt-2 text-xs text-red-600">Failed to create category. Please try again.</p>
+          <p className="mt-2 text-xs text-red-600">{t('classes.failedCreateCategory')}</p>
         )}
       </div>
     </div>
@@ -572,6 +579,7 @@ function CreateCategoryModal({ onClose, onCreated }: { onClose: () => void; onCr
 // ============ CREATE CLASS MODAL ============
 
 function CreateClassModal({ onClose, onCreated }: { onClose: () => void; onCreated: () => void }) {
+  const { t } = useTranslation()
   const [form, setForm] = useState({
     name: '',
     description: '',
@@ -610,17 +618,17 @@ function CreateClassModal({ onClose, onCreated }: { onClose: () => void; onCreat
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-lg p-6 max-h-[90vh] overflow-auto">
-        <h2 className="text-lg font-semibold mb-4">New Class</h2>
+        <h2 className="text-lg font-semibold mb-4">{t('classes.newClassTitle')}</h2>
         <div className="space-y-3">
           <input
             type="text"
-            placeholder="Class name *"
+            placeholder={t('classes.className')}
             value={form.name}
             onChange={(e) => update('name', e.target.value)}
             className="w-full px-3 py-2 border rounded-md text-sm"
           />
           <textarea
-            placeholder="Description"
+            placeholder={t('classes.description')}
             value={form.description}
             onChange={(e) => update('description', e.target.value)}
             className="w-full px-3 py-2 border rounded-md text-sm"
@@ -631,14 +639,14 @@ function CreateClassModal({ onClose, onCreated }: { onClose: () => void; onCreat
             onChange={(e) => update('categoryId', e.target.value)}
             className="w-full px-3 py-2 border rounded-md text-sm"
           >
-            <option value="">No category</option>
+            <option value="">{t('classes.noCategory')}</option>
             {categories?.map((c) => (
               <option key={c.id} value={c.id}>{c.name}</option>
             ))}
           </select>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs text-gray-500">Capacity *</label>
+              <label className="text-xs text-gray-500">{t('classes.capacityLabel')}</label>
               <input
                 type="number"
                 min={1}
@@ -648,7 +656,7 @@ function CreateClassModal({ onClose, onCreated }: { onClose: () => void; onCreat
               />
             </div>
             <div>
-              <label className="text-xs text-gray-500">Duration (min) *</label>
+              <label className="text-xs text-gray-500">{t('classes.durationLabel')}</label>
               <input
                 type="number"
                 min={1}
@@ -660,21 +668,21 @@ function CreateClassModal({ onClose, onCreated }: { onClose: () => void; onCreat
           </div>
           <input
             type="text"
-            placeholder="Room"
+            placeholder={t('classes.roomPlaceholder')}
             value={form.room}
             onChange={(e) => update('room', e.target.value)}
             className="w-full px-3 py-2 border rounded-md text-sm"
           />
           <input
             type="url"
-            placeholder="Virtual meeting link (Zoom, etc.)"
+            placeholder={t('classes.virtualMeetingLink')}
             value={form.virtualLink}
             onChange={(e) => update('virtualLink', e.target.value)}
             className="w-full px-3 py-2 border rounded-md text-sm"
           />
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs text-gray-500">Booking cutoff (min before)</label>
+              <label className="text-xs text-gray-500">{t('classes.bookingCutoff')}</label>
               <input
                 type="number"
                 min={0}
@@ -684,7 +692,7 @@ function CreateClassModal({ onClose, onCreated }: { onClose: () => void; onCreat
               />
             </div>
             <div>
-              <label className="text-xs text-gray-500">Cancel cutoff (min before)</label>
+              <label className="text-xs text-gray-500">{t('classes.cancelCutoff')}</label>
               <input
                 type="number"
                 min={0}
@@ -701,7 +709,7 @@ function CreateClassModal({ onClose, onCreated }: { onClose: () => void; onCreat
                 checked={form.allowWaitlist}
                 onChange={(e) => update('allowWaitlist', e.target.checked)}
               />
-              Allow waitlist
+              {t('classes.allowWaitlist')}
             </label>
             <label className="flex items-center gap-2 text-sm">
               <input
@@ -709,22 +717,22 @@ function CreateClassModal({ onClose, onCreated }: { onClose: () => void; onCreat
                 checked={form.allowTrial}
                 onChange={(e) => update('allowTrial', e.target.checked)}
               />
-              Allow trial/guest
+              {t('classes.allowTrialGuest')}
             </label>
           </div>
         </div>
         <div className="flex justify-end gap-2 mt-4">
-          <button onClick={onClose} className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800">Cancel</button>
+          <button onClick={onClose} className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800">{t('classes.cancel')}</button>
           <button
             onClick={() => mutation.mutate()}
             disabled={!form.name || mutation.isPending}
             className="px-4 py-2 text-sm bg-brand-600 text-white rounded-md hover:bg-brand-700 disabled:opacity-50"
           >
-            {mutation.isPending ? 'Creating...' : 'Create'}
+            {mutation.isPending ? t('classes.creating') : t('classes.create')}
           </button>
         </div>
         {mutation.isError && (
-          <p className="mt-2 text-xs text-red-600">Failed to create class. Please try again.</p>
+          <p className="mt-2 text-xs text-red-600">{t('classes.failedCreateClass')}</p>
         )}
       </div>
     </div>
@@ -734,6 +742,7 @@ function CreateClassModal({ onClose, onCreated }: { onClose: () => void; onCreat
 // ============ CREATE SCHEDULE MODAL ============
 
 function CreateScheduleModal({ onClose, onCreated }: { onClose: () => void; onCreated: () => void }) {
+  const { t } = useTranslation()
   const [classId, setClassId] = useState('')
   const [startDate, setStartDate] = useState('')
   const [startTime, setStartTime] = useState('09:00')
@@ -766,14 +775,14 @@ function CreateScheduleModal({ onClose, onCreated }: { onClose: () => void; onCr
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
-        <h2 className="text-lg font-semibold mb-4">Schedule a Class</h2>
+        <h2 className="text-lg font-semibold mb-4">{t('classes.scheduleAClass')}</h2>
         <div className="space-y-3">
           <select
             value={classId}
             onChange={(e) => setClassId(e.target.value)}
             className="w-full px-3 py-2 border rounded-md text-sm"
           >
-            <option value="">Select a class *</option>
+            <option value="">{t('classes.selectClass')}</option>
             {classes?.map((c) => (
               <option key={c.id} value={c.id}>
                 {c.name} ({c.durationMinutes}min, cap {c.capacity})
@@ -782,7 +791,7 @@ function CreateScheduleModal({ onClose, onCreated }: { onClose: () => void; onCr
           </select>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs text-gray-500">Date *</label>
+              <label className="text-xs text-gray-500">{t('classes.date')}</label>
               <input
                 type="date"
                 value={startDate}
@@ -791,7 +800,7 @@ function CreateScheduleModal({ onClose, onCreated }: { onClose: () => void; onCr
               />
             </div>
             <div>
-              <label className="text-xs text-gray-500">Time *</label>
+              <label className="text-xs text-gray-500">{t('classes.time')}</label>
               <input
                 type="time"
                 value={startTime}
@@ -801,22 +810,22 @@ function CreateScheduleModal({ onClose, onCreated }: { onClose: () => void; onCr
             </div>
           </div>
           <div>
-            <label className="text-xs text-gray-500">Recurrence</label>
+            <label className="text-xs text-gray-500">{t('classes.recurrence')}</label>
             <select
               value={recurrenceRule}
               onChange={(e) => setRecurrenceRule(e.target.value)}
               className="w-full px-3 py-2 border rounded-md text-sm"
             >
-              <option value="NONE">One-time</option>
-              <option value="DAILY">Daily</option>
-              <option value="WEEKLY">Weekly</option>
-              <option value="BIWEEKLY">Every 2 weeks</option>
-              <option value="MONTHLY">Monthly</option>
+              <option value="NONE">{t('classes.oneTime')}</option>
+              <option value="DAILY">{t('classes.daily')}</option>
+              <option value="WEEKLY">{t('classes.weekly')}</option>
+              <option value="BIWEEKLY">{t('classes.everyTwoWeeks')}</option>
+              <option value="MONTHLY">{t('classes.monthly')}</option>
             </select>
           </div>
           {recurrenceRule !== 'NONE' && (
             <div>
-              <label className="text-xs text-gray-500">Generate for how many occurrences?</label>
+              <label className="text-xs text-gray-500">{t('classes.generateOccurrences')}</label>
               <input
                 type="number"
                 min={1}
@@ -829,17 +838,17 @@ function CreateScheduleModal({ onClose, onCreated }: { onClose: () => void; onCr
           )}
         </div>
         <div className="flex justify-end gap-2 mt-4">
-          <button onClick={onClose} className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800">Cancel</button>
+          <button onClick={onClose} className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800">{t('classes.cancel')}</button>
           <button
             onClick={() => mutation.mutate()}
             disabled={!classId || !startDate || mutation.isPending}
             className="px-4 py-2 text-sm bg-brand-600 text-white rounded-md hover:bg-brand-700 disabled:opacity-50"
           >
-            {mutation.isPending ? 'Scheduling...' : 'Schedule'}
+            {mutation.isPending ? t('classes.scheduling') : t('classes.schedule')}
           </button>
         </div>
         {mutation.isError && (
-          <p className="mt-2 text-xs text-red-600">Failed to schedule class. Please try again.</p>
+          <p className="mt-2 text-xs text-red-600">{t('classes.failedScheduleClass')}</p>
         )}
       </div>
     </div>

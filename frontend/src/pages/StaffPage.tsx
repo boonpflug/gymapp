@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import api from '../api/client'
 import type {
@@ -15,17 +16,18 @@ const EMPLOYMENT_TYPES: EmploymentType[] = ['FULL_TIME', 'PART_TIME', 'FREELANCE
 type Tab = 'employees' | 'shifts' | 'time'
 
 export default function StaffPage() {
+  const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState<Tab>('employees')
 
   const tabs: { key: Tab; label: string }[] = [
-    { key: 'employees', label: 'Employees' },
-    { key: 'shifts', label: 'Shift Schedule' },
-    { key: 'time', label: 'Time Tracking' },
+    { key: 'employees', label: t('staff.employees') },
+    { key: 'shifts', label: t('staff.shifts') },
+    { key: 'time', label: t('staff.timeTracking') },
   ]
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Staff</h1>
+      <h1 className="text-2xl font-bold text-gray-900 mb-6">{t('staff.title')}</h1>
       <div className="border-b border-gray-200 mb-6">
         <nav className="flex space-x-8">
           {tabs.map((tab) => (
@@ -54,6 +56,7 @@ export default function StaffPage() {
 // ===================== EMPLOYEES =====================
 
 function EmployeeList() {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const [showCreate, setShowCreate] = useState(false)
   const [editEmployee, setEditEmployee] = useState<EmployeeDto | null>(null)
@@ -96,23 +99,23 @@ function EmployeeList() {
           onClick={() => setShowCreate(true)}
           className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-700"
         >
-          Add Employee
+          {t('staff.addEmployee')}
         </button>
       </div>
 
       {isLoading ? (
-        <p className="text-gray-500">Loading employees...</p>
+        <p className="text-gray-500">{t('staff.loadingEmployees')}</p>
       ) : (
         <div className="bg-white rounded-lg shadow overflow-hidden">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">Name</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">Role</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">Type</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">Position</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">Contact</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">Actions</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">{t('staff.name')}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">{t('staff.role')}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">{t('staff.type')}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">{t('staff.position')}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">{t('staff.contact')}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500">{t('staff.actions')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
@@ -140,7 +143,7 @@ function EmployeeList() {
                         onClick={() => deactivateMutation.mutate(emp.id)}
                         className="text-xs text-red-500 hover:text-red-700"
                       >
-                        Deactivate
+                        {t('staff.deactivate')}
                       </button>
                     )}
                   </td>
@@ -182,6 +185,7 @@ function CreateEmployeeModal({
   isLoading: boolean
   initialData?: EmployeeDto
 }) {
+  const { t } = useTranslation()
   const [form, setForm] = useState({
     firstName: initialData?.firstName ?? '',
     lastName: initialData?.lastName ?? '',
@@ -197,21 +201,21 @@ function CreateEmployeeModal({
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6">
-        <h2 className="text-lg font-bold mb-4">{initialData ? 'Edit Employee' : 'Add Employee'}</h2>
+        <h2 className="text-lg font-bold mb-4">{initialData ? t('staff.editEmployee') : t('staff.addEmployeeTitle')}</h2>
         <div className="space-y-3">
           <div className="grid grid-cols-2 gap-3">
-            <input placeholder="First name *" value={form.firstName}
+            <input placeholder={t('staff.firstNamePlaceholder')} value={form.firstName}
               onChange={(e) => setForm({ ...form, firstName: e.target.value })}
               className="border rounded px-3 py-2 text-sm" />
-            <input placeholder="Last name *" value={form.lastName}
+            <input placeholder={t('staff.lastNamePlaceholder')} value={form.lastName}
               onChange={(e) => setForm({ ...form, lastName: e.target.value })}
               className="border rounded px-3 py-2 text-sm" />
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <input placeholder="Email" value={form.email}
+            <input placeholder={t('staff.emailPlaceholder')} value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
               className="border rounded px-3 py-2 text-sm" />
-            <input placeholder="Phone" value={form.phone}
+            <input placeholder={t('staff.phonePlaceholder')} value={form.phone}
               onChange={(e) => setForm({ ...form, phone: e.target.value })}
               className="border rounded px-3 py-2 text-sm" />
           </div>
@@ -223,24 +227,24 @@ function CreateEmployeeModal({
                 <option key={t} value={t}>{t.replace(/_/g, ' ')}</option>
               ))}
             </select>
-            <input placeholder="Role (e.g., TRAINER)" value={form.role}
+            <input placeholder={t('staff.rolePlaceholder')} value={form.role}
               onChange={(e) => setForm({ ...form, role: e.target.value })}
               className="border rounded px-3 py-2 text-sm" />
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <input placeholder="Position" value={form.position}
+            <input placeholder={t('staff.positionPlaceholder')} value={form.position}
               onChange={(e) => setForm({ ...form, position: e.target.value })}
               className="border rounded px-3 py-2 text-sm" />
-            <input type="number" placeholder="Hourly rate" value={form.hourlyRate}
+            <input type="number" placeholder={t('staff.hourlyRate')} value={form.hourlyRate}
               onChange={(e) => setForm({ ...form, hourlyRate: e.target.value })}
               className="border rounded px-3 py-2 text-sm" />
           </div>
-          <textarea placeholder="Competencies" value={form.competencies}
+          <textarea placeholder={t('staff.competencies')} value={form.competencies}
             onChange={(e) => setForm({ ...form, competencies: e.target.value })}
             className="w-full border rounded px-3 py-2 text-sm" rows={2} />
         </div>
         <div className="flex justify-end gap-3 mt-6">
-          <button onClick={onClose} className="px-4 py-2 text-sm text-gray-600">Cancel</button>
+          <button onClick={onClose} className="px-4 py-2 text-sm text-gray-600">{t('staff.cancel')}</button>
           <button
             onClick={() => onSubmit({
               firstName: form.firstName, lastName: form.lastName,
@@ -253,7 +257,7 @@ function CreateEmployeeModal({
             disabled={!form.firstName || !form.lastName || isLoading}
             className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-700 disabled:opacity-50"
           >
-            {isLoading ? 'Saving...' : initialData ? 'Update' : 'Add Employee'}
+            {isLoading ? t('staff.saving') : initialData ? t('staff.update') : t('staff.addEmployee')}
           </button>
         </div>
       </div>
@@ -264,6 +268,7 @@ function CreateEmployeeModal({
 // ===================== SHIFTS =====================
 
 function ShiftSchedule() {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const [showCreate, setShowCreate] = useState(false)
 
@@ -307,14 +312,14 @@ function ShiftSchedule() {
       <div className="flex justify-end mb-4">
         <button onClick={() => setShowCreate(true)}
           className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-700">
-          Add Shift
+          {t('staff.addShift')}
         </button>
       </div>
 
       {isLoading ? (
-        <p className="text-gray-500">Loading schedule...</p>
+        <p className="text-gray-500">{t('staff.loadingSchedule')}</p>
       ) : shifts.length === 0 ? (
-        <p className="text-gray-400">No shifts scheduled this week.</p>
+        <p className="text-gray-400">{t('staff.noShiftsScheduled')}</p>
       ) : (
         <div className="space-y-3">
           {shifts.map((shift) => (
@@ -355,6 +360,7 @@ function ShiftSchedule() {
 function CreateShiftModal({
   onClose, onSubmit, isLoading,
 }: { onClose: () => void; onSubmit: (data: Record<string, unknown>) => void; isLoading: boolean }) {
+  const { t } = useTranslation()
   const { data: employees } = useQuery({
     queryKey: ['employees-for-shift'],
     queryFn: async () => {
@@ -368,12 +374,12 @@ function CreateShiftModal({
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6">
-        <h2 className="text-lg font-bold mb-4">Add Shift</h2>
+        <h2 className="text-lg font-bold mb-4">{t('staff.addShiftTitle')}</h2>
         <div className="space-y-3">
           <select value={form.employeeId}
             onChange={(e) => setForm({ ...form, employeeId: e.target.value })}
             className="w-full border rounded px-3 py-2 text-sm">
-            <option value="">Select employee *</option>
+            <option value="">{t('staff.selectEmployee')}</option>
             {(employees?.data ?? []).map((e) => (
               <option key={e.id} value={e.id}>{e.firstName} {e.lastName}</option>
             ))}
@@ -386,12 +392,12 @@ function CreateShiftModal({
               onChange={(e) => setForm({ ...form, endTime: e.target.value })}
               className="border rounded px-3 py-2 text-sm" />
           </div>
-          <input placeholder="Notes" value={form.notes}
+          <input placeholder={t('staff.notesPlaceholder')} value={form.notes}
             onChange={(e) => setForm({ ...form, notes: e.target.value })}
             className="w-full border rounded px-3 py-2 text-sm" />
         </div>
         <div className="flex justify-end gap-3 mt-6">
-          <button onClick={onClose} className="px-4 py-2 text-sm text-gray-600">Cancel</button>
+          <button onClick={onClose} className="px-4 py-2 text-sm text-gray-600">{t('staff.cancel')}</button>
           <button
             onClick={() => onSubmit({
               employeeId: form.employeeId,
@@ -402,7 +408,7 @@ function CreateShiftModal({
             disabled={!form.employeeId || !form.startTime || !form.endTime || isLoading}
             className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-700 disabled:opacity-50"
           >
-            {isLoading ? 'Creating...' : 'Add Shift'}
+            {isLoading ? t('staff.creating') : t('staff.addShift')}
           </button>
         </div>
       </div>
@@ -413,6 +419,7 @@ function CreateShiftModal({
 // ===================== TIME TRACKING =====================
 
 function TimeTracking() {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const [selectedEmployee, setSelectedEmployee] = useState('')
 
@@ -455,7 +462,7 @@ function TimeTracking() {
         <select value={selectedEmployee}
           onChange={(e) => setSelectedEmployee(e.target.value)}
           className="border rounded-lg px-3 py-2 text-sm w-80">
-          <option value="">Select employee...</option>
+          <option value="">{t('staff.selectEmployeeTime')}</option>
           {(employees?.data ?? []).map((e) => (
             <option key={e.id} value={e.id}>{e.firstName} {e.lastName}</option>
           ))}
@@ -468,13 +475,13 @@ function TimeTracking() {
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
-                <span className="text-sm font-medium text-green-700">Clocked In</span>
+                <span className="text-sm font-medium text-green-700">{t('staff.clockedIn')}</span>
               </div>
               <p className="text-sm text-gray-600 mb-1">
-                Since: {new Date(activeEntry.clockIn).toLocaleString()}
+                {t('staff.since')} {new Date(activeEntry.clockIn).toLocaleString()}
               </p>
               <p className="text-xs text-gray-400 mb-4">
-                Duration: {Math.round((Date.now() - new Date(activeEntry.clockIn).getTime()) / 60000)} min
+                {t('staff.duration')} {Math.round((Date.now() - new Date(activeEntry.clockIn).getTime()) / 60000)} {t('staff.min')}
               </p>
               <div className="flex gap-3">
                 <button
@@ -484,7 +491,7 @@ function TimeTracking() {
                   })}
                   className="bg-red-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-red-700"
                 >
-                  Clock Out
+                  {t('staff.clockOut')}
                 </button>
                 <button
                   onClick={() => clockOutMutation.mutate({
@@ -493,19 +500,19 @@ function TimeTracking() {
                   })}
                   className="bg-orange-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-orange-700"
                 >
-                  Clock Out (30m break)
+                  {t('staff.clockOutBreak')}
                 </button>
               </div>
             </div>
           ) : (
             <div>
-              <p className="text-sm text-gray-500 mb-4">Not clocked in.</p>
+              <p className="text-sm text-gray-500 mb-4">{t('staff.notClockedIn')}</p>
               <button
                 onClick={() => clockInMutation.mutate({ employeeId: selectedEmployee })}
                 disabled={clockInMutation.isPending}
                 className="bg-green-600 text-white px-6 py-2 rounded-lg text-sm hover:bg-green-700 disabled:opacity-50"
               >
-                {clockInMutation.isPending ? 'Clocking in...' : 'Clock In'}
+                {clockInMutation.isPending ? t('staff.clockingIn') : t('staff.clockIn')}
               </button>
             </div>
           )}
@@ -513,7 +520,7 @@ function TimeTracking() {
       )}
 
       {!selectedEmployee && (
-        <p className="text-gray-400">Select an employee to manage time tracking.</p>
+        <p className="text-gray-400">{t('staff.selectEmployeeManage')}</p>
       )}
     </div>
   )

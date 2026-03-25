@@ -11,6 +11,7 @@
 | | |
 |---|---|
 | **URL** | https://demo.arcwright.dev |
+| **Studio ID** | demo_gym |
 | **E-Mail** | kieser@demo.arcwright.dev |
 | **Passwort** | KieserDemo2026 |
 | **Rolle** | Studio Owner (voller Zugriff) |

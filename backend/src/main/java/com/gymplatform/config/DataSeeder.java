@@ -173,6 +173,7 @@ public class DataSeeder implements ApplicationRunner {
     // ---- USERS ----
 
     private void seedUsers() {
+        createUser("kieser@demo.arcwright.dev", "Kieser", "Admin", Role.STUDIO_OWNER, "KieserDemo2026");
         createUser("owner@fitlife.com", "Stefan", "Müller", Role.STUDIO_OWNER);
         createUser("manager@fitlife.com", "Sarah", "Schmidt", Role.MANAGER);
         createUser("anna.trainer@fitlife.com", "Anna", "Weber", Role.TRAINER);
@@ -203,9 +204,13 @@ public class DataSeeder implements ApplicationRunner {
     }
 
     private User createUser(String email, String firstName, String lastName, Role role) {
+        return createUser(email, firstName, lastName, role, DEFAULT_PASSWORD);
+    }
+
+    private User createUser(String email, String firstName, String lastName, Role role, String password) {
         User user = User.builder()
                 .email(email)
-                .passwordHash(passwordEncoder.encode(DEFAULT_PASSWORD))
+                .passwordHash(passwordEncoder.encode(password))
                 .firstName(firstName)
                 .lastName(lastName)
                 .role(role)

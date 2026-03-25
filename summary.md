@@ -1,12 +1,26 @@
-# Kieser Training AG (KTAG) Requirements vs. Platform Status
+# Kieser Training AG (KTAG) — Plattform-Demo & Anforderungsabgleich
 
-**Prepared for:** Planning meeting with KTAG IT Project Team
-**Date:** 2026-03-23
-**Source:** "Anforderungen an eine Studioverwaltungssoftware" (Feb 2026, CONFIDENTIAL)
+**Erstellt für:** Planungsmeeting mit KTAG IT Project Team
+**Datum:** 2026-03-25
+**Quelle:** "Anforderungen an eine Studioverwaltungssoftware" (Feb 2026, CONFIDENTIAL)
 
 ---
 
-## Scale Context
+## Demo-Zugang
+
+| | |
+|---|---|
+| **URL** | https://demo.arcwright.dev |
+| **E-Mail** | kieser@demo.arcwright.dev |
+| **Passwort** | KieserDemo2026 |
+| **Rolle** | Studio Owner (voller Zugriff) |
+| **Sprache** | Deutsch (umschaltbar auf EN/FR im Menü) |
+
+> Die Demo enthält Beispieldaten: 50 Mitglieder, 3 Standorte (Berlin/München), Verträge, Check-ins, Kurse, Trainingspläne, Kieser-Maschinen, Treueprogramm und mehr.
+
+---
+
+## Skalierung / Nutzergruppen
 
 KTAG operates at significant scale:
 - **~50** backoffice/admin users (controlling, finance, marketing)

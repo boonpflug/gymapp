@@ -767,7 +767,7 @@ function CreatePromoModal({
               value={form.expiresAt}
               onChange={(e) => setForm({ ...form, expiresAt: e.target.value })}
               className="border rounded px-3 py-2 text-sm"
-              placeholder="Expires at"
+              placeholder={t('sales.expiresAt')}
             />
             <input
               type="number"

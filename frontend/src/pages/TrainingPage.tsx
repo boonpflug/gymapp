@@ -57,7 +57,7 @@ export default function TrainingPage() {
       {activeTab === 'exercises' && <ExerciseLibrary />}
       {activeTab === 'plans' && <TrainingPlans />}
       {activeTab === 'templates' && <TemplatesTab />}
-      {activeTab === 'catalog' && <PlanListView queryKey="training-catalog" url="/training/plans/catalog?size=50" emptyMsg="No catalog plans. Create a plan with Catalog checked and publish it." label="Catalog" />}
+      {activeTab === 'catalog' && <PlanListView queryKey="training-catalog" url="/training/plans/catalog?size=50" emptyMsg={t('training.noCatalogPlans')} label={t('training.catalog')} />}
       {activeTab === 'goals' && <GoalsList />}
     </div>
   )
@@ -106,13 +106,13 @@ function ExerciseLibrary() {
           </select>
           <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)} className="border rounded-lg px-3 py-2 text-sm">
             <option value="">{t('training.allTypes')}</option>
-            {EXERCISE_TYPES.map(t => <option key={t} value={t}>{t.replace(/_/g, ' ')}</option>)}
+            {EXERCISE_TYPES.map(et => <option key={et} value={et}>{et.replace(/_/g, ' ')}</option>)}
           </select>
         </div>
         <button onClick={openCreate} className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-700">{t('training.addExercise')}</button>
       </div>
 
-      {isLoading ? <p className="text-gray-500">Loading...</p> : (
+      {isLoading ? <p className="text-gray-500">{t('training.loading')}</p> : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {exercises.map(ex => (
             <div key={ex.id} onClick={() => openEdit(ex)} className="bg-white rounded-lg shadow p-4 cursor-pointer hover:shadow-md">
@@ -203,14 +203,14 @@ function ExerciseModal({ initial, onClose, onSubmit, isLoading }: {
         <div className="space-y-3">
           {/* Name field with smart suggest */}
           <div className="relative">
-            <input placeholder="Exercise name *" value={form.name}
+            <input placeholder={t('training.exerciseName')} value={form.name}
               onChange={e => handleNameChange(e.target.value)}
               onFocus={() => form.name.length >= 3 && setShowSuggestions(true)}
               className="w-full border rounded px-3 py-2 text-sm" />
             {!initial && showSuggestions && suggestions.length > 0 && (
               <div className="absolute z-20 w-full bg-white border border-brand-200 rounded-lg shadow-lg mt-1 overflow-hidden">
                 <div className="px-3 py-1.5 bg-brand-50 text-xs text-brand-600 font-medium">
-                  Auto-fill from similar exercises
+                  {t('training.autoFillSimilar')}
                 </div>
                 {suggestions.map(s => (
                   <button key={s.id} onClick={() => applySuggestion(s)}
@@ -227,12 +227,12 @@ function ExerciseModal({ initial, onClose, onSubmit, isLoading }: {
                         {s.equipment && <> &middot; {s.equipment}</>}
                       </p>
                     </div>
-                    <span className="text-xs text-brand-500 flex-shrink-0">Fill</span>
+                    <span className="text-xs text-brand-500 flex-shrink-0">{t('training.fill')}</span>
                   </button>
                 ))}
                 <button onClick={() => setShowSuggestions(false)}
                   className="w-full text-center py-1.5 text-xs text-gray-400 hover:text-gray-600 border-t">
-                  Dismiss
+                  {t('training.dismiss')}
                 </button>
               </div>
             )}
@@ -241,37 +241,37 @@ function ExerciseModal({ initial, onClose, onSubmit, isLoading }: {
           {/* Applied suggestion banner */}
           {appliedSuggestion && (
             <div className="bg-green-50 border border-green-200 rounded-lg px-3 py-2 text-xs text-green-700 flex items-center justify-between">
-              <span>Auto-filled from: <strong>{appliedSuggestion}</strong></span>
+              <span>{t('training.autoFilledFrom')} <strong>{appliedSuggestion}</strong></span>
               <button onClick={() => setAppliedSuggestion(null)} className="text-green-500 hover:text-green-700">&times;</button>
             </div>
           )}
 
-          <textarea placeholder="Description" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} className="w-full border rounded px-3 py-2 text-sm" rows={2} />
+          <textarea placeholder={t('training.descriptionPlaceholder')} value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} className="w-full border rounded px-3 py-2 text-sm" rows={2} />
           <div className="grid grid-cols-2 gap-3">
             <select value={form.exerciseType} onChange={e => setForm({ ...form, exerciseType: e.target.value as ExerciseType })} className="border rounded px-3 py-2 text-sm">
-              {EXERCISE_TYPES.map(t => <option key={t} value={t}>{t.replace(/_/g, ' ')}</option>)}
+              {EXERCISE_TYPES.map(et => <option key={et} value={et}>{et.replace(/_/g, ' ')}</option>)}
             </select>
             <select value={form.primaryMuscleGroup} onChange={e => setForm({ ...form, primaryMuscleGroup: e.target.value as MuscleGroup })} className="border rounded px-3 py-2 text-sm">
               {MUSCLE_GROUPS.map(mg => <option key={mg} value={mg}>{mg.replace(/_/g, ' ')}</option>)}
             </select>
           </div>
           <select value={form.secondaryMuscleGroup} onChange={e => setForm({ ...form, secondaryMuscleGroup: e.target.value })} className="w-full border rounded px-3 py-2 text-sm">
-            <option value="">No secondary muscle group</option>
+            <option value="">{t('training.noSecondaryMuscle')}</option>
             {MUSCLE_GROUPS.map(mg => <option key={mg} value={mg}>{mg.replace(/_/g, ' ')}</option>)}
           </select>
-          <input placeholder="Equipment" value={form.equipment} onChange={e => setForm({ ...form, equipment: e.target.value })} className="w-full border rounded px-3 py-2 text-sm" />
-          <input placeholder="Video URL" value={form.videoUrl} onChange={e => setForm({ ...form, videoUrl: e.target.value })} className="w-full border rounded px-3 py-2 text-sm" />
-          <textarea placeholder="Execution tips" value={form.executionTips} onChange={e => setForm({ ...form, executionTips: e.target.value })} className="w-full border rounded px-3 py-2 text-sm" rows={2} />
-          <textarea placeholder="Posture notes" value={form.postureNotes} onChange={e => setForm({ ...form, postureNotes: e.target.value })} className="w-full border rounded px-3 py-2 text-sm" rows={2} />
+          <input placeholder={t('training.equipment')} value={form.equipment} onChange={e => setForm({ ...form, equipment: e.target.value })} className="w-full border rounded px-3 py-2 text-sm" />
+          <input placeholder={t('training.videoUrl')} value={form.videoUrl} onChange={e => setForm({ ...form, videoUrl: e.target.value })} className="w-full border rounded px-3 py-2 text-sm" />
+          <textarea placeholder={t('training.executionTips')} value={form.executionTips} onChange={e => setForm({ ...form, executionTips: e.target.value })} className="w-full border rounded px-3 py-2 text-sm" rows={2} />
+          <textarea placeholder={t('training.postureNotes')} value={form.postureNotes} onChange={e => setForm({ ...form, postureNotes: e.target.value })} className="w-full border rounded px-3 py-2 text-sm" rows={2} />
           <select value={form.difficultyLevel} onChange={e => setForm({ ...form, difficultyLevel: e.target.value })} className="w-full border rounded px-3 py-2 text-sm">
-            <option value="BEGINNER">Beginner</option><option value="INTERMEDIATE">Intermediate</option><option value="ADVANCED">Advanced</option>
+            <option value="BEGINNER">{t('training.beginner')}</option><option value="INTERMEDIATE">{t('training.intermediate')}</option><option value="ADVANCED">{t('training.advanced')}</option>
           </select>
         </div>
         <div className="flex justify-end gap-3 mt-6">
-          <button onClick={onClose} className="px-4 py-2 text-sm text-gray-600">Cancel</button>
+          <button onClick={onClose} className="px-4 py-2 text-sm text-gray-600">{t('training.cancel')}</button>
           <button onClick={() => onSubmit({ ...form, secondaryMuscleGroup: form.secondaryMuscleGroup || undefined })}
             disabled={!form.name || isLoading} className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm disabled:opacity-50">
-            {isLoading ? 'Saving...' : initial ? 'Update' : 'Create'}
+            {isLoading ? t('training.saving') : initial ? t('training.update') : t('common.create')}
           </button>
         </div>
       </div>
@@ -282,6 +282,7 @@ function ExerciseModal({ initial, onClose, onSubmit, isLoading }: {
 // ===================== TRAINING PLANS (Member Plans) =====================
 
 function TrainingPlans() {
+  const { t } = useTranslation()
   const qc = useQueryClient()
   const [showCreate, setShowCreate] = useState(false)
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null)
@@ -326,14 +327,14 @@ function TrainingPlans() {
   return (
     <div>
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-sm text-blue-800">
-        <strong>How it works:</strong> Search for a member below to view & manage their training plans. You can create a custom plan from scratch or assign an existing template. Plans start as <em>Draft</em> — publish them when ready so the member can see them.
+        <strong>{t('training.howItWorks')}</strong> {t('training.howItWorksDesc')}
       </div>
 
       {/* Member search */}
       <div className="mb-6">
-        <label className="block text-sm font-medium text-gray-700 mb-1">Select member</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">{t('training.selectMember')}</label>
         <div className="relative max-w-md">
-          <input type="text" placeholder="Search member by name..." value={memberSearch}
+          <input type="text" placeholder={t('training.searchMemberByName')} value={memberSearch}
             onChange={e => { setMemberSearch(e.target.value); if (selectedMember) setSelectedMember(null) }}
             className="w-full border rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-brand-500" />
           {!selectedMember && (membersRes?.data ?? []).length > 0 && (
@@ -353,28 +354,28 @@ function TrainingPlans() {
             <span className="bg-brand-100 text-brand-700 px-3 py-1 rounded-full text-sm font-medium">
               {selectedMember.firstName} {selectedMember.lastName}
             </span>
-            <button onClick={() => { setSelectedMember(null); setMemberSearch('') }} className="text-xs text-gray-500 hover:text-red-500">Clear</button>
+            <button onClick={() => { setSelectedMember(null); setMemberSearch('') }} className="text-xs text-gray-500 hover:text-red-500">{t('training.clear')}</button>
           </div>
         )}
       </div>
 
       {!selectedMember ? (
-        <p className="text-gray-400 text-center py-8">Search and select a member above to manage their training plans.</p>
+        <p className="text-gray-400 text-center py-8">{t('training.searchSelectMember')}</p>
       ) : (
         <>
           {/* Actions */}
           <div className="flex gap-3 mb-4">
             <button onClick={() => setShowCreate(true)} className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-700">
-              Create Custom Plan
+              {t('training.createCustomPlan')}
             </button>
             <button onClick={() => setShowAssignTemplate(true)} className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-purple-700">
-              Assign from Template
+              {t('training.assignFromTemplate')}
             </button>
           </div>
 
           {/* Member's plans */}
-          {isLoading ? <p className="text-gray-500">Loading plans...</p> : plans.length === 0 ? (
-            <p className="text-gray-400">No plans yet for {selectedMember.firstName}. Create one or assign a template above.</p>
+          {isLoading ? <p className="text-gray-500">{t('training.loadingPlans')}</p> : plans.length === 0 ? (
+            <p className="text-gray-400">{t('training.noPlansYet', { name: selectedMember.firstName })}</p>
           ) : (
             <div className="space-y-3">
               {plans.map(plan => (
@@ -384,8 +385,8 @@ function TrainingPlans() {
                     <div>
                       <h3 className="font-medium">{plan.name}</h3>
                       <p className="text-xs text-gray-500 mt-1">
-                        {plan.exerciseCount} exercises
-                        {plan.trainerName && <> &middot; Trainer: {plan.trainerName}</>}
+                        {plan.exerciseCount} {t('training.exercises')}
+                        {plan.trainerName && <> &middot; {t('training.trainerLabel')} {plan.trainerName}</>}
                         {plan.category && <> &middot; {plan.category}</>}
                       </p>
                     </div>
@@ -395,7 +396,7 @@ function TrainingPlans() {
                   </div>
                   {plan.description && <p className="text-sm text-gray-600 mt-2 line-clamp-1">{plan.description}</p>}
                   {plan.status === 'DRAFT' && (
-                    <p className="text-xs text-amber-600 mt-2">Draft — member can't see this yet. Click to publish.</p>
+                    <p className="text-xs text-amber-600 mt-2">{t('training.draftNotVisible')}</p>
                   )}
                 </div>
               ))}
@@ -407,32 +408,32 @@ function TrainingPlans() {
             <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
               <div className="bg-white rounded-xl shadow-xl w-full max-w-lg max-h-[80vh] flex flex-col">
                 <div className="px-6 py-4 border-b">
-                  <h2 className="text-lg font-bold">Assign Template to {selectedMember.firstName}</h2>
-                  <p className="text-sm text-gray-500 mt-1">This creates a copy of the template as a personal plan for the member.</p>
+                  <h2 className="text-lg font-bold">{t('training.assignTemplate', { name: selectedMember.firstName })}</h2>
+                  <p className="text-sm text-gray-500 mt-1">{t('training.assignTemplateDesc')}</p>
                 </div>
                 <div className="flex-1 overflow-y-auto p-4 space-y-2">
                   {templates.length === 0 ? (
-                    <p className="text-gray-400 text-center py-8">No templates available. Create a plan with "Save as Template" checked first.</p>
-                  ) : templates.map(t => (
-                    <div key={t.id} className="border rounded-lg p-4 hover:border-purple-300 hover:bg-purple-50 cursor-pointer transition-colors"
-                      onClick={() => assignMut.mutate(t.id)}>
+                    <p className="text-gray-400 text-center py-8">{t('training.noTemplatesAvailable')}</p>
+                  ) : templates.map(tmpl => (
+                    <div key={tmpl.id} className="border rounded-lg p-4 hover:border-purple-300 hover:bg-purple-50 cursor-pointer transition-colors"
+                      onClick={() => assignMut.mutate(tmpl.id)}>
                       <div className="flex items-center justify-between">
                         <div>
-                          <h3 className="font-medium">{t.name}</h3>
+                          <h3 className="font-medium">{tmpl.name}</h3>
                           <p className="text-xs text-gray-500 mt-1">
-                            {t.exerciseCount} exercises
-                            {t.difficultyLevel && <> &middot; {t.difficultyLevel}</>}
-                            {t.category && <> &middot; {t.category}</>}
+                            {tmpl.exerciseCount} {t('training.exercises')}
+                            {tmpl.difficultyLevel && <> &middot; {tmpl.difficultyLevel}</>}
+                            {tmpl.category && <> &middot; {tmpl.category}</>}
                           </p>
                         </div>
-                        <span className="text-purple-600 text-sm font-medium">Assign</span>
+                        <span className="text-purple-600 text-sm font-medium">{t('training.assign')}</span>
                       </div>
-                      {t.description && <p className="text-sm text-gray-500 mt-1 line-clamp-1">{t.description}</p>}
+                      {tmpl.description && <p className="text-sm text-gray-500 mt-1 line-clamp-1">{tmpl.description}</p>}
                     </div>
                   ))}
                 </div>
                 <div className="px-6 py-3 border-t bg-gray-50 flex justify-end">
-                  <button onClick={() => setShowAssignTemplate(false)} className="px-4 py-2 text-sm text-gray-600">Cancel</button>
+                  <button onClick={() => setShowAssignTemplate(false)} className="px-4 py-2 text-sm text-gray-600">{t('training.cancel')}</button>
                 </div>
               </div>
             </div>
@@ -452,6 +453,7 @@ function PlanStatusBadge({ status }: { status: TrainingPlanStatus }) {
 }
 
 function CreatePlanModal({ onClose, onCreated, defaultMemberId, defaultTemplate }: { onClose: () => void; onCreated: () => void; defaultMemberId?: string; defaultTemplate?: boolean }) {
+  const { t } = useTranslation()
   const [form, setForm] = useState({
     name: '', description: '', memberId: defaultMemberId ?? '',
     template: defaultTemplate ?? false, catalog: false, category: '',
@@ -528,8 +530,8 @@ function CreatePlanModal({ onClose, onCreated, defaultMemberId, defaultTemplate 
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b">
           <div>
-            <h2 className="text-lg font-bold">Create Training Plan</h2>
-            <p className="text-xs text-gray-500">{step === 'details' ? 'Step 1: Plan details' : 'Step 2: Add exercises'}</p>
+            <h2 className="text-lg font-bold">{t('training.createTrainingPlan')}</h2>
+            <p className="text-xs text-gray-500">{step === 'details' ? t('training.stepDetails') : t('training.stepExercises')}</p>
           </div>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
         </div>
@@ -538,43 +540,43 @@ function CreatePlanModal({ onClose, onCreated, defaultMemberId, defaultTemplate 
           <div className="flex-1 overflow-y-auto p-6">
             <div className="max-w-lg mx-auto space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Plan Name *</label>
-                <input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} className="w-full border rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500" placeholder="e.g., Full Body Strength" />
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('training.planName')}</label>
+                <input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} className="w-full border rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500" placeholder={t('training.planNamePlaceholder')} />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                <textarea value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} className="w-full border rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-brand-500" rows={3} placeholder="What this plan focuses on..." />
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('training.descriptionLabel')}</label>
+                <textarea value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} className="w-full border rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-brand-500" rows={3} placeholder={t('training.whatPlanFocuses')} />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Difficulty</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('training.difficulty')}</label>
                   <select value={form.difficultyLevel} onChange={e => setForm({ ...form, difficultyLevel: e.target.value })} className="w-full border rounded-lg px-4 py-2.5 text-sm">
-                    <option value="BEGINNER">Beginner</option><option value="INTERMEDIATE">Intermediate</option><option value="ADVANCED">Advanced</option>
+                    <option value="BEGINNER">{t('training.beginner')}</option><option value="INTERMEDIATE">{t('training.intermediate')}</option><option value="ADVANCED">{t('training.advanced')}</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                  <input value={form.category} onChange={e => setForm({ ...form, category: e.target.value })} className="w-full border rounded-lg px-4 py-2.5 text-sm" placeholder="e.g., Strength, Cardio" />
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('training.categoryLabel')}</label>
+                  <input value={form.category} onChange={e => setForm({ ...form, category: e.target.value })} className="w-full border rounded-lg px-4 py-2.5 text-sm" placeholder={t('training.categoryPlaceholder')} />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Est. Duration (min)</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('training.estDuration')}</label>
                   <input type="number" value={form.estimatedDurationMinutes} onChange={e => setForm({ ...form, estimatedDurationMinutes: e.target.value })} className="w-full border rounded-lg px-4 py-2.5 text-sm" placeholder="45" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Member ID</label>
-                  <input value={form.memberId} onChange={e => setForm({ ...form, memberId: e.target.value })} className="w-full border rounded-lg px-4 py-2.5 text-sm" placeholder="Leave empty for template" />
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('training.memberId')}</label>
+                  <input value={form.memberId} onChange={e => setForm({ ...form, memberId: e.target.value })} className="w-full border rounded-lg px-4 py-2.5 text-sm" placeholder={t('training.leaveEmptyTemplate')} />
                 </div>
               </div>
               <div className="flex gap-6 pt-2">
                 <label className="flex items-center gap-2 text-sm cursor-pointer">
                   <input type="checkbox" checked={form.template} onChange={e => setForm({ ...form, template: e.target.checked })} className="rounded text-brand-600" />
-                  <span>Save as Template</span>
+                  <span>{t('training.saveAsTemplate')}</span>
                 </label>
                 <label className="flex items-center gap-2 text-sm cursor-pointer">
                   <input type="checkbox" checked={form.catalog} onChange={e => setForm({ ...form, catalog: e.target.checked })} className="rounded text-brand-600" />
-                  <span>Show in Catalog</span>
+                  <span>{t('training.showInCatalog')}</span>
                 </label>
               </div>
             </div>
@@ -587,15 +589,15 @@ function CreatePlanModal({ onClose, onCreated, defaultMemberId, defaultTemplate 
             <div className="w-1/2 border-r flex flex-col">
               <div className="p-4 border-b bg-gray-50 space-y-2">
                 <input value={exSearch} onChange={e => setExSearch(e.target.value)}
-                  placeholder="Search exercises..." className="w-full border rounded-lg px-3 py-2 text-sm" />
+                  placeholder={t('training.searchExercises')} className="w-full border rounded-lg px-3 py-2 text-sm" />
                 <select value={exMuscleFilter} onChange={e => setExMuscleFilter(e.target.value)} className="w-full border rounded-lg px-3 py-2 text-sm">
-                  <option value="">All muscle groups</option>
+                  <option value="">{t('training.allMuscleGroups')}</option>
                   {MUSCLE_GROUPS.map(mg => <option key={mg} value={mg}>{mg.replace(/_/g, ' ')}</option>)}
                 </select>
               </div>
               <div className="flex-1 overflow-y-auto p-3 space-y-2">
-                {browsing ? <p className="text-gray-400 text-sm text-center py-4">Loading...</p> :
-                 availableExercises.length === 0 ? <p className="text-gray-400 text-sm text-center py-4">No exercises found</p> :
+                {browsing ? <p className="text-gray-400 text-sm text-center py-4">{t('training.loading')}</p> :
+                 availableExercises.length === 0 ? <p className="text-gray-400 text-sm text-center py-4">{t('training.noExercisesFound')}</p> :
                  availableExercises.map(ex => {
                   const added = addedIds.has(ex.id)
                   return (
@@ -615,7 +617,7 @@ function CreatePlanModal({ onClose, onCreated, defaultMemberId, defaultTemplate 
                           </div>
                         </div>
                         {added ? (
-                          <span className="text-xs text-green-600 font-medium ml-2">Added</span>
+                          <span className="text-xs text-green-600 font-medium ml-2">{t('training.added')}</span>
                         ) : (
                           <button className="ml-2 w-7 h-7 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center text-lg hover:bg-brand-200">+</button>
                         )}
@@ -629,13 +631,13 @@ function CreatePlanModal({ onClose, onCreated, defaultMemberId, defaultTemplate 
             {/* Right: Plan exercises */}
             <div className="w-1/2 flex flex-col">
               <div className="p-4 border-b bg-gray-50">
-                <h3 className="text-sm font-semibold text-gray-700">Plan Exercises ({planExercises.length})</h3>
+                <h3 className="text-sm font-semibold text-gray-700">{t('training.planExercises')} ({planExercises.length})</h3>
               </div>
               <div className="flex-1 overflow-y-auto p-3">
                 {planExercises.length === 0 ? (
                   <div className="flex flex-col items-center justify-center h-full text-gray-400">
                     <p className="text-4xl mb-3">+</p>
-                    <p className="text-sm">Click exercises on the left to add them</p>
+                    <p className="text-sm">{t('training.clickToAdd')}</p>
                   </div>
                 ) : (
                   <div className="space-y-3">
@@ -661,28 +663,28 @@ function CreatePlanModal({ onClose, onCreated, defaultMemberId, defaultTemplate 
                         </div>
                         <div className="grid grid-cols-4 gap-2">
                           <div>
-                            <label className="text-xs text-gray-500 block">Sets</label>
+                            <label className="text-xs text-gray-500 block">{t('training.sets')}</label>
                             <input type="number" min="1" value={ex.sets} onChange={e => updateExField(i, 'sets', parseInt(e.target.value) || 1)}
                               className="w-full border rounded px-2 py-1.5 text-sm text-center font-medium" />
                           </div>
                           <div>
-                            <label className="text-xs text-gray-500 block">Reps</label>
+                            <label className="text-xs text-gray-500 block">{t('training.reps')}</label>
                             <input type="number" min="1" value={ex.reps} onChange={e => updateExField(i, 'reps', parseInt(e.target.value) || 1)}
                               className="w-full border rounded px-2 py-1.5 text-sm text-center font-medium" />
                           </div>
                           <div>
-                            <label className="text-xs text-gray-500 block">Weight (kg)</label>
+                            <label className="text-xs text-gray-500 block">{t('training.weightKg')}</label>
                             <input value={ex.weight} onChange={e => updateExField(i, 'weight', e.target.value)}
                               className="w-full border rounded px-2 py-1.5 text-sm text-center" placeholder="—" />
                           </div>
                           <div>
-                            <label className="text-xs text-gray-500 block">Rest (s)</label>
+                            <label className="text-xs text-gray-500 block">{t('training.restS')}</label>
                             <input value={ex.restSeconds} onChange={e => updateExField(i, 'restSeconds', e.target.value)}
                               className="w-full border rounded px-2 py-1.5 text-sm text-center" placeholder="60" />
                           </div>
                         </div>
                         <input value={ex.trainerComment} onChange={e => updateExField(i, 'trainerComment', e.target.value)}
-                          className="w-full border rounded px-2 py-1.5 text-xs mt-2 text-gray-600" placeholder="Trainer note (optional)..." />
+                          className="w-full border rounded px-2 py-1.5 text-xs mt-2 text-gray-600" placeholder={t('training.trainerNote')} />
                       </div>
                     ))}
                   </div>
@@ -695,22 +697,22 @@ function CreatePlanModal({ onClose, onCreated, defaultMemberId, defaultTemplate 
         {/* Footer */}
         <div className="flex items-center justify-between px-6 py-4 border-t bg-gray-50">
           <div className="text-sm text-gray-500">
-            {step === 'exercises' && `${planExercises.length} exercise${planExercises.length !== 1 ? 's' : ''} added`}
+            {step === 'exercises' && `${planExercises.length} ${t('training.exercisesAdded')}`}
           </div>
           <div className="flex gap-3">
             {step === 'exercises' && (
-              <button onClick={() => setStep('details')} className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800">Back</button>
+              <button onClick={() => setStep('details')} className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800">{t('training.back')}</button>
             )}
-            <button onClick={onClose} className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800">Cancel</button>
+            <button onClick={onClose} className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800">{t('training.cancel')}</button>
             {step === 'details' ? (
               <button onClick={() => setStep('exercises')} disabled={!form.name}
                 className="bg-brand-600 text-white px-5 py-2 rounded-lg text-sm hover:bg-brand-700 disabled:opacity-50">
-                Next: Add Exercises
+                {t('training.nextAddExercises')}
               </button>
             ) : (
               <button onClick={handleSubmit} disabled={!form.name || createMut.isPending}
                 className="bg-green-600 text-white px-5 py-2 rounded-lg text-sm hover:bg-green-700 disabled:opacity-50">
-                {createMut.isPending ? 'Creating...' : `Create Plan (${planExercises.length} exercises)`}
+                {createMut.isPending ? t('training.saving') : `${t('training.createPlan')} (${planExercises.length} ${t('training.exercises')})`}
               </button>
             )}
           </div>
@@ -721,18 +723,19 @@ function CreatePlanModal({ onClose, onCreated, defaultMemberId, defaultTemplate 
 }
 
 function PlanDetailModal({ planId, onClose, onPublish, onArchive }: { planId: string; onClose: () => void; onPublish: (id: string) => void; onArchive: (id: string) => void }) {
+  const { t } = useTranslation()
   const { data, isLoading } = useQuery({
     queryKey: ['training-plan', planId],
     queryFn: () => api.get<ApiResponse<TrainingPlanDto>>(`/training/plans/${planId}`).then(r => r.data.data),
   })
 
-  if (isLoading || !data) return <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"><div className="bg-white rounded-xl p-6">Loading...</div></div>
+  if (isLoading || !data) return <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"><div className="bg-white rounded-xl p-6">{t('training.loading')}</div></div>
   const plan = data
 
   const statusInfo: Record<string, { label: string; desc: string; color: string }> = {
-    DRAFT: { label: 'Draft', desc: 'This plan is not yet visible to the member. Publish it when ready.', color: 'bg-amber-50 border-amber-200 text-amber-800' },
-    PUBLISHED: { label: 'Published', desc: 'The member can see and use this plan.', color: 'bg-green-50 border-green-200 text-green-800' },
-    ARCHIVED: { label: 'Archived', desc: 'This plan is no longer active.', color: 'bg-gray-50 border-gray-200 text-gray-600' },
+    DRAFT: { label: t('training.draft'), desc: t('training.draftDesc'), color: 'bg-amber-50 border-amber-200 text-amber-800' },
+    PUBLISHED: { label: t('training.published'), desc: t('training.publishedDesc'), color: 'bg-green-50 border-green-200 text-green-800' },
+    ARCHIVED: { label: t('training.archived'), desc: t('training.archivedDesc'), color: 'bg-gray-50 border-gray-200 text-gray-600' },
   }
   const si = statusInfo[plan.status] ?? statusInfo.DRAFT
 
@@ -750,8 +753,8 @@ function PlanDetailModal({ planId, onClose, onPublish, onArchive }: { planId: st
             <h2 className="text-lg font-bold">{plan.name}</h2>
             <p className="text-sm text-gray-500 mt-0.5">
               {plan.memberName && <>{plan.memberName} &middot; </>}
-              {plan.trainerName && <>Trainer: {plan.trainerName} &middot; </>}
-              {plan.exerciseCount} exercises
+              {plan.trainerName && <>{t('training.trainerLabel')} {plan.trainerName} &middot; </>}
+              {plan.exerciseCount} {t('training.exercises')}
             </p>
           </div>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
@@ -769,11 +772,11 @@ function PlanDetailModal({ planId, onClose, onPublish, onArchive }: { planId: st
             {plan.category && <span className="text-xs bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full">{plan.category}</span>}
             {plan.difficultyLevel && <span className="text-xs bg-blue-100 text-blue-700 px-2.5 py-1 rounded-full">{plan.difficultyLevel}</span>}
             {plan.estimatedDurationMinutes && <span className="text-xs bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full">~{plan.estimatedDurationMinutes} min</span>}
-            {plan.template && <span className="text-xs bg-purple-100 text-purple-700 px-2.5 py-1 rounded-full">Template</span>}
-            {plan.catalog && <span className="text-xs bg-green-100 text-green-700 px-2.5 py-1 rounded-full">Catalog</span>}
+            {plan.template && <span className="text-xs bg-purple-100 text-purple-700 px-2.5 py-1 rounded-full">{t('training.templates')}</span>}
+            {plan.catalog && <span className="text-xs bg-green-100 text-green-700 px-2.5 py-1 rounded-full">{t('training.catalog')}</span>}
           </div>
 
-          <h3 className="text-sm font-semibold mb-3">Exercises</h3>
+          <h3 className="text-sm font-semibold mb-3">{t('training.exercisesTitle')}</h3>
           <div className="space-y-2 mb-6">
             {plan.exercises?.map((ex, i) => (
               <div key={ex.id} className="bg-gray-50 rounded-lg p-3 flex items-center gap-3">
@@ -795,7 +798,7 @@ function PlanDetailModal({ planId, onClose, onPublish, onArchive }: { planId: st
               </div>
             ))}
             {(!plan.exercises || plan.exercises.length === 0) && (
-              <p className="text-gray-400 text-sm text-center py-4">No exercises in this plan.</p>
+              <p className="text-gray-400 text-sm text-center py-4">{t('training.noExercisesInPlan')}</p>
             )}
           </div>
         </div>
@@ -804,17 +807,17 @@ function PlanDetailModal({ planId, onClose, onPublish, onArchive }: { planId: st
         <div className="px-6 py-4 border-t bg-gray-50 flex justify-end gap-3">
           {plan.status === 'DRAFT' && (
             <button onClick={() => onPublish(plan.id)} className="bg-green-600 text-white px-5 py-2 rounded-lg text-sm hover:bg-green-700">
-              Publish (make visible to member)
+              {t('training.publishMakeVisible')}
             </button>
           )}
           {plan.status === 'PUBLISHED' && (
             <button onClick={() => onArchive(plan.id)} className="bg-gray-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-700">
-              Archive
+              {t('training.archive')}
             </button>
           )}
           {plan.status === 'DRAFT' && (
             <button onClick={() => onArchive(plan.id)} className="text-gray-500 px-4 py-2 text-sm hover:text-gray-700">
-              Discard
+              {t('training.discard')}
             </button>
           )}
         </div>
@@ -826,6 +829,7 @@ function PlanDetailModal({ planId, onClose, onPublish, onArchive }: { planId: st
 // ===================== TEMPLATES TAB =====================
 
 function TemplatesTab() {
+  const { t } = useTranslation()
   const qc = useQueryClient()
   const [showCreate, setShowCreate] = useState(false)
 
@@ -838,25 +842,25 @@ function TemplatesTab() {
   return (
     <div>
       <div className="bg-purple-50 border border-purple-200 rounded-lg p-4 mb-6 text-sm text-purple-800">
-        <strong>Templates</strong> are reusable plan blueprints. Create a template once, then assign copies to individual members from the <em>Training Plans</em> tab. The original template stays unchanged.
+        {t('training.templatesInfo')}
       </div>
       <div className="flex justify-end mb-4">
-        <button onClick={() => setShowCreate(true)} className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-purple-700">Create Template</button>
+        <button onClick={() => setShowCreate(true)} className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-purple-700">{t('training.createTemplate')}</button>
       </div>
-      {isLoading ? <p className="text-gray-500">Loading...</p> : templates.length === 0 ? (
-        <p className="text-gray-400 text-center py-8">No templates yet. Click "Create Template" to build your first reusable plan.</p>
+      {isLoading ? <p className="text-gray-500">{t('training.loading')}</p> : templates.length === 0 ? (
+        <p className="text-gray-400 text-center py-8">{t('training.noTemplatesYet')}</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {templates.map(t => (
-            <div key={t.id} className="bg-white rounded-lg shadow p-5 border-l-4 border-purple-500">
-              <h3 className="font-semibold">{t.name}</h3>
+          {templates.map(tmpl => (
+            <div key={tmpl.id} className="bg-white rounded-lg shadow p-5 border-l-4 border-purple-500">
+              <h3 className="font-semibold">{tmpl.name}</h3>
               <p className="text-xs text-gray-500 mt-1">
-                {t.exerciseCount} exercises
-                {t.difficultyLevel && <> &middot; {t.difficultyLevel}</>}
-                {t.category && <> &middot; {t.category}</>}
+                {tmpl.exerciseCount} {t('training.exercises')}
+                {tmpl.difficultyLevel && <> &middot; {tmpl.difficultyLevel}</>}
+                {tmpl.category && <> &middot; {tmpl.category}</>}
               </p>
-              {t.description && <p className="text-sm text-gray-600 mt-2 line-clamp-2">{t.description}</p>}
-              <p className="text-xs text-gray-400 mt-3">To assign to a member, go to Training Plans tab and click "Assign from Template".</p>
+              {tmpl.description && <p className="text-sm text-gray-600 mt-2 line-clamp-2">{tmpl.description}</p>}
+              <p className="text-xs text-gray-400 mt-3">{t('training.assignInstructions')}</p>
             </div>
           ))}
         </div>
@@ -868,7 +872,8 @@ function TemplatesTab() {
 
 // ===================== CATALOG & GENERIC LIST =====================
 
-function PlanListView({ queryKey, url, emptyMsg, label }: { queryKey: string; url: string; emptyMsg: string; label: string }) {
+function PlanListView({ queryKey, url, emptyMsg }: { queryKey: string; url: string; emptyMsg: string; label?: string }) {
+  const { t } = useTranslation()
   const { data, isLoading } = useQuery({
     queryKey: [queryKey],
     queryFn: () => api.get<ApiResponse<TrainingPlanDto[]>>(url).then(r => r.data),
@@ -877,13 +882,13 @@ function PlanListView({ queryKey, url, emptyMsg, label }: { queryKey: string; ur
 
   return (
     <div>
-      <p className="text-sm text-gray-500 mb-4">{label} — reusable plans for members.</p>
-      {isLoading ? <p className="text-gray-500">Loading...</p> : plans.length === 0 ? <p className="text-gray-400">{emptyMsg}</p> : (
+      <p className="text-sm text-gray-500 mb-4">{t('training.catalogDesc')}</p>
+      {isLoading ? <p className="text-gray-500">{t('training.loading')}</p> : plans.length === 0 ? <p className="text-gray-400">{emptyMsg}</p> : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {plans.map(p => (
             <div key={p.id} className="bg-white rounded-lg shadow p-4">
               <h3 className="font-medium">{p.name}</h3>
-              <p className="text-xs text-gray-500 mt-1">{p.exerciseCount} exercises{p.category && <> &middot; {p.category}</>}</p>
+              <p className="text-xs text-gray-500 mt-1">{p.exerciseCount} {t('training.exercises')}{p.category && <> &middot; {p.category}</>}</p>
               {p.description && <p className="text-sm text-gray-600 mt-2 line-clamp-2">{p.description}</p>}
               {p.difficultyLevel && (
                 <span className={`text-xs mt-2 inline-block px-2 py-0.5 rounded ${p.difficultyLevel === 'BEGINNER' ? 'bg-green-100 text-green-700' : p.difficultyLevel === 'INTERMEDIATE' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'}`}>{p.difficultyLevel}</span>
@@ -899,6 +904,7 @@ function PlanListView({ queryKey, url, emptyMsg, label }: { queryKey: string; ur
 // ===================== GOALS =====================
 
 function GoalsList() {
+  const { t } = useTranslation()
   const qc = useQueryClient()
   const [memberSearch, setMemberSearch] = useState('')
   const [selectedMember, setSelectedMember] = useState<MemberDto | null>(null)
@@ -931,7 +937,7 @@ function GoalsList() {
     <div>
       <div className="flex items-center justify-between mb-4">
         <div className="relative w-80">
-          <input type="text" placeholder="Search member..." value={memberSearch}
+          <input type="text" placeholder={t('training.searchMember')} value={memberSearch}
             onChange={e => { setMemberSearch(e.target.value); if (selectedMember) setSelectedMember(null) }}
             className="border rounded-lg px-3 py-2 text-sm w-full" />
           {!selectedMember && (membersRes?.data ?? []).length > 0 && (
@@ -944,10 +950,10 @@ function GoalsList() {
           )}
           {selectedMember && <button onClick={() => { setSelectedMember(null); setMemberSearch('') }} className="text-xs text-gray-500 underline mt-1">Clear</button>}
         </div>
-        <button onClick={() => setShowCreate(true)} className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-700">Create Goal</button>
+        <button onClick={() => setShowCreate(true)} className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-700">{t('training.createGoal')}</button>
       </div>
 
-      {!selectedMember ? <p className="text-gray-400">Search a member to view their goals.</p> : isLoading ? <p className="text-gray-500">Loading...</p> : goals.length === 0 ? <p className="text-gray-400">No goals for this member.</p> : (
+      {!selectedMember ? <p className="text-gray-400">{t('training.searchMemberGoals')}</p> : isLoading ? <p className="text-gray-500">{t('training.loading')}</p> : goals.length === 0 ? <p className="text-gray-400">{t('training.noGoalsForMember')}</p> : (
         <div className="space-y-3">
           {goals.map(g => (
             <div key={g.id} className="bg-white rounded-lg shadow p-4">
@@ -966,9 +972,9 @@ function GoalsList() {
               )}
               {g.status === 'ACTIVE' && (
                 <div className="flex gap-2 mt-3">
-                  <input type="number" placeholder="New value" className="border rounded px-2 py-1 text-xs w-24"
+                  <input type="number" placeholder={t('training.newValue')} className="border rounded px-2 py-1 text-xs w-24"
                     onKeyDown={e => { if (e.key === 'Enter') { const v = parseFloat((e.target as HTMLInputElement).value); if (!isNaN(v)) { updateProgressMut.mutate({ goalId: g.id, currentValue: v }); (e.target as HTMLInputElement).value = '' } } }} />
-                  <button onClick={() => abandonMut.mutate(g.id)} className="text-xs text-red-500">Abandon</button>
+                  <button onClick={() => abandonMut.mutate(g.id)} className="text-xs text-red-500">{t('training.abandon')}</button>
                 </div>
               )}
             </div>
@@ -982,32 +988,33 @@ function GoalsList() {
 }
 
 function CreateGoalModal({ onClose, onCreated, defaultMemberId }: { onClose: () => void; onCreated: () => void; defaultMemberId?: string }) {
+  const { t } = useTranslation()
   const [form, setForm] = useState({ memberId: defaultMemberId ?? '', goalType: 'GENERAL_FITNESS' as GoalType, title: '', description: '', targetValue: '', currentValue: '', unit: '', targetDate: '' })
   const createMut = useMutation({ mutationFn: (d: Record<string, unknown>) => api.post('/training/goals', d), onSuccess: onCreated })
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6">
-        <h2 className="text-lg font-bold mb-4">Create Training Goal</h2>
+        <h2 className="text-lg font-bold mb-4">{t('training.createTrainingGoal')}</h2>
         <div className="space-y-3">
-          <input placeholder="Member ID *" value={form.memberId} onChange={e => setForm({ ...form, memberId: e.target.value })} className="w-full border rounded px-3 py-2 text-sm" />
-          <input placeholder="Goal title *" value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} className="w-full border rounded px-3 py-2 text-sm" />
+          <input placeholder={t('training.memberIdRequired')} value={form.memberId} onChange={e => setForm({ ...form, memberId: e.target.value })} className="w-full border rounded px-3 py-2 text-sm" />
+          <input placeholder={t('training.goalTitle')} value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} className="w-full border rounded px-3 py-2 text-sm" />
           <select value={form.goalType} onChange={e => setForm({ ...form, goalType: e.target.value as GoalType })} className="w-full border rounded px-3 py-2 text-sm">
             {GOAL_TYPES.map(g => <option key={g} value={g}>{g.replace(/_/g, ' ')}</option>)}
           </select>
-          <textarea placeholder="Description" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} className="w-full border rounded px-3 py-2 text-sm" rows={2} />
+          <textarea placeholder={t('training.descriptionPlaceholder')} value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} className="w-full border rounded px-3 py-2 text-sm" rows={2} />
           <div className="grid grid-cols-3 gap-3">
-            <input type="number" placeholder="Target" value={form.targetValue} onChange={e => setForm({ ...form, targetValue: e.target.value })} className="border rounded px-3 py-2 text-sm" />
-            <input type="number" placeholder="Current" value={form.currentValue} onChange={e => setForm({ ...form, currentValue: e.target.value })} className="border rounded px-3 py-2 text-sm" />
-            <input placeholder="Unit" value={form.unit} onChange={e => setForm({ ...form, unit: e.target.value })} className="border rounded px-3 py-2 text-sm" />
+            <input type="number" placeholder={t('training.targetPlaceholder')} value={form.targetValue} onChange={e => setForm({ ...form, targetValue: e.target.value })} className="border rounded px-3 py-2 text-sm" />
+            <input type="number" placeholder={t('training.currentPlaceholder')} value={form.currentValue} onChange={e => setForm({ ...form, currentValue: e.target.value })} className="border rounded px-3 py-2 text-sm" />
+            <input placeholder={t('training.unit')} value={form.unit} onChange={e => setForm({ ...form, unit: e.target.value })} className="border rounded px-3 py-2 text-sm" />
           </div>
           <input type="date" value={form.targetDate} onChange={e => setForm({ ...form, targetDate: e.target.value })} className="w-full border rounded px-3 py-2 text-sm" />
         </div>
         <div className="flex justify-end gap-3 mt-6">
-          <button onClick={onClose} className="px-4 py-2 text-sm text-gray-600">Cancel</button>
+          <button onClick={onClose} className="px-4 py-2 text-sm text-gray-600">{t('training.cancel')}</button>
           <button onClick={() => createMut.mutate({ memberId: form.memberId, goalType: form.goalType, title: form.title, description: form.description || undefined, targetValue: form.targetValue ? parseFloat(form.targetValue) : undefined, currentValue: form.currentValue ? parseFloat(form.currentValue) : undefined, unit: form.unit || undefined, targetDate: form.targetDate || undefined })}
             disabled={!form.memberId || !form.title || createMut.isPending} className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm disabled:opacity-50">
-            {createMut.isPending ? 'Creating...' : 'Create Goal'}
+            {createMut.isPending ? t('training.saving') : t('training.createGoal')}
           </button>
         </div>
       </div>

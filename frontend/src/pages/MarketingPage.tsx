@@ -367,7 +367,7 @@ function CreateCampaignModal({ onClose }: { onClose: () => void }) {
               rows={4}
               value={form.bodyHtml}
               onChange={(e) => setForm({ ...form, bodyHtml: e.target.value })}
-              placeholder="HTML content with {{member.firstName}} variables..."
+              placeholder={t('marketing.bodyHtmlPlaceholder')}
             />
           </div>
 
@@ -658,6 +658,7 @@ function CampaignDetailModal({ campaign, onClose }: { campaign: CampaignDto; onC
 // ── Audience Builder Tab ───────────────────────────────
 
 function AudienceBuilderTab() {
+  const { t } = useTranslation()
   const [criteria, setCriteria] = useState<AudienceCriteria>({})
   const [preview, setPreview] = useState<AudiencePreviewDto | null>(null)
 
@@ -885,6 +886,7 @@ function AudienceBuilderTab() {
 // ── At-Risk Members Tab ────────────────────────────────
 
 function AtRiskTab() {
+  const { t } = useTranslation()
   const [inactiveDays, setInactiveDays] = useState(14)
 
   const { data: summaryData } = useQuery({

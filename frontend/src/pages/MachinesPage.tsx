@@ -565,7 +565,7 @@ function StrengthProgressTab() {
     <div>
       <div className="flex items-center gap-4 mb-6">
         <input
-          placeholder="Member ID *"
+          placeholder={t('machines.memberIdRequired')}
           value={memberId}
           onChange={(e) => setMemberId(e.target.value)}
           className="border rounded-lg px-3 py-2 text-sm w-56"

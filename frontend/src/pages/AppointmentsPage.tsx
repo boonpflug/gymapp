@@ -1035,7 +1035,7 @@ function CreateFormModal({ onClose }: { onClose: () => void }) {
                       <div className="flex-1 space-y-2">
                         <input
                           className="w-full border rounded-lg px-3 py-1.5 text-sm"
-                          placeholder="Question text *"
+                          placeholder={t('appointments.questionTextPlaceholder')}
                           value={q.questionText}
                           onChange={(e) => updateQuestion(idx, { questionText: e.target.value })}
                           required
@@ -1046,17 +1046,17 @@ function CreateFormModal({ onClose }: { onClose: () => void }) {
                             value={q.questionType}
                             onChange={(e) => updateQuestion(idx, { questionType: e.target.value as QuestionType })}
                           >
-                            <option value="TEXT">Text</option>
-                            <option value="NUMBER">Number</option>
-                            <option value="SINGLE_CHOICE">Single Choice</option>
-                            <option value="MULTI_CHOICE">Multi Choice</option>
-                            <option value="SCALE">Scale</option>
-                            <option value="DATE">Date</option>
-                            <option value="BOOLEAN">Boolean</option>
+                            <option value="TEXT">{t('appointments.questionTypes.TEXT')}</option>
+                            <option value="NUMBER">{t('appointments.questionTypes.NUMBER')}</option>
+                            <option value="SINGLE_CHOICE">{t('appointments.questionTypes.SINGLE_CHOICE')}</option>
+                            <option value="MULTI_CHOICE">{t('appointments.questionTypes.MULTI_CHOICE')}</option>
+                            <option value="SCALE">{t('appointments.questionTypes.SCALE')}</option>
+                            <option value="DATE">{t('appointments.questionTypes.DATE')}</option>
+                            <option value="BOOLEAN">{t('appointments.questionTypes.BOOLEAN')}</option>
                           </select>
                           <input
                             className="border rounded-lg px-2 py-1.5 text-sm"
-                            placeholder="Section (optional)"
+                            placeholder={t('appointments.sectionPlaceholder')}
                             value={q.section}
                             onChange={(e) => updateQuestion(idx, { section: e.target.value })}
                           />
@@ -1067,13 +1067,13 @@ function CreateFormModal({ onClose }: { onClose: () => void }) {
                               onChange={(e) => updateQuestion(idx, { required: e.target.checked })}
                               className="rounded border-gray-300 text-teal-600 focus:ring-teal-500"
                             />
-                            <label className="text-xs text-gray-600">Required</label>
+                            <label className="text-xs text-gray-600">{t('common.required')}</label>
                           </div>
                         </div>
                         {(q.questionType === 'SINGLE_CHOICE' || q.questionType === 'MULTI_CHOICE') && (
                           <input
                             className="w-full border rounded-lg px-2 py-1.5 text-sm"
-                            placeholder="Options (comma-separated)"
+                            placeholder={t('appointments.optionsPlaceholder')}
                             value={q.options}
                             onChange={(e) => updateQuestion(idx, { options: e.target.value })}
                           />
